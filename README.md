@@ -1,5 +1,7 @@
 #Cognitive Battery
-A Python based battery of common cognitive psychology tasks. Designed to be modular as each task is contained within a single Python script, the results of which are returned as a dataframe for saving. Pull requests are welcome! Please see the contribution notes below.
+A Python based battery of common cognitive psychology tasks. Designed to be modular as each task is contained within a single Python script, the results of which are returned as a dataframe for saving.
+
+Pull requests are welcome! Please see the contribution notes below.
 
 ![Battery loading screen](/images/load_screen.png)
 
@@ -66,4 +68,4 @@ In summary:
 4. Add your task name to the `taskList` widget in `run_battery.py` (within the `retranslateUi()` method)
 5. Spawn a new instance of the class in `run_battery.py` within the `start()` method.
 
-Consider making a pull request. However, I will only add tasks that are using a standard implementation, without major deviation, and have a journal reference.
+Consider making a pull request. However, I will only add tasks that are using a standard implementation, without major deviations, and have a journal reference.
