@@ -3,6 +3,8 @@ A Python based battery of common cognitive psychology tasks. Designed to be modu
 
 ![Battery loading screen](/images/load_screen.png)
 
+The battery was originally designed for a resolution of 1280x1024, but it should work with most resolutions.
+
 Some tasks contain copyrighted images (e.g. Mental Rotations Task, Raven's Progressive Matrices) that I cannot include in this repo. In case you have access to the original images, I have included an explanation of how to name/format those items to work with this battery.
 
 **Note**: I created this project as I needed to get some tasks up and running quickly for an experiment. Everything is fully functional as it stands, but I will be refactoring much of the code over time to clean things up. This will include things like code reduction, better handling of different screen resolutions, and improved logic.
