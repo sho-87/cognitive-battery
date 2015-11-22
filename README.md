@@ -17,7 +17,7 @@ You will need to have the following dependencies installed to run the battery, m
 * **Numpy**
   - Included with Anaconda. Otherwise, install using pip (`pip install numpy`)
 * **Pygame**
-  - Downloadable from the [Pygame website](http://www.pygame.org/download.shtml). If you installed 64bit Python, you will need to download the 64bit Pygame binaries from [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame) and install using pip (`pip install <download filename>`)
+  - Downloadable from the [Pygame website](http://www.pygame.org/download.shtml). If you installed 64bit Python, you will need to download the 64bit Pygame binaries from [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame) and install using pip (`pip install <filename>`)
 * **PyQT4**
   - Full release downloadable from the [PyQT4 website](https://www.riverbankcomputing.com/software/pyqt/download)
 
@@ -29,6 +29,19 @@ On the loading screen, all sections are currently mandatory, although some may b
 Select the tasks you want to include by using the checkboxes. The order of task administration can be set using the `Up` and `Down` buttons. Alternatively, you can set the order to be random using the checkbox.
 
 The task results are saved in the /data directory. Each participant's data is saved as an Excel file, where each task is saved to a separate sheet. I'm considering replacing the use of Excel with .csv files, but that will come later.
+
+##Tasks
+* **Attention Network Test (ANT)**
+  - Based on the original version by [Fan et al. (2002)](http://www.mitpressjournals.org/doi/abs/10.1162/089892902317361886#.VlEwI9irSHs)
+  - I have also included the shortened version by [Fan et al. (2005)](http://www.sciencedirect.com/science/article/pii/S1053811905000984). While this version works, it is currently not included in the main battery.
+* **Sustained Attention to Response Task (SART)**
+  - Based on the original version by [Robertson et al. (1997)](http://www.sciencedirect.com/science/article/pii/S0028393297000158)
+* **Digit Span (backwards)**
+  - Based on the version used by [Berman et al. (2008)](http://pss.sagepub.com/content/19/12/1207) and [Bourrier (2015)](https://open.library.ubc.ca/cIRcle/collections/ubctheses/24/items/1.0166677)
+* **Mental Rotation Task**
+  - Based on the redrawn version by [Peters et al. (1995)](http://www.ncbi.nlm.nih.gov/pubmed/7546667)
+* **Raven's Progressive Matrices**
+  - Based on the second set of matrices used in the [Wechsler Adult Intelligence Scale](https://en.wikipedia.org/wiki/Wechsler_Adult_Intelligence_Scale#WAIS-IV)
 
 ##Contribution
 Extending the battery is simple.
@@ -49,4 +62,4 @@ In summary:
 4. Add your task name to the `taskList` widget in `run_battery.py` (within the `retranslateUi()` method)
 5. Spawn a new instance of the class in `run_battery.py` within the `start()` method.
 
-##References
+Consider making a pull request. However, I will only add tasks that are using a standard implementation, without major deviation, and have a journal reference.
