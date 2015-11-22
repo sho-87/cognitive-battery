@@ -1,0 +1,5 @@
+*.pyc
+/images/MRT/p[0-9]*.jpg
+/images/MRT/[0-9]*.jpg
+/images/Ravens/*.png
+/images/Ravens/practice/*.png
