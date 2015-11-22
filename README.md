@@ -31,6 +31,8 @@ Select the tasks you want to include by using the checkboxes. The order of task 
 The task results are saved in the /data directory. Each participant's data is saved as an Excel file, where each task is saved to a separate sheet. I'm considering replacing the use of Excel with .csv files, but that will come later.
 
 ##Tasks
+Currently implemented tasks include:
+
 * **Attention Network Test (ANT)**
   - Based on the original version by [Fan et al. (2002)](http://www.mitpressjournals.org/doi/abs/10.1162/089892902317361886#.VlEwI9irSHs)
   - I have also included the shortened version by [Fan et al. (2005)](http://www.sciencedirect.com/science/article/pii/S1053811905000984). While this version works, it is currently not included in the main battery.
