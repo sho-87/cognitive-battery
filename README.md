@@ -20,10 +20,10 @@ You will need to have the following dependencies installed to run the battery, m
   - Included with Anaconda. Otherwise, install using pip (`pip install pandas`)
 * **Numpy**
   - Included with Anaconda. Otherwise, install using pip (`pip install numpy`)
+* **PyQT4**
+  - Included with Anaconda. Alternatively, full release (including QT designer) downloadable from the [PyQT4 website](https://www.riverbankcomputing.com/software/pyqt/download)
 * **Pygame**
   - Downloadable from the [Pygame website](http://www.pygame.org/download.shtml). If you installed 64bit Python, you will need to download the 64bit Pygame binaries from [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame) and install using pip (`pip install <filename>`)
-* **PyQT4**
-  - Full release downloadable from the [PyQT4 website](https://www.riverbankcomputing.com/software/pyqt/download)
 
 ##Usage
 Using the battery is as simple as running the `run_battery.py` file. This can either be done using the command line (navigate to the directory and `python run_battery.py`), or running it from IDLE.
