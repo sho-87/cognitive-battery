@@ -1,2 +1,1 @@
-#Cognitive Battery
-Battery of cognitive tasks
+#Mental Rotation Task Images
