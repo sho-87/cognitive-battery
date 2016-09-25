@@ -1,1 +1,1 @@
-CALL pyuic battery_select.ui -o ../battery_select.py
+CALL pyuic main_window.ui -o ../main_window.py

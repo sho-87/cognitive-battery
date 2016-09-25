@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>batterySelect</class>
- <widget class="QWidget" name="batterySelect">
+ <class>main_window</class>
+ <widget class="QWidget" name="main_window">
   <property name="geometry">
    <rect>
     <x>0</x>
