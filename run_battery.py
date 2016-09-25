@@ -3,15 +3,11 @@ import os
 import random
 import datetime
 import pandas as pd
-import ant
-import mrt
-import sart
-import ravens
-import digitspan_backwards
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
 from interface import main_window
+from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
 
 class BatteryWindow(QtGui.QMainWindow, main_window.Ui_CognitiveBattery):
