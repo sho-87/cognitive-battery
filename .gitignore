@@ -13,3 +13,6 @@ __pycache__
 
 # Data files
 /data/*_*_*.xls
+
+# Settings file
+settings.ini
