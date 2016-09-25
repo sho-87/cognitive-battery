@@ -6,16 +6,22 @@ import pandas as pd
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
-from interface import main_window
+import about_dialog
+
+from interface import battery_window_qt
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
 
-class BatteryWindow(QtGui.QMainWindow, main_window.Ui_CognitiveBattery):
+class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
+    # TODO move this class to a separate file
     def __init__(self):
         super(BatteryWindow, self).__init__()
 
         # Setup the main window UI
         self.setupUi(self)
+
+        # Initialize the about dialog object
+        self.about = None
 
         # Get current directory
         self.directory = os.path.dirname(os.path.realpath(__file__))
@@ -39,6 +45,17 @@ class BatteryWindow(QtGui.QMainWindow, main_window.Ui_CognitiveBattery):
                                           self.experimentIDBox)
         self.experimentIDBox.setCompleter(self.completer)
 
+        # Handle menu bar item click events
+        self.actionExit.triggered.connect(self.close)
+        self.actionDocumentation.triggered.connect(self.show_documentation)
+        self.actionLicense.triggered.connect(self.show_license)
+        self.actionContribute.triggered.connect(self.show_contribute)
+        self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
+        self.actionReport_Bug.triggered.connect(self.show_new_issue)
+        self.actionRequest_Feature.triggered.connect(self.show_new_issue)
+        self.actionAbout.triggered.connect(self.show_about)
+
+        # TODO disable Up/Down buttons if order is random
         # Bind button events
         self.cancelButton.clicked.connect(self.close)
         self.startButton.clicked.connect(self.start)
@@ -46,6 +63,38 @@ class BatteryWindow(QtGui.QMainWindow, main_window.Ui_CognitiveBattery):
         self.deselectAllButton.clicked.connect(self.deselectAll)
         self.upButton.clicked.connect(self.moveUp)
         self.downButton.clicked.connect(self.moveDown)
+
+    # Open web browser to the documentation page
+    def show_documentation(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
+
+    # Open web browser to the license page
+    def show_license(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
+
+    # Open web browser to the github develop branch for contribution
+    def show_contribute(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
+
+    # Open web browser to the github issues page
+    def show_browse_issues(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues"))
+
+    # Open web browser to the github new issue post
+    def show_new_issue(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
+
+    # Create a new AboutDialog object and display it
+    def show_about(self):
+        # If the about dialog does not exist, create one
+        if self.about is None:
+            self.about = about_dialog.AboutDialog(self)
+            self.about.show()
+            self.about.finished.connect(lambda: setattr(self, 'about', None))
+        # If about dialog exists, bring it to the front
+        else:
+            self.about.activateWindow()
+            self.about.raise_()
 
     def errorDialog(self, message):
         QtGui.QMessageBox.warning(self, 'Error', message)
@@ -140,6 +189,7 @@ class BatteryWindow(QtGui.QMainWindow, main_window.Ui_CognitiveBattery):
 
                 # Run each task
                 # Return and save their output to dataframe/excel
+                # TODO move data saving to end of each individual task module
                 for task in self.tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
