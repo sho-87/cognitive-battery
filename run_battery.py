@@ -6,10 +6,8 @@ import pandas as pd
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
-import about_dialog
-import settings_window
-
-from interface import battery_window_qt
+from designer import battery_window_qt
+from interface import about_dialog, settings_window
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
 

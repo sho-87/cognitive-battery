@@ -1,7 +1,7 @@
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
-from interface import settings_window_qt
+from designer import settings_window_qt
 
 
 class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
