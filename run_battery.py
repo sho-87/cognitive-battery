@@ -136,6 +136,7 @@ class BatteryWindow(QtGui.QMainWindow, main_window.Ui_CognitiveBattery):
             if os.path.isfile(self.dataPath + self.datafileName):
                 self.errorDialog('Data file already exists!')
             else:
+                # TODO save each experiment data to their own directory
                 # Create the excel writer object and save the file
                 self.writer = pd.ExcelWriter(self.dataPath + self.datafileName)
                 self.subjectInfo.to_excel(self.writer, 'info', index=False)
