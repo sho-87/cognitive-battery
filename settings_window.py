@@ -17,3 +17,6 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Remove the help / whats this button from title bar
         self.setWindowFlags(
             self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
+
+        # Bind button events
+        self.settings_cancel_button.clicked.connect(self.close)
