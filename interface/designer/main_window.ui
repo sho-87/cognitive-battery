@@ -1,433 +1,437 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>main_window</class>
- <widget class="QWidget" name="main_window">
+ <class>CognitiveBattery</class>
+ <widget class="QMainWindow" name="CognitiveBattery">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>513</width>
-    <height>567</height>
+    <width>554</width>
+    <height>621</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Cognitive Battery</string>
   </property>
-  <property name="autoFillBackground">
-   <bool>false</bool>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <layout class="QVBoxLayout" name="mainLayout">
-     <item>
-      <layout class="QVBoxLayout" name="sessionInfoLayout">
-       <item>
-        <widget class="QLabel" name="sessionInfoText">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Session information:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::AutoText</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="sessionInfoColumnLayout">
-         <item>
-          <layout class="QVBoxLayout" name="sessionInfoLabelLayout">
-           <item>
-            <widget class="QLabel" name="raText">
-             <property name="text">
-              <string>Research Assistant:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="subNumText">
-             <property name="text">
-              <string>Subject #:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="experimentIDText">
-             <property name="text">
-              <string>Experiment ID:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="conditionText">
-             <property name="text">
-              <string>Condition:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="ageText">
-             <property name="text">
-              <string>Age:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="sexText">
-             <property name="text">
-              <string>Sex:</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="sessionInfoInputLayout">
-           <item>
-            <widget class="QLineEdit" name="raBox"/>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="subNumBox"/>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="experimentIDBox"/>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="conditionBox"/>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="ageBox"/>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="sexLayout">
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QRadioButton" name="maleRadio">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Male</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="femaleRadio">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Female</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="Line" name="sessionLine">
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="batteryLayout">
-       <item>
-        <widget class="QLabel" name="batterySelectText">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Task selection:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="taskOrderLayout">
-         <property name="bottomMargin">
-          <number>10</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="reorderText">
-           <property name="font">
-            <font>
-             <pointsize>7</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>(use the Up/Down buttons to set adminstration order)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="randomOrderCheck">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Random order</string>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="selectionLayout">
-         <property name="bottomMargin">
-          <number>10</number>
-         </property>
-         <item>
-          <spacer name="selectionButtonSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="selectAllButton">
-           <property name="text">
-            <string>Select All</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="deselectAllButton">
-           <property name="text">
-            <string>Deselect All</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="taskListLayout">
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QListWidget" name="taskList">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="showDropIndicator" stdset="0">
-            <bool>false</bool>
-           </property>
-           <property name="dragEnabled">
-            <bool>true</bool>
-           </property>
-           <property name="dragDropMode">
-            <enum>QAbstractItemView::DragDrop</enum>
-           </property>
-           <property name="defaultDropAction">
-            <enum>Qt::MoveAction</enum>
-           </property>
-           <property name="alternatingRowColors">
-            <bool>true</bool>
-           </property>
-           <property name="movement">
-            <enum>QListView::Snap</enum>
-           </property>
-           <item>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="mainLayout">
+      <item>
+       <layout class="QVBoxLayout" name="sessionInfoLayout">
+        <item>
+         <widget class="QLabel" name="sessionInfoText">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Session information:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::AutoText</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="sessionInfoColumnLayout">
+          <item>
+           <layout class="QVBoxLayout" name="sessionInfoLabelLayout">
+            <item>
+             <widget class="QLabel" name="raText">
+              <property name="text">
+               <string>Research Assistant:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="subNumText">
+              <property name="text">
+               <string>Subject #:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="experimentIDText">
+              <property name="text">
+               <string>Experiment ID:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="conditionText">
+              <property name="text">
+               <string>Condition:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="ageText">
+              <property name="text">
+               <string>Age:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="sexText">
+              <property name="text">
+               <string>Sex:</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="sessionInfoInputLayout">
+            <item>
+             <widget class="QLineEdit" name="raBox"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="subNumBox"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="experimentIDBox"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="conditionBox"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="ageBox"/>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="sexLayout">
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QRadioButton" name="maleRadio">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Male</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="femaleRadio">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Female</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="Line" name="sessionLine">
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="batteryLayout">
+        <item>
+         <widget class="QLabel" name="batterySelectText">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Task selection:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="taskOrderLayout">
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="reorderText">
+            <property name="font">
+             <font>
+              <pointsize>7</pointsize>
+             </font>
+            </property>
             <property name="text">
-             <string>Attention Network Test (ANT)</string>
+             <string>(use the Up/Down buttons to set adminstration order)</string>
             </property>
-            <property name="checkState">
-             <enum>Checked</enum>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-           </item>
-           <item>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="randomOrderCheck">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
-             <string>Sustained Attention to Response Task (SART)</string>
+             <string>Random order</string>
             </property>
-            <property name="checkState">
-             <enum>Checked</enum>
+            <property name="checked">
+             <bool>false</bool>
             </property>
-           </item>
-           <item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="selectionLayout">
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
+          <item>
+           <spacer name="selectionButtonSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="selectAllButton">
             <property name="text">
-             <string>Digit Span (backwards)</string>
+             <string>Select All</string>
             </property>
-            <property name="checkState">
-             <enum>Checked</enum>
-            </property>
-           </item>
-           <item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="deselectAllButton">
             <property name="text">
-             <string>Mental Rotation Task</string>
+             <string>Deselect All</string>
             </property>
-            <property name="checkState">
-             <enum>Unchecked</enum>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="taskListLayout">
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QListWidget" name="taskList">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
             </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Raven's Progressive Matrices</string>
+            <property name="showDropIndicator" stdset="0">
+             <bool>false</bool>
             </property>
-            <property name="checkState">
-             <enum>Unchecked</enum>
+            <property name="dragEnabled">
+             <bool>true</bool>
             </property>
-           </item>
-          </widget>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="reorderButtonLayout">
-           <property name="spacing">
-            <number>6</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <spacer name="upSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="upButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>50</width>
-               <height>16777215</height>
-              </size>
-             </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::DragDrop</enum>
+            </property>
+            <property name="defaultDropAction">
+             <enum>Qt::MoveAction</enum>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="movement">
+             <enum>QListView::Snap</enum>
+            </property>
+            <item>
              <property name="text">
-              <string>Up</string>
+              <string>Attention Network Test (ANT)</string>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="downButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+             <property name="checkState">
+              <enum>Checked</enum>
              </property>
-             <property name="maximumSize">
-              <size>
-               <width>50</width>
-               <height>16777215</height>
-              </size>
-             </property>
+            </item>
+            <item>
              <property name="text">
-              <string>Down</string>
+              <string>Sustained Attention to Response Task (SART)</string>
              </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="downSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+             <property name="checkState">
+              <enum>Checked</enum>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
+            </item>
+            <item>
+             <property name="text">
+              <string>Digit Span (backwards)</string>
              </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="saveLoadLayout">
-       <item>
-        <widget class="QPushButton" name="startButton">
-         <property name="text">
-          <string>Start</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="cancelButton">
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-  </layout>
+             <property name="checkState">
+              <enum>Checked</enum>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Mental Rotation Task</string>
+             </property>
+             <property name="checkState">
+              <enum>Unchecked</enum>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Raven's Progressive Matrices</string>
+             </property>
+             <property name="checkState">
+              <enum>Unchecked</enum>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="reorderButtonLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <spacer name="upSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="upButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Up</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="downButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Down</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="downSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="saveLoadLayout">
+        <item>
+         <widget class="QPushButton" name="startButton">
+          <property name="text">
+           <string>Start</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="cancelButton">
+          <property name="text">
+           <string>Cancel</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>554</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
