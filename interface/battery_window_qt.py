@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_CognitiveBattery(object):
     def setupUi(self, CognitiveBattery):
         CognitiveBattery.setObjectName(_fromUtf8("CognitiveBattery"))
-        CognitiveBattery.resize(434, 546)
+        CognitiveBattery.resize(451, 546)
         self.centralwidget = QtGui.QWidget(CognitiveBattery)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -227,7 +227,7 @@ class Ui_CognitiveBattery(object):
         self.verticalLayout.addLayout(self.mainLayout)
         CognitiveBattery.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(CognitiveBattery)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 434, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 451, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
