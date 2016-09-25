@@ -6,7 +6,7 @@ import pandas as pd
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
-import about_dialog
+import about_dialog, settings_window
 
 from interface import battery_window_qt
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
@@ -36,8 +36,9 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.move(self.settings.value("pos").toPoint())
         self.settings.endGroup()
 
-        # Initialize the about dialog object
+        # Initialize the about and settings window objects
         self.about = None
+        self.settings_window = None
 
         # Get current directory
         self.directory = cur_directory
@@ -63,6 +64,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
         # Handle menu bar item click events
         self.actionExit.triggered.connect(self.close)
+        self.actionSettings.triggered.connect(self.show_settings)
         self.actionDocumentation.triggered.connect(self.show_documentation)
         self.actionLicense.triggered.connect(self.show_license)
         self.actionContribute.triggered.connect(self.show_contribute)
@@ -99,6 +101,19 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Open web browser to the github new issue post
     def show_new_issue(self):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
+
+    # Create a new SettingsWindow object and display it
+    def show_settings(self):
+        # If the settings window does not exist, create one
+        if self.settings_window is None:
+            self.settings_window = settings_window.SettingsWindow(self)
+            self.settings_window.show()
+            self.settings_window.finished.connect(
+                lambda: setattr(self, 'settings_window', None))
+        # If settings window exists, bring it to the front
+        else:
+            self.settings_window.activateWindow()
+            self.settings_window.raise_()
 
     # Create a new AboutDialog object and display it
     def show_about(self):
