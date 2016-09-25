@@ -70,10 +70,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # Bind button events
         self.cancelButton.clicked.connect(self.close)
         self.startButton.clicked.connect(self.start)
-        self.selectAllButton.clicked.connect(self.selectAll)
-        self.deselectAllButton.clicked.connect(self.deselectAll)
-        self.upButton.clicked.connect(self.moveUp)
-        self.downButton.clicked.connect(self.moveDown)
+        self.selectAllButton.clicked.connect(self.select_all)
+        self.deselectAllButton.clicked.connect(self.deselect_all)
+        self.upButton.clicked.connect(self.move_up)
+        self.downButton.clicked.connect(self.move_down)
 
     # Open web browser to the documentation page
     def show_documentation(self):
@@ -107,29 +107,30 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             self.about.activateWindow()
             self.about.raise_()
 
-    def errorDialog(self, message):
+    def error_dialog(self, message):
         QtGui.QMessageBox.warning(self, 'Error', message)
 
-    def selectAll(self):
+    def select_all(self):
         for index in range(self.taskList.count()):
             self.taskList.item(index).setCheckState(2)
 
-    def deselectAll(self):
+    def deselect_all(self):
         for index in range(self.taskList.count()):
             self.taskList.item(index).setCheckState(0)
 
-    def moveUp(self):
+    def move_up(self):
         currentRow = self.taskList.currentRow()
         currentItem = self.taskList.takeItem(currentRow)
         self.taskList.insertItem(currentRow - 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
-    def moveDown(self):
+    def move_down(self):
         currentRow = self.taskList.currentRow()
         currentItem = self.taskList.takeItem(currentRow)
         self.taskList.insertItem(currentRow + 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
+    # Redefine the closeEvent method
     def closeEvent(self, event):
         # Store window size/position to settings on close
         self.settings.beginGroup("MainWindow")
@@ -155,17 +156,17 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
         # Check for required inputs
         if not self.ra:
-            self.errorDialog('Please enter RA name...')
+            self.error_dialog('Please enter RA name...')
         elif not self.subNum:
-            self.errorDialog('Please enter a subject number...')
+            self.error_dialog('Please enter a subject number...')
         elif not self.experimentID:
-            self.errorDialog('Please enter an experiment ID...')
+            self.error_dialog('Please enter an experiment ID...')
         elif not self.condition:
-            self.errorDialog('Please enter a condition number...')
+            self.error_dialog('Please enter a condition number...')
         elif not self.age:
-            self.errorDialog('Please enter an age...')
+            self.error_dialog('Please enter an age...')
         elif not self.maleRadio.isChecked() and not self.femaleRadio.isChecked():
-            self.errorDialog('Please select a sex...')
+            self.error_dialog('Please select a sex...')
         else:
             # Get *selected* tasks and task order
             self.tasks = []
@@ -196,7 +197,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
             # Check if file already exists
             if os.path.isfile(self.dataPath + self.datafileName):
-                self.errorDialog('Data file already exists!')
+                self.error_dialog('Data file already exists!')
             else:
                 # TODO save each experiment data to their own directory
                 # Create the excel writer object and save the file
