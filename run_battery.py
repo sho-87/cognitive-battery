@@ -10,6 +10,9 @@ from designer import battery_window_qt
 from interface import about_dialog, settings_window
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
+# Center all pygame windows if not fullscreen
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # TODO move this class to a separate file
@@ -41,6 +44,11 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.resize(self.settings.value("size").toSize())
         self.move(self.settings.value("pos").toPoint())
         self.settings.endGroup()
+
+        # Initialize task settings
+        self.task_fullscreen = None
+        self.task_width = None
+        self.task_height = None
 
         # Initialize the about and settings window objects
         self.about = None
@@ -168,6 +176,13 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.settings.setValue('pos', pos)
         self.settings.endGroup()
 
+    # Get task window settings from file
+    def get_task_settings(self):
+        self.settings.beginGroup("TaskWindows")
+        self.task_fullscreen = self.settings.value("fullscreen").toBool()
+        self.task_width = self.settings.value("width").toInt()[0]
+        self.task_height = self.settings.value("height").toInt()[0]
+
     # Redefine the closeEvent method
     def closeEvent(self, event):
         self.save_settings_window(self.size(), self.pos())
@@ -228,6 +243,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             self.datafileName = "%s_%s_%s.xls" % (self.experimentID,
                                                   self.subNum, self.condition)
 
+            # Get most recent task window settings from file
+            # TODO automatically set pygame window size within each task
+            self.get_task_settings()
+
             # Check if file already exists
             if os.path.isfile(self.dataPath + self.datafileName):
                 self.error_dialog('Data file already exists!')
@@ -244,35 +263,47 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 for task in self.tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
-                        antTask = ant.ANT(blocks=3)
+                        antTask = ant.ANT(self.task_width, self.task_height,
+                                          self.task_fullscreen, blocks=3)
                         # Run ANT
                         self.antData = antTask.run()
                         # Save ANT data to excel
                         self.antData.to_excel(self.writer, 'ANT', index=False)
                         print "- ANT complete"
                     elif task == "Mental Rotation Task":
-                        mrtTask = mrt.MRT()
+                        mrtTask = mrt.MRT(self.task_width,
+                                          self.task_height,
+                                          self.task_fullscreen)
                         # Run MRT
                         self.mrtData = mrtTask.run()
                         # Save MRT data to excel
                         self.mrtData.to_excel(self.writer, 'MRT', index=False)
                         print "- MRT complete"
                     elif task == "Sustained Attention to Response Task (SART)":
-                        sartTask = sart.SART()
+                        sartTask = sart.SART(self.task_width,
+                                             self.task_height,
+                                             self.task_fullscreen)
                         # Run SART
                         self.sartData = sartTask.run()
                         # Save SART data to excel
                         self.sartData.to_excel(self.writer, 'SART', index=False)
                         print "- SART complete"
                     elif task == "Digit Span (backwards)":
-                        digitspanBackwardsTask = digitspan_backwards.DigitspanBackwards()
+                        digitspanBackwardsTask = \
+                            digitspan_backwards.DigitspanBackwards(
+                                self.task_width,
+                                self.task_height,
+                                self.task_fullscreen)
                         # Run Digit span (Backwards)
                         self.digitspanBackwardsData = digitspanBackwardsTask.run()
                         # Save digit span (backwards) data to excel
                         self.digitspanBackwardsData.to_excel(self.writer, 'Digit span (backwards)', index=False)
                         print "- Digit span (backwards) complete"
                     elif task == "Raven's Progressive Matrices":
-                        ravensTask = ravens.Ravens(start=9, numTrials=12)
+                        ravensTask = ravens.Ravens(self.task_width,
+                                                   self.task_height,
+                                                   self.task_fullscreen,
+                                                   start=9, numTrials=12)
                         # Run Raven's Matrices
                         self.ravensData = ravensTask.run()
                         # Save ravens data to excel

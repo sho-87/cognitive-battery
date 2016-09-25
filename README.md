@@ -93,9 +93,16 @@ hopefully automating the importing/running/saving of tasks.
 
 Each new task you want to add will need to be programmed as a Python module.
 
-Create a `Class` in the module that contains a `run()` method. This method 
+Create a class in the module that contains a `run()` method. This method 
 should contain the main sequence of your task and needs to return a Pandas 
 dataframe object.
+
+If you want your task to obey user defined settings (e.g. task window size)
+your class constructor will also need to accept each of the settings as
+parameters. Within your code you'll need to check and handle each of the
+settings accordingly. Pass the settings in when you create an instance of
+your class. Alternatively, you can pull the settings directly from the
+`settings.ini` file.
 
 An instance of the class is spawned in `run_battery.py`, near the end of the 
 `start()` method. Your class's `run()` method is invoked after, and the 
