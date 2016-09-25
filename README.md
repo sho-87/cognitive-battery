@@ -102,12 +102,12 @@ An instance of the class is spawned in `run_battery.py`, near the end of the
 returned dataframe is saved to file.
 
 You'll then need to update the QT Designer UI file 
-(`/interface/designer/main_window_qt.ui`) by adding your task to the list. 
+(`/interface/designer/battery_window_qt.ui`) by adding your task to the list. 
 Rebuild using the included `convertUI.bat` script.
 
 **Note**: It is better to modify the UI file using QT Designer and then 
 rebuild, rather than directly editing the generated Python file
-(`main_window_qt.py`), because:
+(`battery_window_qt.py`), because:
 
 - Your changes will be included in the UI file in case anyone wants to use 
 QT Designer to make changes later
