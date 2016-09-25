@@ -6,7 +6,8 @@ import pandas as pd
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
-import about_dialog, settings_window
+import about_dialog
+import settings_window
 
 from interface import battery_window_qt
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
@@ -27,8 +28,15 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
         # If first run, store some default settings
         if first_run:
+            # Main window size and position
             self.save_settings_window(self.size(), QtCore.QPoint(100, 100))
-            self.save_settings_task_window(False, (1280, 1024))
+
+            # Settings - Task Windows
+            self.settings.beginGroup("TaskWindows")
+            self.settings.setValue('fullscreen', False)
+            self.settings.setValue('width', 1280)
+            self.settings.setValue('height', 1024)
+            self.settings.endGroup()
 
         # Set initial window size/pos from saved settings
         self.settings.beginGroup("MainWindow")
@@ -84,23 +92,28 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
     # Open web browser to the documentation page
     def show_documentation(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
 
     # Open web browser to the license page
     def show_license(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
 
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
 
     # Open web browser to the github issues page
     def show_browse_issues(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues"))
 
     # Open web browser to the github new issue post
     def show_new_issue(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):
@@ -155,14 +168,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.settings.beginGroup("MainWindow")
         self.settings.setValue('size', size)
         self.settings.setValue('pos', pos)
-        self.settings.endGroup()
-
-    # Save task window settings
-    def save_settings_task_window(self, fullscreen, size):
-        self.settings.beginGroup("TaskWindow")
-        self.settings.setValue('fullscreen', fullscreen)
-        self.settings.setValue('width', size[0])
-        self.settings.setValue('height', size[1])
         self.settings.endGroup()
 
     # Redefine the closeEvent method
