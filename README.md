@@ -102,12 +102,12 @@ An instance of the class is spawned in `run_battery.py`, near the end of the
 returned dataframe is saved to file.
 
 You'll then need to update the QT Designer UI file 
-(`/interface/designer/main_window.ui`) by adding your task to the list. 
+(`/interface/designer/main_window_qt.ui`) by adding your task to the list. 
 Rebuild using the included `convertUI.bat` script.
 
 **Note**: It is better to modify the UI file using QT Designer and then 
-rebuild, rather than directly editing the Python file (`main_window.py`), 
-because:
+rebuild, rather than directly editing the generated Python file
+(`main_window_qt.py`), because:
 
 - Your changes will be included in the UI file in case anyone wants to use 
 QT Designer to make changes later
@@ -152,7 +152,7 @@ In no particular order...
 
 ##Changelog
 
-###[1.1](https://github.com/sho-87/cognitive-battery/releases/tag/1.1) *(unreleased)*
+###[1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1) *(unreleased)*
 
 **User Interface**
 - Create separate class for UI layout and import into main script
@@ -163,5 +163,5 @@ In no particular order...
 **Tasks**
 - All tasks (and their images) moved to separate directory
 
-###[1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) *(2015-11-21)*
+###[1.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) *(2015-11-21)*
 - Initial release
