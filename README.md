@@ -152,14 +152,12 @@ In no particular order...
 
 ##Changelog
 
-[1.1](https://github.com/sho-87/cognitive-battery/releases/tag/1.1) 
-*(unreleased)*
+###[1.1](https://github.com/sho-87/cognitive-battery/releases/tag/1.1) *(unreleased)*
 
 **User Interface**
 - Create separate class for UI layout and import into main script
 - Change UI base class to `QTMainWindow`
 - Create conversion script for building a Python module from UI file
 
-[1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) 
-*(2015-11-21)*
+###[1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) *(2015-11-21)*
 - Initial release
