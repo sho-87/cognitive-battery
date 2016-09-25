@@ -20,6 +20,17 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # Setup the main window UI
         self.setupUi(self)
 
+        # Create/open settings file with no registry fallback
+        self.settings = QtCore.QSettings("settings.ini",
+                                         QtCore.QSettings.IniFormat)
+        self.settings.setFallbacksEnabled(False)
+
+        # Set initial window size/pos, from saved settings if available
+        self.settings.beginGroup("MainWindow")
+        self.resize(self.settings.value("size", self.size()).toSize())
+        self.move(self.settings.value("pos", QtCore.QPoint(100, 100)).toPoint())
+        self.settings.endGroup()
+
         # Initialize the about dialog object
         self.about = None
 
@@ -119,8 +130,14 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.taskList.insertItem(currentRow + 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
-    def close(self):
-        QtCore.QCoreApplication.instance().quit()
+    def closeEvent(self, event):
+        # Store window size/position to settings on close
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue('size', self.size())
+        self.settings.setValue('pos', self.pos())
+        self.settings.endGroup()
+
+        event.accept()
 
     def start(self):
         # Store input values
