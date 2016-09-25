@@ -159,5 +159,8 @@ In no particular order...
 - Change UI base class to `QTMainWindow`
 - Create conversion script for building a Python module from UI file
 
+**Tasks**
+- All tasks (and their images) moved to separate directory
+
 ###[1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) *(2015-11-21)*
 - Initial release
