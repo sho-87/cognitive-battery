@@ -86,19 +86,39 @@
           <item>
            <layout class="QVBoxLayout" name="sessionInfoInputLayout">
             <item>
-             <widget class="QLineEdit" name="raBox"/>
+             <widget class="QLineEdit" name="raBox">
+              <property name="statusTip">
+               <string>Enter name of the research assistant</string>
+              </property>
+             </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="subNumBox"/>
+             <widget class="QLineEdit" name="subNumBox">
+              <property name="statusTip">
+               <string>Enter the subject number or ID</string>
+              </property>
+             </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="experimentIDBox"/>
+             <widget class="QLineEdit" name="experimentIDBox">
+              <property name="statusTip">
+               <string>Enter the experiment name or ID</string>
+              </property>
+             </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="conditionBox"/>
+             <widget class="QLineEdit" name="conditionBox">
+              <property name="statusTip">
+               <string>Enter the current condition</string>
+              </property>
+             </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="ageBox"/>
+             <widget class="QLineEdit" name="ageBox">
+              <property name="statusTip">
+               <string>Enter the participant's age</string>
+              </property>
+             </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="sexLayout">
@@ -205,6 +225,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="statusTip">
+             <string>Run tasks in a random order</string>
+            </property>
             <property name="text">
              <string>Random order</string>
             </property>
@@ -235,6 +258,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="selectAllButton">
+            <property name="statusTip">
+             <string>Select all tasks</string>
+            </property>
             <property name="text">
              <string>Select All</string>
             </property>
@@ -242,6 +268,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="deselectAllButton">
+            <property name="statusTip">
+             <string>Deselect all tasks</string>
+            </property>
             <property name="text">
              <string>Deselect All</string>
             </property>
@@ -356,6 +385,9 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="statusTip">
+               <string>Move selected task up in order of administration</string>
+              </property>
               <property name="text">
                <string>Up</string>
               </property>
@@ -374,6 +406,9 @@
                 <width>50</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="statusTip">
+               <string>Move selected task down in order of administration</string>
               </property>
               <property name="text">
                <string>Down</string>
@@ -403,6 +438,9 @@
        <layout class="QHBoxLayout" name="saveLoadLayout">
         <item>
          <widget class="QPushButton" name="startButton">
+          <property name="statusTip">
+           <string>Start the testing session</string>
+          </property>
           <property name="text">
            <string>Start</string>
           </property>
@@ -410,6 +448,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="cancelButton">
+          <property name="statusTip">
+           <string>Quit the battery</string>
+          </property>
           <property name="text">
            <string>Cancel</string>
           </property>
@@ -465,45 +506,72 @@
    <property name="text">
     <string>Settings</string>
    </property>
+   <property name="statusTip">
+    <string>Change battery settings</string>
+   </property>
   </action>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+   <property name="statusTip">
+    <string>Exit the battery</string>
    </property>
   </action>
   <action name="actionDocumentation">
    <property name="text">
     <string>Documentation</string>
    </property>
+   <property name="statusTip">
+    <string>Visit the GitHub support page</string>
+   </property>
   </action>
   <action name="actionView_License">
    <property name="text">
     <string>View License</string>
+   </property>
+   <property name="statusTip">
+    <string>View application license</string>
    </property>
   </action>
   <action name="actionContribute">
    <property name="text">
     <string>Contribute</string>
    </property>
+   <property name="statusTip">
+    <string>Contribute code on GitHub</string>
+   </property>
   </action>
   <action name="actionBrowse_Issues">
    <property name="text">
     <string>Browse Issues</string>
+   </property>
+   <property name="statusTip">
+    <string>Browse known bugs and issues</string>
    </property>
   </action>
   <action name="actionReport_Bug">
    <property name="text">
     <string>Report Bug</string>
    </property>
+   <property name="statusTip">
+    <string>Report a bug</string>
+   </property>
   </action>
   <action name="actionRequest_Feature">
    <property name="text">
     <string>Request Feature</string>
    </property>
+   <property name="statusTip">
+    <string>Request a feature</string>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+   <property name="statusTip">
+    <string>About the battery</string>
    </property>
   </action>
  </widget>
