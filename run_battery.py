@@ -143,9 +143,9 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.settings.endGroup()
 
     # Save task window settings
-    def save_settings_task_window(self, maximize, size):
+    def save_settings_task_window(self, fullscreen, size):
         self.settings.beginGroup("TaskWindow")
-        self.settings.setValue('maximize', maximize)
+        self.settings.setValue('fullscreen', fullscreen)
         self.settings.setValue('width', size[0])
         self.settings.setValue('height', size[1])
         self.settings.endGroup()
