@@ -1,7 +1,7 @@
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
-from interface import about_dialog_qt
+from designer import about_dialog_qt
 
 
 class AboutDialog(QtGui.QDialog, about_dialog_qt.Ui_Dialog):
