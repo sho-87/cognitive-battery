@@ -155,10 +155,11 @@ In no particular order...
 ###[1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1) *(unreleased)*
 
 **User Interface**
-- Create separate class for UI layout and import into main script
-- Change UI base class to `QTMainWindow`
-- Create conversion script for building a Python module from UI file
-- Add Menu and Status bar to UI
+- Created separate class for UI layout and import into main script
+- Changed UI base class to `QTMainWindow`
+- Created conversion script for building a Python module from UI file
+- Added Menu and Status bar to UI
+- Added global Settings window
 
 **Tasks**
 - All tasks (and their images) moved to separate directory

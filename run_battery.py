@@ -7,6 +7,7 @@ import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
 import about_dialog
+import settings_window
 
 from interface import battery_window_qt
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
@@ -14,17 +15,41 @@ from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # TODO move this class to a separate file
-    def __init__(self):
+    def __init__(self, cur_directory, first_run):
         super(BatteryWindow, self).__init__()
 
         # Setup the main window UI
         self.setupUi(self)
 
-        # Initialize the about dialog object
+        # Create/open settings file with no registry fallback
+        self.settings = QtCore.QSettings("settings.ini",
+                                         QtCore.QSettings.IniFormat)
+        self.settings.setFallbacksEnabled(False)
+
+        # If first run, store some default settings
+        if first_run:
+            # Main window size and position
+            self.save_settings_window(self.size(), QtCore.QPoint(100, 100))
+
+            # Settings - Task Windows
+            self.settings.beginGroup("TaskWindows")
+            self.settings.setValue('fullscreen', False)
+            self.settings.setValue('width', 1280)
+            self.settings.setValue('height', 1024)
+            self.settings.endGroup()
+
+        # Set initial window size/pos from saved settings
+        self.settings.beginGroup("MainWindow")
+        self.resize(self.settings.value("size").toSize())
+        self.move(self.settings.value("pos").toPoint())
+        self.settings.endGroup()
+
+        # Initialize the about and settings window objects
         self.about = None
+        self.settings_window = None
 
         # Get current directory
-        self.directory = os.path.dirname(os.path.realpath(__file__))
+        self.directory = cur_directory
 
         # Make data folder if it doesnt exist
         self.dataPath = self.directory + "\data\\"
@@ -47,6 +72,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
         # Handle menu bar item click events
         self.actionExit.triggered.connect(self.close)
+        self.actionSettings.triggered.connect(self.show_settings)
         self.actionDocumentation.triggered.connect(self.show_documentation)
         self.actionLicense.triggered.connect(self.show_license)
         self.actionContribute.triggered.connect(self.show_contribute)
@@ -59,30 +85,48 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # Bind button events
         self.cancelButton.clicked.connect(self.close)
         self.startButton.clicked.connect(self.start)
-        self.selectAllButton.clicked.connect(self.selectAll)
-        self.deselectAllButton.clicked.connect(self.deselectAll)
-        self.upButton.clicked.connect(self.moveUp)
-        self.downButton.clicked.connect(self.moveDown)
+        self.selectAllButton.clicked.connect(self.select_all)
+        self.deselectAllButton.clicked.connect(self.deselect_all)
+        self.upButton.clicked.connect(self.move_up)
+        self.downButton.clicked.connect(self.move_down)
 
     # Open web browser to the documentation page
     def show_documentation(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
 
     # Open web browser to the license page
     def show_license(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
 
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
 
     # Open web browser to the github issues page
     def show_browse_issues(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues"))
 
     # Open web browser to the github new issue post
     def show_new_issue(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
+
+    # Create a new SettingsWindow object and display it
+    def show_settings(self):
+        # If the settings window does not exist, create one
+        if self.settings_window is None:
+            self.settings_window = settings_window.SettingsWindow(self)
+            self.settings_window.show()
+            self.settings_window.finished.connect(
+                lambda: setattr(self, 'settings_window', None))
+        # If settings window exists, bring it to the front
+        else:
+            self.settings_window.activateWindow()
+            self.settings_window.raise_()
 
     # Create a new AboutDialog object and display it
     def show_about(self):
@@ -96,31 +140,40 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             self.about.activateWindow()
             self.about.raise_()
 
-    def errorDialog(self, message):
+    def error_dialog(self, message):
         QtGui.QMessageBox.warning(self, 'Error', message)
 
-    def selectAll(self):
+    def select_all(self):
         for index in range(self.taskList.count()):
             self.taskList.item(index).setCheckState(2)
 
-    def deselectAll(self):
+    def deselect_all(self):
         for index in range(self.taskList.count()):
             self.taskList.item(index).setCheckState(0)
 
-    def moveUp(self):
+    def move_up(self):
         currentRow = self.taskList.currentRow()
         currentItem = self.taskList.takeItem(currentRow)
         self.taskList.insertItem(currentRow - 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
-    def moveDown(self):
+    def move_down(self):
         currentRow = self.taskList.currentRow()
         currentItem = self.taskList.takeItem(currentRow)
         self.taskList.insertItem(currentRow + 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
-    def close(self):
-        QtCore.QCoreApplication.instance().quit()
+    # Save window size/position to settings file
+    def save_settings_window(self, size, pos):
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue('size', size)
+        self.settings.setValue('pos', pos)
+        self.settings.endGroup()
+
+    # Redefine the closeEvent method
+    def closeEvent(self, event):
+        self.save_settings_window(self.size(), self.pos())
+        event.accept()
 
     def start(self):
         # Store input values
@@ -138,17 +191,17 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
         # Check for required inputs
         if not self.ra:
-            self.errorDialog('Please enter RA name...')
+            self.error_dialog('Please enter RA name...')
         elif not self.subNum:
-            self.errorDialog('Please enter a subject number...')
+            self.error_dialog('Please enter a subject number...')
         elif not self.experimentID:
-            self.errorDialog('Please enter an experiment ID...')
+            self.error_dialog('Please enter an experiment ID...')
         elif not self.condition:
-            self.errorDialog('Please enter a condition number...')
+            self.error_dialog('Please enter a condition number...')
         elif not self.age:
-            self.errorDialog('Please enter an age...')
+            self.error_dialog('Please enter an age...')
         elif not self.maleRadio.isChecked() and not self.femaleRadio.isChecked():
-            self.errorDialog('Please select a sex...')
+            self.error_dialog('Please select a sex...')
         else:
             # Get *selected* tasks and task order
             self.tasks = []
@@ -179,7 +232,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
             # Check if file already exists
             if os.path.isfile(self.dataPath + self.datafileName):
-                self.errorDialog('Data file already exists!')
+                self.error_dialog('Data file already exists!')
             else:
                 # TODO save each experiment data to their own directory
                 # Create the excel writer object and save the file
@@ -236,9 +289,15 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
 
 def main():
+    # Get current directory
+    cur_directory = os.path.dirname(os.path.realpath(__file__))
+
+    # Check if settings file exists. If not, this is a first run
+    first_run = not os.path.isfile(os.path.join(cur_directory, "settings.ini"))
+
     # Create main app window
     app = QtGui.QApplication(sys.argv)
-    battery_window = BatteryWindow()
+    battery_window = BatteryWindow(cur_directory, first_run)
     battery_window.show()
     sys.exit(app.exec_())
 
