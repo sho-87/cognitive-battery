@@ -6,10 +6,10 @@ __pycache__
 .idea
 
 # Images
-/images/MRT/p[0-9]*.jpg
-/images/MRT/[0-9]*.jpg
-/images/Ravens/*.png
-/images/Ravens/practice/*.png
+/tasks/images/MRT/p[0-9]*.jpg
+/tasks/images/MRT/[0-9]*.jpg
+/tasks/images/Ravens/*.png
+/tasks/images/Ravens/practice/*.png
 
 # Data files
 /data/*_*_*.xls
