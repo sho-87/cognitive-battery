@@ -1,0 +1,1 @@
+CALL pyuic battery_select.ui -o ../battery_select.py
