@@ -1,8 +1,15 @@
+# Compiled/cached Python files
+__pycache__
 *.pyc
+
+# IDEA
+.idea
+
+# Images
 /images/MRT/p[0-9]*.jpg
 /images/MRT/[0-9]*.jpg
 /images/Ravens/*.png
 /images/Ravens/practice/*.png
 
-#IDEA
-.idea/
+# Data files
+/data/*_*_*.xls
