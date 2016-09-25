@@ -45,6 +45,11 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                                           self.experimentIDBox)
         self.experimentIDBox.setCompleter(self.completer)
 
+        # Handle menu bar item click events
+        self.actionExit.triggered.connect(self.close)
+        self.actionDocumentation.triggered.connect(self.show_documentation)
+        self.actionAbout.triggered.connect(self.show_about)
+
         # TODO disable Up/Down buttons if order is random
         # Bind button events
         self.cancelButton.clicked.connect(self.close)
@@ -54,9 +59,9 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.upButton.clicked.connect(self.moveUp)
         self.downButton.clicked.connect(self.moveDown)
 
-        # Handle menu bar item click events
-        self.actionExit.triggered.connect(self.close)
-        self.actionAbout.triggered.connect(self.show_about)
+    # Open web browser to the documentation page
+    def show_documentation(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
 
     # Create a new AboutDialog object and display it
     def show_about(self):
