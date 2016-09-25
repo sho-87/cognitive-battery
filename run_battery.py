@@ -50,6 +50,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.actionDocumentation.triggered.connect(self.show_documentation)
         self.actionLicense.triggered.connect(self.show_license)
         self.actionContribute.triggered.connect(self.show_contribute)
+        self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
         self.actionAbout.triggered.connect(self.show_about)
 
         # TODO disable Up/Down buttons if order is random
@@ -72,6 +73,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
+
+    # Open web browser to the github issues page
+    def show_browse_issues(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues"))
 
     # Create a new AboutDialog object and display it
     def show_about(self):
