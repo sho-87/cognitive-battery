@@ -52,6 +52,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.actionContribute.triggered.connect(self.show_contribute)
         self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
         self.actionReport_Bug.triggered.connect(self.show_new_issue)
+        self.actionRequest_Feature.triggered.connect(self.show_new_issue)
         self.actionAbout.triggered.connect(self.show_about)
 
         # TODO disable Up/Down buttons if order is random
