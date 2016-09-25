@@ -242,7 +242,7 @@ class Ui_CognitiveBattery(object):
         self.sessionInfoText.setText(_translate("CognitiveBattery", "<html><head/><body><p><span style=\" font-weight:600;\">Session information:</span></p></body></html>", None))
         self.raText.setText(_translate("CognitiveBattery", "Research Assistant:", None))
         self.subNumText.setText(_translate("CognitiveBattery", "Subject #:", None))
-        self.experimentIDText.setText(_translate("CognitiveBattery", "Experiment ID:", None))
+        self.experimentIDText.setText(_translate("CognitiveBattery", "Experiment name/ID:", None))
         self.conditionText.setText(_translate("CognitiveBattery", "Condition:", None))
         self.ageText.setText(_translate("CognitiveBattery", "Age:", None))
         self.sexText.setText(_translate("CognitiveBattery", "Sex:", None))

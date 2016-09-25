@@ -56,7 +56,7 @@
             <item>
              <widget class="QLabel" name="experimentIDText">
               <property name="text">
-               <string>Experiment ID:</string>
+               <string>Experiment name/ID:</string>
               </property>
              </widget>
             </item>
