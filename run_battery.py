@@ -14,7 +14,7 @@ from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # TODO move this class to a separate file
-    def __init__(self):
+    def __init__(self, cur_directory, first_run):
         super(BatteryWindow, self).__init__()
 
         # Setup the main window UI
@@ -25,17 +25,21 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                                          QtCore.QSettings.IniFormat)
         self.settings.setFallbacksEnabled(False)
 
-        # Set initial window size/pos, from saved settings if available
+        # If first run, store some default settings
+        if first_run:
+            self.save_settings_window(self.size(), QtCore.QPoint(100, 100))
+
+        # Set initial window size/pos from saved settings
         self.settings.beginGroup("MainWindow")
-        self.resize(self.settings.value("size", self.size()).toSize())
-        self.move(self.settings.value("pos", QtCore.QPoint(100, 100)).toPoint())
+        self.resize(self.settings.value("size").toSize())
+        self.move(self.settings.value("pos").toPoint())
         self.settings.endGroup()
 
         # Initialize the about dialog object
         self.about = None
 
         # Get current directory
-        self.directory = os.path.dirname(os.path.realpath(__file__))
+        self.directory = cur_directory
 
         # Make data folder if it doesnt exist
         self.dataPath = self.directory + "\data\\"
@@ -130,14 +134,16 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.taskList.insertItem(currentRow + 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
-    # Redefine the closeEvent method
-    def closeEvent(self, event):
-        # Store window size/position to settings on close
+    # Save window size/position to settings file
+    def save_settings_window(self, size, pos):
         self.settings.beginGroup("MainWindow")
-        self.settings.setValue('size', self.size())
-        self.settings.setValue('pos', self.pos())
+        self.settings.setValue('size', size)
+        self.settings.setValue('pos', pos)
         self.settings.endGroup()
 
+    # Redefine the closeEvent method
+    def closeEvent(self, event):
+        self.save_settings_window(self.size(), self.pos())
         event.accept()
 
     def start(self):
@@ -254,9 +260,15 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
 
 def main():
+    # Get current directory
+    cur_directory = os.path.dirname(os.path.realpath(__file__))
+
+    # Check if settings file exists. If not, this is a first run
+    first_run = not os.path.isfile(os.path.join(cur_directory, "settings.ini"))
+
     # Create main app window
     app = QtGui.QApplication(sys.argv)
-    battery_window = BatteryWindow()
+    battery_window = BatteryWindow(cur_directory, first_run)
     battery_window.show()
     sys.exit(app.exec_())
 
