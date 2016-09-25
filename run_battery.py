@@ -245,6 +245,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                                                   self.subNum, self.condition)
 
             # Check if file already exists
+            # TODO use OS path join to create paths
             if os.path.isfile(self.dataPath + self.datafileName):
                 self.error_dialog('Data file already exists!')
             else:
