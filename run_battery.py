@@ -28,7 +28,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # If first run, store some default settings
         if first_run:
             self.save_settings_window(self.size(), QtCore.QPoint(100, 100))
-            self.save_settings_tasks(False, (1280, 1024))
+            self.save_settings_task_window(False, (1280, 1024))
 
         # Set initial window size/pos from saved settings
         self.settings.beginGroup("MainWindow")
@@ -142,9 +142,9 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.settings.setValue('pos', pos)
         self.settings.endGroup()
 
-    # Save task settings
-    def save_settings_tasks(self, maximize, size):
-        self.settings.beginGroup("Tasks")
+    # Save task window settings
+    def save_settings_task_window(self, maximize, size):
+        self.settings.beginGroup("TaskWindow")
         self.settings.setValue('maximize', maximize)
         self.settings.setValue('width', size[0])
         self.settings.setValue('height', size[1])
