@@ -10,17 +10,18 @@ from designer import battery_window_qt
 from interface import about_dialog, settings_window
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
-# Center all pygame windows if not fullscreen
-os.environ['SDL_VIDEO_CENTERED'] = '1'
-
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # TODO move this class to a separate file
-    def __init__(self, cur_directory, first_run):
+    def __init__(self, cur_directory, first_run, res_width, res_height):
         super(BatteryWindow, self).__init__()
 
         # Setup the main window UI
         self.setupUi(self)
+
+        # Get screen resolution
+        self.res_width = res_width
+        self.res_height = res_height
 
         # Create/open settings file with no registry fallback
         self.settings = QtCore.QSettings("settings.ini",
@@ -243,10 +244,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             self.datafileName = "%s_%s_%s.xls" % (self.experimentID,
                                                   self.subNum, self.condition)
 
-            # Get most recent task window settings from file
-            # TODO automatically set pygame window size within each task
-            self.get_task_settings()
-
             # Check if file already exists
             if os.path.isfile(self.dataPath + self.datafileName):
                 self.error_dialog('Data file already exists!')
@@ -256,6 +253,17 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 self.writer = pd.ExcelWriter(self.dataPath + self.datafileName)
                 self.subjectInfo.to_excel(self.writer, 'info', index=False)
                 self.writer.save()
+
+                # Get most recent task window settings from file
+                self.get_task_settings()
+
+                # Center all pygame windows if not fullscreen
+                if not self.task_fullscreen:
+                    pos_x = str(self.res_width/2 - self.task_width/2)
+                    pos_y = str(self.res_height/2 - self.task_height/2)
+
+                    os.environ['SDL_VIDEO_WINDOW_POS'] = \
+                        "%s, %s" % (pos_x, pos_y)
 
                 # Run each task
                 # Return and save their output to dataframe/excel
@@ -326,7 +334,12 @@ def main():
 
     # Create main app window
     app = QtGui.QApplication(sys.argv)
-    battery_window = BatteryWindow(cur_directory, first_run)
+    screen_resolution = app.desktop().screenGeometry()
+
+    battery_window = BatteryWindow(cur_directory,
+                                   first_run,
+                                   screen_resolution.width(),
+                                   screen_resolution.height())
     battery_window.show()
     sys.exit(app.exec_())
 
