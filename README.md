@@ -158,6 +158,7 @@ In no particular order...
 - Create separate class for UI layout and import into main script
 - Change UI base class to `QTMainWindow`
 - Create conversion script for building a Python module from UI file
+- Add Menu and Status bar to UI
 
 **Tasks**
 - All tasks (and their images) moved to separate directory
