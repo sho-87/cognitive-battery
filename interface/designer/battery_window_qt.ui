@@ -482,7 +482,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionDocumentation"/>
-    <addaction name="actionView_License"/>
+    <addaction name="actionLicense"/>
     <addaction name="separator"/>
     <addaction name="actionContribute"/>
     <addaction name="actionBrowse_Issues"/>
@@ -526,9 +526,9 @@
     <string>Visit the GitHub support page</string>
    </property>
   </action>
-  <action name="actionView_License">
+  <action name="actionLicense">
    <property name="text">
-    <string>View License</string>
+    <string>License</string>
    </property>
    <property name="statusTip">
     <string>View application license</string>

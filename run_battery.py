@@ -48,6 +48,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # Handle menu bar item click events
         self.actionExit.triggered.connect(self.close)
         self.actionDocumentation.triggered.connect(self.show_documentation)
+        self.actionLicense.triggered.connect(self.show_license)
         self.actionAbout.triggered.connect(self.show_about)
 
         # TODO disable Up/Down buttons if order is random
@@ -62,6 +63,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Open web browser to the documentation page
     def show_documentation(self):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
+
+    # Open web browser to the license page
+    def show_license(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
 
     # Create a new AboutDialog object and display it
     def show_about(self):
