@@ -39,6 +39,7 @@ class BatteryWindow(QtGui.QMainWindow, main_window.Ui_CognitiveBattery):
                                           self.experimentIDBox)
         self.experimentIDBox.setCompleter(self.completer)
 
+        # TODO disable Up/Down buttons if order is random
         # Bind button events
         self.cancelButton.clicked.connect(self.close)
         self.startButton.clicked.connect(self.start)
