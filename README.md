@@ -138,7 +138,6 @@ using a standard implementation and have a journal reference.
 In no particular order...
 
 **General**
-- Improve integration with pygame
 - Compile an executable binary version of the entire battery
     - This will make it possible run the battery without dealing with Python
      module installation
@@ -169,6 +168,7 @@ In no particular order...
 
 **Tasks**
 - All tasks (and their images) moved to separate directory
+- Improved integration with pygame
 
 ###[1.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) *(2015-11-21)*
 - Initial release
