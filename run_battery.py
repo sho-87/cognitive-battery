@@ -282,7 +282,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
                 # Initialize pygame
                 pygame.init()
-                pygame.font.init()
 
                 # Create primary task window
                 # pygame_screen is passed to each task as the display window
