@@ -220,8 +220,23 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         elif self.femaleRadio.isChecked():
             self.sex = 'female'
 
+        # Get *selected* tasks and task order
+        self.tasks = []
+        for index in range(self.taskList.count()):
+            # State 2 is set when item is selected
+            if self.taskList.item(index).checkState() == 2:
+                # Add selected task to task list
+                self.tasks.append(str(self.taskList.item(index).text()))
+
+        # Check to see if a random order is desired
+        # If so, shuffle tasks
+        if self.random_order_selected():
+            random.shuffle(self.tasks)
+
         # Check for required inputs
-        if not self.ra:
+        if not self.tasks:
+            self.error_dialog('No tasks selected')
+        elif not self.ra:
             self.error_dialog('Please enter RA name...')
         elif not self.subNum:
             self.error_dialog('Please enter a subject number...')
@@ -234,19 +249,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         elif not self.maleRadio.isChecked() and not self.femaleRadio.isChecked():
             self.error_dialog('Please select a sex...')
         else:
-            # Get *selected* tasks and task order
-            self.tasks = []
-            for index in range(self.taskList.count()):
-                # State 2 is set when item is selected
-                if self.taskList.item(index).checkState() == 2:
-                    # Add selected task to task list
-                    self.tasks.append(str(self.taskList.item(index).text()))
-
-            # Check to see if a random order is desired
-            # If so, shuffle tasks
-            if self.random_order_selected():
-                random.shuffle(self.tasks)
-
             # Store subject info into a dataframe
             self.subjectInfo = pd.DataFrame(
                 data=[(str(self.datetime), str(self.subNum),
