@@ -1,10 +1,11 @@
+import time
 import pandas as pd
 import numpy as np
 import pygame
-import time
+
+from pygame.locals import *
 from os import listdir
 from os.path import isfile, join, dirname, realpath
-from pygame.locals import *
 from sys import exit
 
 
