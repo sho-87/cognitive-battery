@@ -272,6 +272,9 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 self.subjectInfo.to_excel(self.writer, 'info', index=False)
                 self.writer.save()
 
+                # Minimize battery UI
+                self.showMinimized()
+
                 # Get most recent task window settings from file
                 self.get_task_settings()
 
