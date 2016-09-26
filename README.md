@@ -33,6 +33,7 @@ most of which are just Python modules:
   - The easiest way to install Python is using the 
   [Anaconda](https://www.continuum.io/downloads) distribution as it also 
   includes most of the other dependencies listed below
+  - Python 3 is not currently supported
 * **Pandas**
   - Included with Anaconda. Otherwise, install using pip (`pip install pandas`)
 * **Numpy**
