@@ -302,4 +302,6 @@ class DigitspanBackwards(object):
 
             pygame.display.flip()
 
+        print "- Digit span (backwards) complete"
+
         return self.allData

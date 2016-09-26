@@ -428,4 +428,6 @@ class ANT(object):
 
             pygame.display.flip()
 
+        print "- Ant (2005) complete"
+
         return self.allData

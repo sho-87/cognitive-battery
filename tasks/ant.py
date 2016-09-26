@@ -442,4 +442,6 @@ class ANT(object):
 
             pygame.display.flip()
 
+        print "- ANT complete"
+
         return self.allData

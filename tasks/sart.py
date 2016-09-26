@@ -231,4 +231,6 @@ class SART(object):
 
             pygame.display.flip()
 
+        print "- SART complete"
+
         return self.allData

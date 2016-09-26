@@ -294,21 +294,18 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         self.antData = antTask.run()
                         # Save ANT data to excel
                         self.antData.to_excel(self.writer, 'ANT', index=False)
-                        print "- ANT complete"
                     elif task == "Mental Rotation Task":
                         mrtTask = mrt.MRT(self.pygame_screen)
                         # Run MRT
                         self.mrtData = mrtTask.run()
                         # Save MRT data to excel
                         self.mrtData.to_excel(self.writer, 'MRT', index=False)
-                        print "- MRT complete"
                     elif task == "Sustained Attention to Response Task (SART)":
                         sartTask = sart.SART(self.pygame_screen)
                         # Run SART
                         self.sartData = sartTask.run()
                         # Save SART data to excel
                         self.sartData.to_excel(self.writer, 'SART', index=False)
-                        print "- SART complete"
                     elif task == "Digit Span (backwards)":
                         digitspanBackwardsTask = \
                             digitspan_backwards.DigitspanBackwards(
@@ -317,7 +314,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         self.digitspanBackwardsData = digitspanBackwardsTask.run()
                         # Save digit span (backwards) data to excel
                         self.digitspanBackwardsData.to_excel(self.writer, 'Digit span (backwards)', index=False)
-                        print "- Digit span (backwards) complete"
                     elif task == "Raven's Progressive Matrices":
                         ravensTask = ravens.Ravens(self.pygame_screen,
                                                    start=9, numTrials=12)
@@ -325,7 +321,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         self.ravensData = ravensTask.run()
                         # Save ravens data to excel
                         self.ravensData.to_excel(self.writer, 'Ravens Matrices', index=False)
-                        print "- Raven's Progressive Matrices complete"
 
                     # Save excel file
                     self.writer.save()

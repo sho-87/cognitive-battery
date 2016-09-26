@@ -728,4 +728,6 @@ class MRT(object):
 
             pygame.display.flip()
 
+        print "- MRT complete"
+
         return self.allData

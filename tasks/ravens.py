@@ -363,4 +363,6 @@ class Ravens(object):
 
             pygame.display.flip()
 
+        print "- Raven's Progressive Matrices complete"
+
         return self.allData
