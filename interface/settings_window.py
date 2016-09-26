@@ -23,7 +23,12 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
                                          QtCore.QSettings.IniFormat)
         self.settings.setFallbacksEnabled(False)
 
-        # Get task window settings
+        # Set initial settings window size from saved settings
+        self.settings.beginGroup("SettingsWindow")
+        self.resize(self.settings.value("size", self.size()).toSize())
+        self.settings.endGroup()
+
+        # Get stored task window settings
         self.settings.beginGroup("TaskWindows")
         self.task_fullscreen = self.settings.value("fullscreen").toBool()
         self.task_width = self.settings.value("width").toString()
@@ -42,7 +47,7 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         # Bind button events
         self.settings_save_button.clicked.connect(self.save_settings)
-        self.settings_cancel_button.clicked.connect(self.close)
+        self.settings_cancel_button.clicked.connect(self.cancel_settings)
         self.settings_task_fullscreen_checkbox.clicked.connect(
             self.task_fullscreen_checkbox)
 
@@ -57,6 +62,16 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Set entry boxes to opposite of new fullscreen state
         self.set_task_size_state(not self.task_fullscreen)
 
+    def save_window_information(self):
+        self.settings.beginGroup("SettingsWindow")
+        self.settings.setValue('size', self.size())
+        self.settings.endGroup()
+
+    def cancel_settings(self):
+        # Save settings window size information
+        self.save_window_information()
+        self.close()
+
     def save_settings(self):
         self.settings.beginGroup("TaskWindows")
         self.settings.setValue('fullscreen', self.task_fullscreen)
@@ -70,4 +85,6 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         self.settings.endGroup()
 
+        # Save settings window size information
+        self.save_window_information()
         self.close()
