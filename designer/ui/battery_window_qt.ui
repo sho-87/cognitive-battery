@@ -313,7 +313,7 @@
               <string>Attention Network Test (ANT)</string>
              </property>
              <property name="checkState">
-              <enum>Checked</enum>
+              <enum>Unchecked</enum>
              </property>
             </item>
             <item>
@@ -321,7 +321,7 @@
               <string>Sustained Attention to Response Task (SART)</string>
              </property>
              <property name="checkState">
-              <enum>Checked</enum>
+              <enum>Unchecked</enum>
              </property>
             </item>
             <item>
@@ -329,7 +329,7 @@
               <string>Digit Span (backwards)</string>
              </property>
              <property name="checkState">
-              <enum>Checked</enum>
+              <enum>Unchecked</enum>
              </property>
             </item>
             <item>
