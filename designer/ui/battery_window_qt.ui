@@ -495,6 +495,7 @@
     <property name="title">
      <string>Options</string>
     </property>
+    <addaction name="actionAnalysis"/>
     <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuFile"/>
@@ -572,6 +573,17 @@
    </property>
    <property name="statusTip">
     <string>About the battery</string>
+   </property>
+  </action>
+  <action name="actionAnalysis">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Analysis</string>
+   </property>
+   <property name="statusTip">
+    <string>Calculate aggregate data for all tasks</string>
    </property>
   </action>
  </widget>

@@ -132,6 +132,9 @@ using a standard implementation and have a journal reference.
 In no particular order...
 
 **General**
+- Create an analysis tool for summarizing/aggregating participant data for
+the different battery tasks. The goal is to output summary data that is ready
+for statistics
 - Compile an executable binary version of the entire battery
     - This will make it possible run the battery without dealing with Python
      module installation
