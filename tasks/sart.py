@@ -12,13 +12,6 @@ class SART(object):
         # Get the pygame display window
         self.screen = screen
 
-        # get mask image
-        self.directory = os.path.dirname(os.path.realpath(__file__))
-        self.imagePath = self.directory + "\images\\SART\\"
-        # this uses the 29mm mask image (as described by Robertson 1997)
-        self.maskImage = pygame.image.load(self.imagePath + 'mask_29.png')
-        self.maskX, self.maskY = self.maskImage.get_rect().size
-
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
 
@@ -32,6 +25,13 @@ class SART(object):
         self.background.fill((0, 0, 0))
         pygame.display.set_caption("SART Task")
         pygame.mouse.set_visible(0)
+
+        # get mask image
+        self.directory = os.path.dirname(os.path.realpath(__file__))
+        self.imagePath = self.directory + "\images\\SART\\"
+        # this uses the 29mm mask image (as described by Robertson 1997)
+        self.maskImage = pygame.image.load(self.imagePath + 'mask_29.png')
+        self.maskX, self.maskY = self.maskImage.get_rect().size
 
         # set variables
         self.stimDuration = 0.25

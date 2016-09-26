@@ -18,13 +18,24 @@ class Ravens(object):
         # Get the pygame display window
         self.screen = screen
 
+        # sets font and font size
+        self.instructionsFont = pygame.font.SysFont("arial", 20)
+
+        # get screen info
+        self.screen_x = self.screen.get_width()
+        self.screen_y = self.screen.get_height()
+
+        # fills background
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((255, 255, 255))
+        pygame.display.set_caption("Ravens Progressive Matrices")
+        pygame.mouse.set_visible(0)
+
         # set number of trials
         self.numTrials = numTrials
         self.stimDuration = 60000
         self.ITI = 1000
-
-        # sets font and font size
-        self.instructionsFont = pygame.font.SysFont("arial", 20)
 
         # get images
         self.directory = dirname(realpath(__file__))
@@ -95,17 +106,6 @@ class Ravens(object):
             3,  # 35
             2,  # 36
         ])
-
-        # get screen info
-        self.screen_x = self.screen.get_width()
-        self.screen_y = self.screen.get_height()
-
-        # fills background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((255, 255, 255))
-        pygame.display.set_caption("Ravens Progressive Matrices")
-        pygame.mouse.set_visible(0)
 
         # create output dataframe
         self.allData = pd.DataFrame()

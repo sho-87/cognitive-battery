@@ -18,7 +18,14 @@ class MRT(object):
         # get self.screen info
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
-        self.button = (self.screen_x - 1024) / 2
+        self.button = (self.screen_x - 1024) / 2  # TODO remove this magic num
+
+        # fills self.background
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((255, 255, 255))
+        pygame.display.set_caption("Mental Rotation Task")
+        pygame.mouse.set_visible(1)
 
         # create dataframe for all data
         self.allData = pd.DataFrame([
@@ -63,13 +70,6 @@ class MRT(object):
 
         self.directory = os.path.dirname(os.path.realpath(__file__))
         self.imagePath = self.directory + "\images\\MRT\\"
-
-        # fills self.background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((255, 255, 255))
-        pygame.display.set_caption("Mental Rotation Task")
-        pygame.mouse.set_visible(1)
 
     def pressSpace(self, x, y):
         self.space = self.xFont.render("(Press spacebar when ready)", 1,
