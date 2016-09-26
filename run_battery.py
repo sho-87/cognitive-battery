@@ -201,7 +201,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Redefine the closeEvent method
     def closeEvent(self, event):
         self.save_settings_window(self.size(), self.pos())
+
         event.accept()
+
+        sys.exit(0)  # This closes any open pygame windows
 
     def start(self):
         # Store input values
