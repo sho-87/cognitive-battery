@@ -190,8 +190,7 @@ class Ravens(object):
                 self.screen_x / 2 - self.stimW / 2,
                 self.screen_y / 2 - self.stimH / 2))
 
-            self.timeLeft = self.stimDuration / 1000 - (
-                                                           self.endTime - self.baseTime) / 1000
+            self.timeLeft = self.stimDuration / 1000 - (self.endTime - self.baseTime) / 1000
             # convert seconds to time format
             self.timer = time.strftime('%M:%S', time.gmtime(self.timeLeft))
 
