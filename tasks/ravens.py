@@ -1,32 +1,42 @@
+import time
 import pandas as pd
 import numpy as np
 import pygame
-import time
+
+from pygame.locals import *
 from os import listdir
 from os.path import isfile, join, dirname, realpath
-from pygame.locals import *
 from sys import exit
 
 
 class Ravens(object):
-    def __init__(self, win_width, win_height, fullscreen=True, start=1,
-                 numTrials=12):
+    def __init__(self, screen, start=1, numTrials=12):
         # check that start position isnt too high
         if start > 36 - numTrials + 1:
             print "Raven's Matrices: Not enough trials. Set a lower start number."
             exit()
 
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
+        # Get the pygame display window
+        self.screen = screen
+
+        # sets font and font size
+        self.instructionsFont = pygame.font.SysFont("arial", 20)
+
+        # get screen info
+        self.screen_x = self.screen.get_width()
+        self.screen_y = self.screen.get_height()
+
+        # fills background
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((255, 255, 255))
+        pygame.display.set_caption("Ravens Progressive Matrices")
+        pygame.mouse.set_visible(0)
 
         # set number of trials
         self.numTrials = numTrials
         self.stimDuration = 60000
         self.ITI = 1000
-
-        # sets font and font size
-        self.instructionsFont = pygame.font.SysFont("arial", 20)
 
         # get images
         self.directory = dirname(realpath(__file__))
@@ -97,24 +107,6 @@ class Ravens(object):
             3,  # 35
             2,  # 36
         ])
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
-
-        # get screen info
-        self.screen_x = self.screen.get_width()
-        self.screen_y = self.screen.get_height()
-
-        # fills background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((255, 255, 255))
-        pygame.display.set_caption("Ravens Progressive Matrices")
-        pygame.mouse.set_visible(0)
 
         # create output dataframe
         self.allData = pd.DataFrame()
@@ -199,8 +191,7 @@ class Ravens(object):
                 self.screen_x / 2 - self.stimW / 2,
                 self.screen_y / 2 - self.stimH / 2))
 
-            self.timeLeft = self.stimDuration / 1000 - (
-                                                           self.endTime - self.baseTime) / 1000
+            self.timeLeft = self.stimDuration / 1000 - (self.endTime - self.baseTime) / 1000
             # convert seconds to time format
             self.timer = time.strftime('%M:%S', time.gmtime(self.timeLeft))
 
@@ -372,6 +363,6 @@ class Ravens(object):
 
             pygame.display.flip()
 
-        # pygame.quit()
+        print "- Raven's Progressive Matrices complete"
 
         return self.allData

@@ -2,6 +2,7 @@ import sys
 import os
 import random
 import datetime
+import pygame
 import pandas as pd
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
@@ -10,17 +11,18 @@ from designer import battery_window_qt
 from interface import about_dialog, settings_window
 from tasks import ant, mrt, sart, ravens, digitspan_backwards
 
-# Center all pygame windows if not fullscreen
-os.environ['SDL_VIDEO_CENTERED'] = '1'
-
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # TODO move this class to a separate file
-    def __init__(self, cur_directory, first_run):
+    def __init__(self, cur_directory, first_run, res_width, res_height):
         super(BatteryWindow, self).__init__()
 
         # Setup the main window UI
         self.setupUi(self)
+
+        # Get screen resolution
+        self.res_width = res_width
+        self.res_height = res_height
 
         # Create/open settings file with no registry fallback
         self.settings = QtCore.QSettings("settings.ini",
@@ -53,6 +55,9 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # Initialize the about and settings window objects
         self.about = None
         self.settings_window = None
+
+        # Initialize pygame screen
+        self.pygame_screen = None
 
         # Get current directory
         self.directory = cur_directory
@@ -243,11 +248,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             self.datafileName = "%s_%s_%s.xls" % (self.experimentID,
                                                   self.subNum, self.condition)
 
-            # Get most recent task window settings from file
-            # TODO automatically set pygame window size within each task
-            self.get_task_settings()
-
             # Check if file already exists
+            # TODO use OS path join to create paths
             if os.path.isfile(self.dataPath + self.datafileName):
                 self.error_dialog('Data file already exists!')
             else:
@@ -257,61 +259,74 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 self.subjectInfo.to_excel(self.writer, 'info', index=False)
                 self.writer.save()
 
+                # Get most recent task window settings from file
+                self.get_task_settings()
+
+                # Center all pygame windows if not fullscreen
+                if not self.task_fullscreen:
+                    pos_x = str(self.res_width/2 - self.task_width/2)
+                    pos_y = str(self.res_height/2 - self.task_height/2)
+
+                    os.environ['SDL_VIDEO_WINDOW_POS'] = \
+                        "%s, %s" % (pos_x, pos_y)
+
+                # Initialize pygame
+                pygame.init()
+                pygame.font.init()
+
+                # Create primary task window
+                # pygame_screen is passed to each task as the display window
+                if self.task_fullscreen:
+                    self.pygame_screen = pygame.display.set_mode(
+                        (0, 0), pygame.FULLSCREEN)
+                else:
+                    self.pygame_screen = pygame.display.set_mode(
+                        (self.task_width, self.task_height))
+
                 # Run each task
                 # Return and save their output to dataframe/excel
                 # TODO move data saving to end of each individual task module
                 for task in self.tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
-                        antTask = ant.ANT(self.task_width, self.task_height,
-                                          self.task_fullscreen, blocks=3)
+                        antTask = ant.ANT(self.pygame_screen, blocks=3)
                         # Run ANT
                         self.antData = antTask.run()
                         # Save ANT data to excel
                         self.antData.to_excel(self.writer, 'ANT', index=False)
-                        print "- ANT complete"
                     elif task == "Mental Rotation Task":
-                        mrtTask = mrt.MRT(self.task_width,
-                                          self.task_height,
-                                          self.task_fullscreen)
+                        mrtTask = mrt.MRT(self.pygame_screen)
                         # Run MRT
                         self.mrtData = mrtTask.run()
                         # Save MRT data to excel
                         self.mrtData.to_excel(self.writer, 'MRT', index=False)
-                        print "- MRT complete"
                     elif task == "Sustained Attention to Response Task (SART)":
-                        sartTask = sart.SART(self.task_width,
-                                             self.task_height,
-                                             self.task_fullscreen)
+                        sartTask = sart.SART(self.pygame_screen)
                         # Run SART
                         self.sartData = sartTask.run()
                         # Save SART data to excel
                         self.sartData.to_excel(self.writer, 'SART', index=False)
-                        print "- SART complete"
                     elif task == "Digit Span (backwards)":
                         digitspanBackwardsTask = \
                             digitspan_backwards.DigitspanBackwards(
-                                self.task_width,
-                                self.task_height,
-                                self.task_fullscreen)
+                                self.pygame_screen)
                         # Run Digit span (Backwards)
                         self.digitspanBackwardsData = digitspanBackwardsTask.run()
                         # Save digit span (backwards) data to excel
                         self.digitspanBackwardsData.to_excel(self.writer, 'Digit span (backwards)', index=False)
-                        print "- Digit span (backwards) complete"
                     elif task == "Raven's Progressive Matrices":
-                        ravensTask = ravens.Ravens(self.task_width,
-                                                   self.task_height,
-                                                   self.task_fullscreen,
+                        ravensTask = ravens.Ravens(self.pygame_screen,
                                                    start=9, numTrials=12)
                         # Run Raven's Matrices
                         self.ravensData = ravensTask.run()
                         # Save ravens data to excel
                         self.ravensData.to_excel(self.writer, 'Ravens Matrices', index=False)
-                        print "- Raven's Progressive Matrices complete"
 
                     # Save excel file
                     self.writer.save()
+
+                # Quit pygame
+                pygame.quit()
 
                 print "--- Experiment complete"
                 self.close()
@@ -326,7 +341,12 @@ def main():
 
     # Create main app window
     app = QtGui.QApplication(sys.argv)
-    battery_window = BatteryWindow(cur_directory, first_run)
+    screen_resolution = app.desktop().screenGeometry()
+
+    battery_window = BatteryWindow(cur_directory,
+                                   first_run,
+                                   screen_resolution.width(),
+                                   screen_resolution.height())
     battery_window.show()
     sys.exit(app.exec_())
 

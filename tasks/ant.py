@@ -1,21 +1,32 @@
+import os
+import time
 import pandas as pd
 import numpy as np
 import pygame
-import time
-import os
+
 from pygame.locals import *
 from itertools import product
 from sys import exit
 
 
 class ANT(object):
-    def __init__(self, win_width, win_height, fullscreen=True, blocks=3):
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
+    def __init__(self, screen, blocks=3):
+        # Get the pygame display window
+        self.screen = screen
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
+
+        # get screen info
+        self.screen_x = self.screen.get_width()
+        self.screen_y = self.screen.get_height()
+
+        # fills background
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((255, 255, 255))
+        pygame.display.set_caption("ANT Task")
+        pygame.mouse.set_visible(0)
 
         # get images
         self.directory = os.path.dirname(os.path.realpath(__file__))
@@ -42,24 +53,6 @@ class ANT(object):
         self.flankerH = self.img_left_incongruent.get_rect().height
         self.fixationW = self.img_fixation.get_rect().width
         self.fixationH = self.img_fixation.get_rect().height
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
-
-        # get screen info
-        self.screen_x = self.screen.get_width()
-        self.screen_y = self.screen.get_height()
-
-        # fills background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((255, 255, 255))
-        pygame.display.set_caption("ANT Task")
-        pygame.mouse.set_visible(0)
 
         # set number of blocks
         self.numBlocks = blocks
@@ -450,6 +443,6 @@ class ANT(object):
 
             pygame.display.flip()
 
-        # pygame.quit()
+        print "- ANT complete"
 
         return self.allData

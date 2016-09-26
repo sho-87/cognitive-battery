@@ -1,27 +1,20 @@
+import time
 import pandas as pd
 import numpy as np
 import pygame
-import time
+
 from pygame.locals import *
 from sys import exit
 
 
 class DigitspanBackwards(object):
-    def __init__(self, win_width, win_height, fullscreen=True, blocks=6):
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
+    def __init__(self, screen):
+        # Get the pygame display window
+        self.screen = screen
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
         self.stimulusFont = pygame.font.SysFont("arial", 80)
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
 
         # get screen info
         self.screen_x = self.screen.get_width()
@@ -310,6 +303,6 @@ class DigitspanBackwards(object):
 
             pygame.display.flip()
 
-        # pygame.quit()
+        print "- Digit span (backwards) complete"
 
         return self.allData

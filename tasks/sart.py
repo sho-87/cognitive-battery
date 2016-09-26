@@ -1,34 +1,20 @@
+import os
+import time
 import pandas as pd
 import numpy as np
 import pygame
-import time
-import os
+
 from pygame.locals import *
 from sys import exit
 
 
 class SART(object):
-    def __init__(self, win_width, win_height, fullscreen=True):
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
-
-        # get mask image
-        self.directory = os.path.dirname(os.path.realpath(__file__))
-        self.imagePath = self.directory + "\images\\SART\\"
-        # this uses the 29mm mask image (as described by Robertson 1997)
-        self.maskImage = pygame.image.load(self.imagePath + 'mask_29.png')
-        self.maskX, self.maskY = self.maskImage.get_rect().size
+    def __init__(self, screen):
+        # Get the pygame display window
+        self.screen = screen
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
 
         # get screen info
         self.screen_x = self.screen.get_width()
@@ -40,6 +26,13 @@ class SART(object):
         self.background.fill((0, 0, 0))
         pygame.display.set_caption("SART Task")
         pygame.mouse.set_visible(0)
+
+        # get mask image
+        self.directory = os.path.dirname(os.path.realpath(__file__))
+        self.imagePath = self.directory + "\images\\SART\\"
+        # this uses the 29mm mask image (as described by Robertson 1997)
+        self.maskImage = pygame.image.load(self.imagePath + 'mask_29.png')
+        self.maskX, self.maskY = self.maskImage.get_rect().size
 
         # set variables
         self.stimDuration = 0.25
@@ -239,6 +232,6 @@ class SART(object):
 
             pygame.display.flip()
 
-        # pygame.quit()
+        print "- SART complete"
 
         return self.allData

@@ -1,14 +1,33 @@
-import pygame
-import time
 import os
+import time
 import pandas as pd
 import numpy as np
+import pygame
+
 from pygame.locals import *
 from sys import exit
 
 
 class MRT(object):
-    def __init__(self, win_width, win_height, fullscreen=True):
+    def __init__(self, screen):
+        # Get the pygame display window
+        self.screen = screen
+
+        # sets font and font size
+        self.xFont = pygame.font.SysFont("arial", 20)
+
+        # get self.screen info
+        self.screen_x = self.screen.get_width()
+        self.screen_y = self.screen.get_height()
+        self.button = (self.screen_x - 1024) / 2  # TODO remove this magic num
+
+        # fills self.background
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((255, 255, 255))
+        pygame.display.set_caption("Mental Rotation Task")
+        pygame.mouse.set_visible(1)
+
         # create dataframe for all data
         self.allData = pd.DataFrame([
             [1, 3],  # 1
@@ -52,32 +71,6 @@ class MRT(object):
 
         self.directory = os.path.dirname(os.path.realpath(__file__))
         self.imagePath = self.directory + "\images\\MRT\\"
-
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
-
-        # sets font and font size
-        self.xFont = pygame.font.SysFont("arial", 20)
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
-
-        # get self.screen info
-        self.screen_x = self.screen.get_width()
-        self.screen_y = self.screen.get_height()
-        self.button = (self.screen_x - 1024) / 2
-
-        # fills self.background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((255, 255, 255))
-        pygame.display.set_caption("Mental Rotation Task")
-        pygame.mouse.set_visible(1)
 
     def pressSpace(self, x, y):
         self.space = self.xFont.render("(Press spacebar when ready)", 1,
@@ -736,5 +729,6 @@ class MRT(object):
 
             pygame.display.flip()
 
-        # pygame.quit()
+        print "- MRT complete"
+
         return self.allData

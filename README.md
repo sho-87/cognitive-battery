@@ -97,13 +97,6 @@ Create a class in the module that contains a `run()` method. This method
 should contain the main sequence of your task and needs to return a Pandas 
 dataframe object.
 
-If you want your task to obey user defined settings (e.g. task window size)
-your class constructor will also need to accept each of the settings as
-parameters. Within your code you'll need to check and handle each of the
-settings accordingly. Pass the settings in when you create an instance of
-your class. Alternatively, you can pull the settings directly from the
-`settings.ini` file.
-
 An instance of the class is spawned in `run_battery.py`, near the end of the 
 `start()` method. Your class's `run()` method is invoked after, and the 
 returned dataframe is saved to file.
@@ -138,7 +131,6 @@ using a standard implementation and have a journal reference.
 In no particular order...
 
 **General**
-- Improve integration with pygame
 - Compile an executable binary version of the entire battery
     - This will make it possible run the battery without dealing with Python
      module installation
@@ -169,6 +161,7 @@ In no particular order...
 
 **Tasks**
 - All tasks (and their images) moved to separate directory
+- Improved integration with pygame
 
 ###[1.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) *(2015-11-21)*
 - Initial release
