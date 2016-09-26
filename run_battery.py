@@ -92,10 +92,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.actionRequest_Feature.triggered.connect(self.show_new_issue)
         self.actionAbout.triggered.connect(self.show_about)
 
-        # TODO disable Up/Down buttons if order is random
         # Bind button events
         self.cancelButton.clicked.connect(self.close)
         self.startButton.clicked.connect(self.start)
+        self.randomOrderCheck.clicked.connect(self.random_order_selected)
         self.selectAllButton.clicked.connect(self.select_all)
         self.deselectAllButton.clicked.connect(self.deselect_all)
         self.upButton.clicked.connect(self.move_up)
@@ -153,6 +153,16 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
     def error_dialog(self, message):
         QtGui.QMessageBox.warning(self, 'Error', message)
+
+    def random_order_selected(self):
+        if self.randomOrderCheck.isChecked():
+            self.upButton.setEnabled(False)
+            self.downButton.setEnabled(False)
+            return True
+        else:
+            self.upButton.setEnabled(True)
+            self.downButton.setEnabled(True)
+            return False
 
     def select_all(self):
         for index in range(self.taskList.count()):
@@ -231,7 +241,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
             # Check to see if a random order is desired
             # If so, shuffle tasks
-            if self.randomOrderCheck.isChecked():
+            if self.random_order_selected():
                 random.shuffle(self.tasks)
 
             # Store subject info into a dataframe
