@@ -9,16 +9,14 @@ from sys import exit
 
 
 class Ravens(object):
-    def __init__(self, win_width, win_height, fullscreen=True, start=1,
-                 numTrials=12):
+    def __init__(self, screen, start=1, numTrials=12):
         # check that start position isnt too high
         if start > 36 - numTrials + 1:
             print "Raven's Matrices: Not enough trials. Set a lower start number."
             exit()
 
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
+        # Get the pygame display window
+        self.screen = screen
 
         # set number of trials
         self.numTrials = numTrials
@@ -97,13 +95,6 @@ class Ravens(object):
             3,  # 35
             2,  # 36
         ])
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
 
         # get screen info
         self.screen_x = self.screen.get_width()
@@ -371,7 +362,5 @@ class Ravens(object):
             self.pressSpace(100, (self.screen_y / 2) + 100)
 
             pygame.display.flip()
-
-        # pygame.quit()
 
         return self.allData

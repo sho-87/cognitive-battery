@@ -8,7 +8,18 @@ from sys import exit
 
 
 class MRT(object):
-    def __init__(self, win_width, win_height, fullscreen=True):
+    def __init__(self, screen):
+        # Get the pygame display window
+        self.screen = screen
+
+        # sets font and font size
+        self.xFont = pygame.font.SysFont("arial", 20)
+
+        # get self.screen info
+        self.screen_x = self.screen.get_width()
+        self.screen_y = self.screen.get_height()
+        self.button = (self.screen_x - 1024) / 2
+
         # create dataframe for all data
         self.allData = pd.DataFrame([
             [1, 3],  # 1
@@ -52,25 +63,6 @@ class MRT(object):
 
         self.directory = os.path.dirname(os.path.realpath(__file__))
         self.imagePath = self.directory + "\images\\MRT\\"
-
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
-
-        # sets font and font size
-        self.xFont = pygame.font.SysFont("arial", 20)
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
-
-        # get self.screen info
-        self.screen_x = self.screen.get_width()
-        self.screen_y = self.screen.get_height()
-        self.button = (self.screen_x - 1024) / 2
 
         # fills self.background
         self.background = pygame.Surface(self.screen.get_size())
@@ -736,5 +728,4 @@ class MRT(object):
 
             pygame.display.flip()
 
-        # pygame.quit()
         return self.allData

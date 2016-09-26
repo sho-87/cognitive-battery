@@ -9,10 +9,9 @@ from sys import exit
 
 
 class ANT(object):
-    def __init__(self, win_width, win_height, fullscreen=True, blocks=3):
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
+    def __init__(self, screen, blocks=3):
+        # Get the pygame display window
+        self.screen = screen
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
@@ -42,13 +41,6 @@ class ANT(object):
         self.flankerH = self.img_left_incongruent.get_rect().height
         self.fixationW = self.img_fixation.get_rect().width
         self.fixationH = self.img_fixation.get_rect().height
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
 
         # get screen info
         self.screen_x = self.screen.get_width()
@@ -449,7 +441,5 @@ class ANT(object):
             self.pressSpace(100, (self.screen_y / 2) + 100)
 
             pygame.display.flip()
-
-        # pygame.quit()
 
         return self.allData

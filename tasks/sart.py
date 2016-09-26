@@ -8,10 +8,9 @@ from sys import exit
 
 
 class SART(object):
-    def __init__(self, win_width, win_height, fullscreen=True):
-        # initialize pygame
-        pygame.init()
-        pygame.font.init()
+    def __init__(self, screen):
+        # Get the pygame display window
+        self.screen = screen
 
         # get mask image
         self.directory = os.path.dirname(os.path.realpath(__file__))
@@ -22,13 +21,6 @@ class SART(object):
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
-
-        # open window
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((win_width, win_height),
-                                                  RESIZABLE)
 
         # get screen info
         self.screen_x = self.screen.get_width()
@@ -238,7 +230,5 @@ class SART(object):
             self.pressSpace(100, (self.screen_y / 2) + 100)
 
             pygame.display.flip()
-
-        # pygame.quit()
 
         return self.allData
