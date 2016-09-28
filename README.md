@@ -125,8 +125,8 @@ method
 5. Invoke your `run()` method and save the returned dataframe to a file
 6. Update the QT Designer UI file and rebuild using the conversion script
 
-Consider making a pull request. However, I will only add tasks that are 
-using a standard implementation and have a journal reference.
+Consider making a pull request and please include a journal reference for any
+new tasks you add.
 
 ##TODO
 In no particular order...
@@ -148,6 +148,7 @@ for statistics
     - Automatically handle task running/saving
     - No longer need to edit the main battery file to add your own tasks
 - Add the ability to set options for each task (e.g. number of trials)
+- Add description/details for each task (number of trials, timings etc.)
 - Save subject data to non-proprietary file format instead of Excel
     - Likely to be CSV, but open to suggestions
 - Add more tasks...
