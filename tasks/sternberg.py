@@ -32,7 +32,7 @@ class Sternberg(object):
         self.num_blocks = blocks
         self.stim_duration = 1200
         self.between_stim_duration = 250
-        self.probe_warn = 2000
+        self.probe_warn_duration = 2000
         self.feedback_duration = 1000
         self.ITI = 750
         self.stim_set = range(10)
