@@ -15,7 +15,7 @@ class Sternberg(object):
         self.screen = screen
 
         # Sets font and font size
-        self.instructions_font = pygame.font.SysFont("arial", 30)
+        self.font = pygame.font.SysFont("arial", 30)
 
         # Get screen info
         self.screen_x = self.screen.get_width()
@@ -92,6 +92,13 @@ class Sternberg(object):
             df = df[columns]
 
         return df
+
+    def display_text(self, text, x, y):
+        text = self.font.render(text, 1, (0, 0, 0))
+        self.screen.blit(text, (x, y))
+
+    def display_space_text(self, x, y):
+        self.display_text("(Press spacebar when ready)", x, y)
 
     def run(self):
 
