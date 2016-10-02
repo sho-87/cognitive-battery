@@ -93,17 +93,27 @@ class Sternberg(object):
 
     def display_text(self, text, x, y):
         text = self.font.render(text, 1, (0, 0, 0))
-        self.screen.blit(text, (x, y))
+
+        if x == "center":
+            x_pos = self.screen_x/2 - text.get_rect().width/2
+        else:
+            x_pos = x
+
+        if y == "center":
+            y_pos = self.screen_y/2 - text.get_rect().height/2
+        else:
+            y_pos = y
+
+        self.screen.blit(text, (x_pos, y_pos))
 
     def display_space_text(self, x, y):
-        self.display_text("(Press space to continue)", x, y)
+        self.display_text("(press space to continue)", x, y)
 
     def run(self):
-
         # End screen
         self.screen.blit(self.background, (0, 0))
-        self.display_text("End of task", 100, self.screen_y / 2)
-        self.display_space_text(100, (self.screen_y / 2) + 100)
+        self.display_text("End of task", "center", "center")
+        self.display_space_text("center", (self.screen_y / 2) + 100)
         pygame.display.flip()
 
         end_screen = True
