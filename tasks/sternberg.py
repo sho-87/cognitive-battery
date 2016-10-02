@@ -1,3 +1,4 @@
+import sys
 import random
 import pandas as pd
 import pygame
@@ -43,6 +44,7 @@ class Sternberg(object):
 
         # Create practice trials
         # This gives 24 practice trials
+        # TODO add the ability to manually set the number of trials
         self.practice_combinations = self.combinations * 6
         random.shuffle(self.practice_combinations)
         self.practice_trials = self.create_trials(self.practice_combinations)
@@ -52,6 +54,7 @@ class Sternberg(object):
 
         for i in range(self.num_blocks):
             # This creates 48 trials per block
+            # TODO add the ability to manually set the number of trials
             block_combinations = self.combinations * 12
             random.shuffle(block_combinations)
 
@@ -91,6 +94,68 @@ class Sternberg(object):
         return df
 
     def run(self):
+        # Instructions screen
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "You will see a sequence of numbers. "
+                     "Try your best to memorize them",
+                     100, 100)
+
+        display.text(self.screen, self.font,
+                     "You will then be shown a single test number", 100, 200)
+
+        display.text(self.screen, self.font,
+                     "If this number was in the original sequence, "
+                     "press the LEFT arrow",
+                     100, 400)
+
+        display.text(self.screen, self.font,
+                     "If this number was NOT in the original sequence, "
+                     "press the RIGHT arrow",
+                     100, 500)
+
+        display.text(self.screen, self.font,
+                     "Try to do this as quickly, "
+                     "and as accurately, as possible",
+                     100, 600)
+
+        display.space_text(self.screen, self.font, "center", 800)
+
+        pygame.display.flip()
+
+        instruction_screen = True
+        while instruction_screen:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_SPACE:
+                    instruction_screen = False
+                elif event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+        # Practice ready screen
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We will begin with some practice trials...",
+                     "center", "center")
+
+        display.space_text(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
+
+        pygame.display.flip()
+
+        practice_ready_screen = True
+        while practice_ready_screen:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_SPACE:
+                    practice_ready_screen = False
+                elif event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+        # Practice trials
+
+        # Main trials ready screen
+
+        # Main trials
+
         # End screen
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "End of task", "center", "center")
