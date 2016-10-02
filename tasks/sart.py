@@ -9,9 +9,10 @@ from sys import exit
 
 
 class SART(object):
-    def __init__(self, screen):
+    def __init__(self, screen, background):
         # Get the pygame display window
         self.screen = screen
+        self.background = background
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
@@ -20,9 +21,7 @@ class SART(object):
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
-        # fills background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
+        # fill background
         self.background.fill((0, 0, 0))
         pygame.display.set_caption("SART Task")
         pygame.mouse.set_visible(0)
