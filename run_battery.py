@@ -184,6 +184,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.taskList.insertItem(currentRow + 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
+    # TODO add memory for previously selected tasks
     # Save window size/position to settings file
     def save_settings_window(self, size, pos):
         self.settings.beginGroup("MainWindow")
