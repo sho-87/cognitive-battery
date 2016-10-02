@@ -96,9 +96,21 @@ class Sternberg(object):
         self.screen.blit(text, (x, y))
 
     def display_space_text(self, x, y):
-        self.display_text("(Press spacebar when ready)", x, y)
+        self.display_text("(Press space to continue)", x, y)
 
     def run(self):
+
+        # End screen
+        self.screen.blit(self.background, (0, 0))
+        self.display_text("End of task", 100, self.screen_y / 2)
+        self.display_space_text(100, (self.screen_y / 2) + 100)
+        pygame.display.flip()
+
+        end_screen = True
+        while end_screen:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_SPACE:
+                    end_screen = False
 
         # Concatenate blocks and add trial numbers
         all_data = pd.concat(self.blocks)
