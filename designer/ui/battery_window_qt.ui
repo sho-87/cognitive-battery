@@ -318,14 +318,6 @@
             </item>
             <item>
              <property name="text">
-              <string>Sustained Attention to Response Task (SART)</string>
-             </property>
-             <property name="checkState">
-              <enum>Unchecked</enum>
-             </property>
-            </item>
-            <item>
-             <property name="text">
               <string>Digit Span (backwards)</string>
              </property>
              <property name="checkState">
@@ -343,6 +335,22 @@
             <item>
              <property name="text">
               <string>Raven's Progressive Matrices</string>
+             </property>
+             <property name="checkState">
+              <enum>Unchecked</enum>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Sternberg Task</string>
+             </property>
+             <property name="checkState">
+              <enum>Unchecked</enum>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Sustained Attention to Response Task (SART)</string>
              </property>
              <property name="checkState">
               <enum>Unchecked</enum>
