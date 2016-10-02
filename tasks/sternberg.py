@@ -8,9 +8,10 @@ from utils import display
 
 
 class Sternberg(object):
-    def __init__(self, screen, blocks=2):
+    def __init__(self, screen, background, blocks=2):
         # Get the pygame display window
         self.screen = screen
+        self.background = background
 
         # Sets font and font size
         self.font = pygame.font.SysFont("arial", 30)
@@ -19,9 +20,7 @@ class Sternberg(object):
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
-        # Fills background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
+        # Fill background
         self.background.fill((255, 255, 255))
         pygame.display.set_caption("Sternberg Task")
         pygame.mouse.set_visible(0)

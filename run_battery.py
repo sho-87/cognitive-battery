@@ -305,13 +305,17 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                     self.pygame_screen = pygame.display.set_mode(
                         (self.task_width, self.task_height))
 
+                background = pygame.Surface(self.pygame_screen.get_size())
+                background = background.convert()
+
                 # Run each task
                 # Return and save their output to dataframe/excel
                 # TODO move data saving to end of each individual task module
                 for task in self.tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
-                        antTask = ant.ANT(self.pygame_screen, blocks=3)
+                        antTask = ant.ANT(self.pygame_screen, background,
+                                          blocks=3)
                         # Run ANT
                         self.antData = antTask.run()
                         # Save ANT data to excel
@@ -323,7 +327,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         # Save MRT data to excel
                         self.mrtData.to_excel(self.writer, 'MRT', index=False)
                     elif task == "Sustained Attention to Response Task (SART)":
-                        sartTask = sart.SART(self.pygame_screen)
+                        sartTask = sart.SART(self.pygame_screen, background)
                         # Run SART
                         self.sartData = sartTask.run()
                         # Save SART data to excel
@@ -349,7 +353,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                                                  'Ravens Matrices',
                                                  index=False)
                     elif task == "Sternberg Task":
-                        sternbergTask = sternberg.Sternberg(self.pygame_screen)
+                        sternbergTask = sternberg.Sternberg(
+                            self.pygame_screen, background)
                         # Run Sternberg Task
                         self.sternbergData = sternbergTask.run()
                         # Save sternberg data to excel
@@ -360,12 +365,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                     self.writer.save()
 
                 # End of experiment screen
-                background = pygame.Surface(self.pygame_screen.get_size())
-                background = background.convert()
-                background.fill((255, 255, 255))
                 pygame.display.set_caption("End of Experiment")
                 pygame.mouse.set_visible(1)
 
+                background.fill((255, 255, 255))
                 self.pygame_screen.blit(background, (0, 0))
 
                 font = pygame.font.SysFont("arial", 30)
