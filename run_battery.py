@@ -321,7 +321,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         # Save ANT data to excel
                         self.antData.to_excel(self.writer, 'ANT', index=False)
                     elif task == "Mental Rotation Task":
-                        mrtTask = mrt.MRT(self.pygame_screen)
+                        mrtTask = mrt.MRT(self.pygame_screen, background)
                         # Run MRT
                         self.mrtData = mrtTask.run()
                         # Save MRT data to excel
@@ -336,7 +336,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                     elif task == "Digit Span (backwards)":
                         digitspanBackwardsTask = \
                             digitspan_backwards.DigitspanBackwards(
-                                self.pygame_screen)
+                                self.pygame_screen, background)
                         # Run Digit span (Backwards)
                         self.digitspanBackwardsData = digitspanBackwardsTask.run()
                         # Save digit span (backwards) data to excel
@@ -345,6 +345,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                                                              index=False)
                     elif task == "Raven's Progressive Matrices":
                         ravensTask = ravens.Ravens(self.pygame_screen,
+                                                   background,
                                                    start=9, numTrials=12)
                         # Run Raven's Matrices
                         self.ravensData = ravensTask.run()

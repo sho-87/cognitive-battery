@@ -10,7 +10,7 @@ from sys import exit
 
 
 class Ravens(object):
-    def __init__(self, screen, start=1, numTrials=12):
+    def __init__(self, screen, background, start=1, numTrials=12):
         # check that start position isnt too high
         if start > 36 - numTrials + 1:
             print "Raven's Matrices: Not enough trials. Set a lower start number."
@@ -18,6 +18,7 @@ class Ravens(object):
 
         # Get the pygame display window
         self.screen = screen
+        self.background = background
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 20)
@@ -26,9 +27,7 @@ class Ravens(object):
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
-        # fills background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
+        # Fill background
         self.background.fill((255, 255, 255))
         pygame.display.set_caption("Ravens Progressive Matrices")
         pygame.mouse.set_visible(0)

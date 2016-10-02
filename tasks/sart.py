@@ -21,7 +21,7 @@ class SART(object):
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
-        # fill background
+        # Fill background
         self.background.fill((0, 0, 0))
         pygame.display.set_caption("SART Task")
         pygame.mouse.set_visible(0)

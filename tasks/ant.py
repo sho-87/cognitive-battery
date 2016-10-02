@@ -22,7 +22,7 @@ class ANT(object):
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
-        # fill background
+        # Fill background
         self.background.fill((255, 255, 255))
         pygame.display.set_caption("ANT Task")
         pygame.mouse.set_visible(0)
