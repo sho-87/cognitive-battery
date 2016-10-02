@@ -91,20 +91,14 @@ class Sternberg(object):
 
         return df
 
-    def display_text(self, text, x, y):
-        text = self.font.render(text, 1, (0, 0, 0))
+    def display_text(self, text_string, x, y):
+        text = self.font.render(text_string, 1, (0, 0, 0))
 
-        if x == "center":
-            x_pos = self.screen_x/2 - text.get_rect().width/2
-        else:
-            x_pos = x
+        x_p = self.screen_x/2-text.get_rect().width/2 if x == "center" else x
 
-        if y == "center":
-            y_pos = self.screen_y/2 - text.get_rect().height/2
-        else:
-            y_pos = y
+        y_p = self.screen_y/2-text.get_rect().height/2 if y == "center" else y
 
-        self.screen.blit(text, (x_pos, y_pos))
+        self.screen.blit(text, (x_p, y_p))
 
     def display_space_text(self, x, y):
         self.display_text("(press space to continue)", x, y)
