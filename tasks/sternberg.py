@@ -4,7 +4,7 @@ import pygame
 
 from pygame.locals import *
 from itertools import product
-from sys import exit
+from utils import display
 
 
 class Sternberg(object):
@@ -91,23 +91,12 @@ class Sternberg(object):
 
         return df
 
-    def display_text(self, text_string, x, y):
-        text = self.font.render(text_string, 1, (0, 0, 0))
-
-        x_p = self.screen_x/2-text.get_rect().width/2 if x == "center" else x
-
-        y_p = self.screen_y/2-text.get_rect().height/2 if y == "center" else y
-
-        self.screen.blit(text, (x_p, y_p))
-
-    def display_space_text(self, x, y):
-        self.display_text("(press space to continue)", x, y)
-
     def run(self):
         # End screen
         self.screen.blit(self.background, (0, 0))
-        self.display_text("End of task", "center", "center")
-        self.display_space_text("center", (self.screen_y / 2) + 100)
+        display.text(self.screen, self.font, "End of task", "center", "center")
+        display.space_text(self.screen, self.font,
+                           "center", (self.screen_y / 2) + 100)
         pygame.display.flip()
 
         end_screen = True

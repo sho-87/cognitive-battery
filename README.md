@@ -160,6 +160,9 @@ for statistics
 
 ###[1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1.0) *(unreleased)*
 
+**General**
+- Moved a number of text/background display methods into their own package (`utils`)
+
 **User Interface**
 - Created separate class for UI layout and import into main script
 - Changed UI base class to `QTMainWindow`

@@ -7,6 +7,7 @@ import pandas as pd
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
+from utils import display
 from designer import battery_window_qt
 from interface import about_dialog, settings_window
 from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
@@ -368,13 +369,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 self.pygame_screen.blit(background, (0, 0))
 
                 font = pygame.font.SysFont("arial", 30)
-                end_text = font.render("End of Experiment", 1, (0, 0, 0))
-                end_text_x = self.pygame_screen.get_width() / 2 -\
-                    end_text.get_rect().width / 2
-                end_text_y = self.pygame_screen.get_height() / 2 - \
-                    end_text.get_rect().height / 2
-
-                self.pygame_screen.blit(end_text, (end_text_x, end_text_y))
+                display.text(self.pygame_screen, font, "End of Experiment",
+                             "center", "center")
 
                 pygame.display.flip()
 
