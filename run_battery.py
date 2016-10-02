@@ -9,7 +9,7 @@ import PyQt4.QtGui as QtGui
 
 from designer import battery_window_qt
 from interface import about_dialog, settings_window
-from tasks import ant, mrt, sart, ravens, digitspan_backwards
+from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
@@ -339,6 +339,12 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         self.ravensData = ravensTask.run()
                         # Save ravens data to excel
                         self.ravensData.to_excel(self.writer, 'Ravens Matrices', index=False)
+                    elif task == "Sternberg Task":
+                        sternbergTask = sternberg.Sternberg(self.pygame_screen)
+                        # Run Sternberg Task
+                        self.sternbergData = sternbergTask.run()
+                        # Save sternberg data to excel
+                        self.sternbergData.to_excel(self.writer, 'Sternberg', index=False)
 
                     # Save excel file
                     self.writer.save()
