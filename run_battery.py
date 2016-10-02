@@ -109,12 +109,14 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Open web browser to the license page
     def show_license(self):
         QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
+            QtCore.QUrl(
+                "https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
 
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
         QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
+            QtCore.QUrl(
+                "https://github.com/sho-87/cognitive-battery/tree/develop"))
 
     # Open web browser to the github issues page
     def show_browse_issues(self):
@@ -124,7 +126,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Open web browser to the github new issue post
     def show_new_issue(self):
         QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
+            QtCore.QUrl(
+                "https://github.com/sho-87/cognitive-battery/issues/new"))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):
@@ -283,8 +286,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
                 # Center all pygame windows if not fullscreen
                 if not self.task_fullscreen:
-                    pos_x = str(self.res_width/2 - self.task_width/2)
-                    pos_y = str(self.res_height/2 - self.task_height/2)
+                    pos_x = str(self.res_width / 2 - self.task_width / 2)
+                    pos_y = str(self.res_height / 2 - self.task_height / 2)
 
                     os.environ['SDL_VIDEO_WINDOW_POS'] = \
                         "%s, %s" % (pos_x, pos_y)
@@ -323,7 +326,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         # Run SART
                         self.sartData = sartTask.run()
                         # Save SART data to excel
-                        self.sartData.to_excel(self.writer, 'SART', index=False)
+                        self.sartData.to_excel(self.writer, 'SART',
+                                               index=False)
                     elif task == "Digit Span (backwards)":
                         digitspanBackwardsTask = \
                             digitspan_backwards.DigitspanBackwards(
@@ -331,23 +335,55 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                         # Run Digit span (Backwards)
                         self.digitspanBackwardsData = digitspanBackwardsTask.run()
                         # Save digit span (backwards) data to excel
-                        self.digitspanBackwardsData.to_excel(self.writer, 'Digit span (backwards)', index=False)
+                        self.digitspanBackwardsData.to_excel(self.writer,
+                                                             'Digit span (backwards)',
+                                                             index=False)
                     elif task == "Raven's Progressive Matrices":
                         ravensTask = ravens.Ravens(self.pygame_screen,
                                                    start=9, numTrials=12)
                         # Run Raven's Matrices
                         self.ravensData = ravensTask.run()
                         # Save ravens data to excel
-                        self.ravensData.to_excel(self.writer, 'Ravens Matrices', index=False)
+                        self.ravensData.to_excel(self.writer,
+                                                 'Ravens Matrices',
+                                                 index=False)
                     elif task == "Sternberg Task":
                         sternbergTask = sternberg.Sternberg(self.pygame_screen)
                         # Run Sternberg Task
                         self.sternbergData = sternbergTask.run()
                         # Save sternberg data to excel
-                        self.sternbergData.to_excel(self.writer, 'Sternberg', index=False)
+                        self.sternbergData.to_excel(self.writer, 'Sternberg',
+                                                    index=False)
 
                     # Save excel file
                     self.writer.save()
+
+                # End of experiment screen
+                background = pygame.Surface(self.pygame_screen.get_size())
+                background = background.convert()
+                background.fill((255, 255, 255))
+                pygame.display.set_caption("End of Experiment")
+                pygame.mouse.set_visible(1)
+
+                self.pygame_screen.blit(background, (0, 0))
+
+                font = pygame.font.SysFont("arial", 30)
+                end_text = font.render("End of Experiment", 1, (0, 0, 0))
+                end_text_x = self.pygame_screen.get_width() / 2 -\
+                    end_text.get_rect().width / 2
+                end_text_y = self.pygame_screen.get_height() / 2 - \
+                    end_text.get_rect().height / 2
+
+                self.pygame_screen.blit(end_text, (end_text_x, end_text_y))
+
+                pygame.display.flip()
+
+                end_experiment = True
+                while end_experiment:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN and \
+                                        event.key == pygame.K_SPACE:
+                            end_experiment = False
 
                 # Quit pygame
                 pygame.quit()
@@ -373,6 +409,7 @@ def main():
                                    screen_resolution.height())
     battery_window.show()
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()
