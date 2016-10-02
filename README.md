@@ -74,9 +74,6 @@ Currently implemented tasks:
   - I have also included the shortened version by
   [Fan et al. (2005)](http://www.sciencedirect.com/science/article/pii/S1053811905000984).
   While this version works, it is currently not included in the main battery.
-* **Sustained Attention to Response Task (SART)**
-  - Based on the original version by
-  [Robertson et al. (1997)](http://www.sciencedirect.com/science/article/pii/S0028393297000158)
 * **Digit Span (backwards)**
   - Based on the version used by
   [Berman et al. (2008)](http://pss.sagepub.com/content/19/12/1207) and
@@ -87,6 +84,12 @@ Currently implemented tasks:
 * **Raven's Progressive Matrices**
   - Based on the second set of matrices used in the
   [Wechsler Adult Intelligence Scale](https://en.wikipedia.org/wiki/Wechsler_Adult_Intelligence_Scale#WAIS-IV)
+* **Sternberg Task**
+  - Based on the original task by [Sternberg (1966)](https://www.ncbi.nlm.nih.gov/pubmed/5939936),
+   with trial count and set sizes from [Martins et al. (2012)](http://www.sciencedirect.com/science/article/pii/S1469029212001380)
+* **Sustained Attention to Response Task (SART)**
+  - Based on the original version by
+  [Robertson et al. (1997)](http://www.sciencedirect.com/science/article/pii/S0028393297000158)
 
 ##Contribution
 **Note**: I intend to majorly streamline this process in future releases, 
@@ -168,6 +171,7 @@ for statistics
 **Tasks**
 - All tasks (and their images) moved to separate directory
 - Improved integration with pygame
+- Added the Sternberg Task
 
 **Bug Fixes**
 - Up/Down buttons now correctly disable if random order is selected
