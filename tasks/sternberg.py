@@ -134,21 +134,21 @@ class Sternberg(object):
 
         # Display key reminders if practice trials
         if trial_type == "practice":
+            display.image(self.screen, self.img_left,
+                          450 - self.img_left.get_rect().width/2,
+                          self.screen_y/2 + 150)
             yes_text = self.font.render("(yes)", 1, (0, 0, 0))
             display.text(self.screen, self.font, yes_text,
                          450 - yes_text.get_rect().width/2,
-                         self.screen_y/2 + 150)
-            display.image(self.screen, self.img_left,
-                          450 - self.img_left.get_rect().width/2,
-                          self.screen_y/2 + 200)
+                         self.screen_y/2 + 160)
 
+            display.image(self.screen, self.img_right,
+                          self.screen_x-450-self.img_right.get_rect().width/2,
+                          self.screen_y/2 + 150)
             no_text = self.font.render("(no)", 1, (0, 0, 0))
             display.text(self.screen, self.font, no_text,
                          self.screen_x - 450 - no_text.get_rect().width/2,
-                         self.screen_y/2 + 150)
-            display.image(self.screen, self.img_right,
-                          self.screen_x-450-self.img_right.get_rect().width/2,
-                          self.screen_y/2 + 200)
+                         self.screen_y/2 + 160)
 
         pygame.display.flip()
 
