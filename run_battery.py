@@ -66,7 +66,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.directory = cur_directory
 
         # Make data folder if it doesnt exist
-        self.dataPath = self.directory + "\data\\"
+        self.dataPath = os.path.join(self.directory, "data")
         if not os.path.isdir(self.dataPath):
             os.makedirs(self.dataPath)
 
@@ -190,7 +190,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.taskList.insertItem(currentRow + 1, currentItem)
         self.taskList.setCurrentItem(currentItem)
 
-    # TODO add memory for previously selected tasks
     # Save window size/position to settings file
     def save_settings_window(self, size, pos):
         self.settings.beginGroup("MainWindow")
@@ -212,7 +211,6 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.save_settings_window(self.size(), self.pos())
 
         event.accept()
-
         sys.exit(0)  # This closes any open pygame windows
 
     def start(self):
@@ -273,13 +271,13 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                                                   self.subNum, self.condition)
 
             # Check if file already exists
-            # TODO use OS path join to create paths
-            if os.path.isfile(self.dataPath + self.datafileName):
+            self.output_file = os.path.join(self.dataPath, self.datafileName)
+            if os.path.isfile(self.output_file):
                 self.error_dialog('Data file already exists')
             else:
                 # TODO save each experiment data to their own directory
                 # Create the excel writer object and save the file
-                self.writer = pd.ExcelWriter(self.dataPath + self.datafileName)
+                self.writer = pd.ExcelWriter(self.output_file)
                 self.subjectInfo.to_excel(self.writer, 'info', index=False)
                 self.writer.save()
 
