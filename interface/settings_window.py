@@ -31,6 +31,7 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Get stored task window settings
         self.settings.beginGroup("TaskWindows")
         self.task_fullscreen = self.settings.value("fullscreen").toBool()
+        self.task_borderless = self.settings.value("borderless").toBool()
         self.task_width = self.settings.value("width").toString()
         self.task_height = self.settings.value("height").toString()
         self.settings.endGroup()
@@ -42,8 +43,11 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Set fullscreen check state
         self.settings_task_fullscreen_checkbox.setChecked(self.task_fullscreen)
 
-        # Disable task window size entry if fullscreen is selected
-        self.set_task_size_state(not self.task_fullscreen)
+        # Set borderless check state
+        self.settings_task_borderless_checkbox.setChecked(self.task_borderless)
+
+        # Set state of the windowed mode options (e.g. borderless, size)
+        self.set_windowed_options_state(not self.task_fullscreen)
 
         # Bind button events
         self.settings_save_button.clicked.connect(self.save_settings)
@@ -51,8 +55,9 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings_task_fullscreen_checkbox.clicked.connect(
             self.task_fullscreen_checkbox)
 
-    # Set state of the task window size entry fields
-    def set_task_size_state(self, state):
+    def set_windowed_options_state(self, state):
+        self.settings_task_borderless_checkbox.setEnabled(state)
+
         self.settings_task_height_value.setEnabled(state)
         self.settings_task_width_value.setEnabled(state)
 
@@ -60,24 +65,23 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Invert fullscreen selection state
         self.task_fullscreen = not self.task_fullscreen
         # Set entry boxes to opposite of new fullscreen state
-        self.set_task_size_state(not self.task_fullscreen)
+        self.set_windowed_options_state(not self.task_fullscreen)
 
     def save_window_information(self):
         self.settings.beginGroup("SettingsWindow")
         self.settings.setValue('size', self.size())
         self.settings.endGroup()
 
-    def cancel_settings(self):
-        # Save settings window size information
-        self.save_window_information()
-        self.close()
-
     def save_settings(self):
         self.settings.beginGroup("TaskWindows")
         self.settings.setValue('fullscreen', self.task_fullscreen)
 
-        # Only save width and height if fullscreen is not selected
+        # Only save some options if fullscreen is not selected
         if not self.task_fullscreen:
+            self.settings.setValue(
+                'borderless',
+                self.settings_task_borderless_checkbox.isChecked())
+
             self.settings.setValue('width',
                                    self.settings_task_width_value.text())
             self.settings.setValue('height',
@@ -85,6 +89,11 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         self.settings.endGroup()
 
+        # Save settings window size information
+        self.save_window_information()
+        self.close()
+
+    def cancel_settings(self):
         # Save settings window size information
         self.save_window_information()
         self.close()

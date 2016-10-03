@@ -38,6 +38,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             # Settings - Task Windows
             self.settings.beginGroup("TaskWindows")
             self.settings.setValue('fullscreen', False)
+            self.settings.setValue('borderless', False)
             self.settings.setValue('width', 1280)
             self.settings.setValue('height', 1024)
             self.settings.endGroup()
@@ -50,6 +51,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
         # Initialize task settings
         self.task_fullscreen = None
+        self.task_borderless = None
         self.task_width = None
         self.task_height = None
 
@@ -200,8 +202,10 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     def get_task_settings(self):
         self.settings.beginGroup("TaskWindows")
         self.task_fullscreen = self.settings.value("fullscreen").toBool()
+        self.task_borderless = self.settings.value("borderless").toBool()
         self.task_width = self.settings.value("width").toInt()[0]
         self.task_height = self.settings.value("height").toInt()[0]
+        self.settings.endGroup()
 
     # Override the closeEvent method
     def closeEvent(self, event):
@@ -271,7 +275,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             # Check if file already exists
             # TODO use OS path join to create paths
             if os.path.isfile(self.dataPath + self.datafileName):
-                self.error_dialog('Data file already exists!')
+                self.error_dialog('Data file already exists')
             else:
                 # TODO save each experiment data to their own directory
                 # Create the excel writer object and save the file
@@ -296,15 +300,19 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 # Initialize pygame
                 pygame.init()
 
-                # TODO add a borderless option to Settings
                 # Create primary task window
                 # pygame_screen is passed to each task as the display window
                 if self.task_fullscreen:
                     self.pygame_screen = pygame.display.set_mode(
                         (0, 0), pygame.FULLSCREEN)
                 else:
-                    self.pygame_screen = pygame.display.set_mode(
-                        (self.task_width, self.task_height))
+                    if self.task_borderless:
+                        self.pygame_screen = pygame.display.set_mode(
+                            (self.task_width, self.task_height),
+                            pygame.NOFRAME)
+                    else:
+                        self.pygame_screen = pygame.display.set_mode(
+                            (self.task_width, self.task_height))
 
                 background = pygame.Surface(self.pygame_screen.get_size())
                 background = background.convert()

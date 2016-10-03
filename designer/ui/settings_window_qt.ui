@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>171</height>
+    <height>161</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QVBoxLayout" name="settings_main_layout">
+    <layout class="QVBoxLayout" name="settings_main_layout" stretch="0,0">
      <item>
       <widget class="QScrollArea" name="settings_scroll_area">
        <property name="frameShape">
@@ -45,21 +45,12 @@
           <x>0</x>
           <y>0</y>
           <width>330</width>
-          <height>101</height>
+          <height>110</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
-         <property name="leftMargin">
-          <number>5</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>5</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
+         <property name="margin">
+          <number>1</number>
          </property>
          <item>
           <widget class="QGroupBox" name="settings_tasks_group">
@@ -71,41 +62,18 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <layout class="QHBoxLayout" name="settings_task_fullscreen_layout">
-              <item>
-               <widget class="QLabel" name="settings_task_maximize_label">
-                <property name="text">
-                 <string>Fullscreen:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="settings_task_fullscreen_checkbox">
-                <property name="statusTip">
-                 <string>Show tasks in fullscreen mode</string>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
+             <widget class="QCheckBox" name="settings_task_fullscreen_checkbox">
+              <property name="text">
+               <string>Fullscreen</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="settings_task_borderless_checkbox">
+              <property name="text">
+               <string>Borderless</string>
+              </property>
+             </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="settings_task_size">
@@ -145,19 +113,6 @@
         </layout>
        </widget>
       </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item>
       <layout class="QHBoxLayout" name="settings_button_layout">
