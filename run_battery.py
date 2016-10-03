@@ -296,6 +296,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 # Initialize pygame
                 pygame.init()
 
+                # TODO add a borderless option to Settings
                 # Create primary task window
                 # pygame_screen is passed to each task as the display window
                 if self.task_fullscreen:
