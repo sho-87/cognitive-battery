@@ -1,6 +1,6 @@
 #Cognitive Battery
 
-<img align="right" src="images/icon.png">
+<img align="left" src="images/icon.png">
 
 A Python based battery of common cognitive psychology tasks. Designed to be 
 modular as each task is contained within a single Python script/module, the 
