@@ -239,11 +239,44 @@ class Sternberg(object):
         for i, r in self.practice_trials.iterrows():
             self.display_trial(self.practice_trials, i, r)
 
-        print self.practice_trials
-
         # Main trials ready screen
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "End of practice trials.",
+                     100, 100)
+        display.text(self.screen, self.font, "You may move on to the main "
+                                             "trials when you're ready",
+                     100, 300)
+
+        display.text(self.screen, self.font, "Remember to respond as quickly "
+                                             "and as accurately as possible",
+                     100, 500)
+        display.text(self.screen, self.font, "Your reaction time and accuracy"
+                                             " will be recorded",
+                     100, 600)
+        display.text_space(self.screen, self.font,
+                           "center", 800)
+
+        pygame.display.flip()
+
+        display.wait_for_space()
 
         # Main trials
+        for i, block in enumerate(self.blocks):
+            for j, r in block.iterrows():
+                self.display_trial(block, j, r)
+
+            # If this is not the final block, show instructions for next block
+            if i != len(self.blocks)-1:
+                display.text(self.screen, self.font, "End of block.", 100, 200)
+                display.text(self.screen, self.font,
+                             "Take a short break, and press space when you're "
+                             "ready to start the next block...", 100, 400)
+                display.text_space(self.screen, self.font,
+                                   "center", 700)
+
+                pygame.display.flip()
+
+                display.wait_for_space()
 
         # End screen
         self.screen.blit(self.background, (0, 0))
