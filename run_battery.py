@@ -20,6 +20,9 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # Setup the main window UI
         self.setupUi(self)
 
+        # Set app icon
+        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon.png')))
+
         # Get screen resolution
         self.res_width = res_width
         self.res_height = res_height

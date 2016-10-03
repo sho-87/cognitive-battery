@@ -1,3 +1,4 @@
+import os
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
@@ -10,6 +11,12 @@ class AboutDialog(QtGui.QDialog, about_dialog_qt.Ui_Dialog):
 
         # Setup the about dialog box
         self.setupUi(self)
+
+        # Add icon image
+        project_dir = os.path.dirname(os.path.dirname(
+            os.path.abspath(__file__)))  # Get parent directory
+        pixmap = QtGui.QPixmap(os.path.join(project_dir, 'images', 'icon.png'))
+        self.icon.setPixmap(pixmap)
 
         # Delete the object when dialog is closed
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
