@@ -1,3 +1,4 @@
+import os
 import sys
 import random
 import time
@@ -27,6 +28,16 @@ class Sternberg(object):
         self.background.fill((255, 255, 255))
         pygame.display.set_caption("Sternberg Task")
         pygame.mouse.set_visible(0)
+
+        # Load images
+        self.base_dir = os.path.dirname(os.path.realpath(__file__))
+        self.image_path = os.path.join(self.base_dir, "images", "Sternberg")
+
+        self.img_left = pygame.image.load(
+            os.path.join(self.image_path, 'left_arrow.png'))
+
+        self.img_right = pygame.image.load(
+            os.path.join(self.image_path, 'right_arrow.png'))
 
         # Experiment options
         # Timings are taken from Sternberg (1966)
@@ -96,7 +107,7 @@ class Sternberg(object):
 
         return df
 
-    def display_trial(self, df, i, r):
+    def display_trial(self, df, i, r, trial_type):
         # Clear screen
         self.screen.blit(self.background, (0, 0))
         pygame.display.flip()
@@ -121,15 +132,30 @@ class Sternberg(object):
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.stim_font, r['probe'],
                      "center", "center", (0, 0, 255))
-        display.text(self.screen, self.font, "(yes)",
-                     200, self.screen_y/2 + 200)
-        display.text(self.screen, self.font, "(no)",
-                     self.screen_x - 200, self.screen_y/2 + 200)
+
+        # Display key reminders if practice trials
+        if trial_type == "practice":
+            yes_text = self.font.render("yes", 1, (0, 0, 0))
+            display.text(self.screen, self.font, yes_text,
+                         300 - yes_text.get_rect().width/2,
+                         self.screen_y/2 + 200)
+            display.image(self.screen, self.img_left,
+                          300 - self.img_left.get_rect().width/2,
+                          self.screen_y/2 + 250)
+
+            no_text = self.font.render("no", 1, (0, 0, 0))
+            display.text(self.screen, self.font, no_text,
+                         self.screen_x - 300 - no_text.get_rect().width/2,
+                         self.screen_y/2 + 200)
+            display.image(self.screen, self.img_right,
+                          self.screen_x-300-self.img_right.get_rect().width/2,
+                          self.screen_y/2 + 250)
+
         pygame.display.flip()
 
         start_time = int(round(time.time() * 1000))
 
-        # clear the event queue before checking for responses
+        # Clear the event queue before checking for responses
         pygame.event.clear()
         wait_response = True
         while wait_response:
@@ -237,7 +263,7 @@ class Sternberg(object):
 
         # Practice trials
         for i, r in self.practice_trials.iterrows():
-            self.display_trial(self.practice_trials, i, r)
+            self.display_trial(self.practice_trials, i, r, "practice")
 
         # Main trials ready screen
         self.screen.blit(self.background, (0, 0))
@@ -263,7 +289,7 @@ class Sternberg(object):
         # Main trials
         for i, block in enumerate(self.blocks):
             for j, r in block.iterrows():
-                self.display_trial(block, j, r)
+                self.display_trial(block, j, r, "main")
 
             # If this is not the final block, show instructions for next block
             if i != len(self.blocks)-1:
