@@ -23,7 +23,7 @@ class DigitspanBackwards(object):
 
         # Fill background
         self.background.fill((255, 255, 255))
-        pygame.display.set_caption("Backwards digit-span")
+        pygame.display.set_caption("Backwards Digitspan")
         pygame.mouse.set_visible(0)
 
         # set stimulus timings
@@ -81,8 +81,8 @@ class DigitspanBackwards(object):
             pygame.display.flip()
 
             self.baseTime = int(round(time.time() * 1000))
-            while int(round(
-                            time.time() * 1000)) - self.baseTime < self.stimDuration:
+            while int(
+                    round(time.time() * 1000)) - self.baseTime < self.stimDuration:
                 pass
 
             self.screen.blit(self.background, (0, 0))
@@ -97,8 +97,11 @@ class DigitspanBackwards(object):
     def numberEntry(self):
         self.userSequence = []
 
+        # Clear the event queue before checking for responses
+        pygame.event.clear()
+
         self.entry = True
-        while self.entry == True:
+        while self.entry:
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_RETURN:
                     self.entry = False

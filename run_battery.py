@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 import random
 import datetime
 import pygame
@@ -14,7 +14,6 @@ from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
-    # TODO move this class to a separate file
     def __init__(self, cur_directory, first_run, res_width, res_height):
         super(BatteryWindow, self).__init__()
 
@@ -62,6 +61,18 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # Initialize pygame screen
         self.pygame_screen = None
 
+        # Define URLs
+        self.LINKS = {
+            "github": "https://github.com/sho-87/cognitive-battery",
+            "license": "https://github.com/sho-87/"
+                       "cognitive-battery/blob/master/LICENSE",
+            "develop": "https://github.com/sho-87/"
+                       "cognitive-battery/tree/develop",
+            "issues": "https://github.com/sho-87/cognitive-battery/issues",
+            "new_issue": "https://github.com/sho-87/"
+                         "cognitive-battery/issues/new"
+        }
+
         # Get current directory
         self.directory = cur_directory
 
@@ -106,31 +117,23 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
     # Open web browser to the documentation page
     def show_documentation(self):
-        QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery"))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["github"]))
 
     # Open web browser to the license page
     def show_license(self):
-        QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl(
-                "https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["license"]))
 
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
-        QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl(
-                "https://github.com/sho-87/cognitive-battery/tree/develop"))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["develop"]))
 
     # Open web browser to the github issues page
     def show_browse_issues(self):
-        QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues"))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["issues"]))
 
     # Open web browser to the github new issue post
     def show_new_issue(self):
-        QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl(
-                "https://github.com/sho-87/cognitive-battery/issues/new"))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):
@@ -179,16 +182,16 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             self.taskList.item(index).setCheckState(0)
 
     def move_up(self):
-        currentRow = self.taskList.currentRow()
-        currentItem = self.taskList.takeItem(currentRow)
-        self.taskList.insertItem(currentRow - 1, currentItem)
-        self.taskList.setCurrentItem(currentItem)
+        current_row = self.taskList.currentRow()
+        current_item = self.taskList.takeItem(current_row)
+        self.taskList.insertItem(current_row - 1, current_item)
+        self.taskList.setCurrentItem(current_item)
 
     def move_down(self):
-        currentRow = self.taskList.currentRow()
-        currentItem = self.taskList.takeItem(currentRow)
-        self.taskList.insertItem(currentRow + 1, currentItem)
-        self.taskList.setCurrentItem(currentItem)
+        current_row = self.taskList.currentRow()
+        current_item = self.taskList.takeItem(current_row)
+        self.taskList.insertItem(current_row + 1, current_item)
+        self.taskList.setCurrentItem(current_item)
 
     # Save window size/position to settings file
     def save_settings_window(self, size, pos):
@@ -215,71 +218,70 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
     def start(self):
         # Store input values
-        self.subNum = self.subNumBox.text()
-        self.experimentID = self.experimentIDBox.text()
-        self.condition = self.conditionBox.text()
-        self.age = self.ageBox.text()
-        self.ra = self.raBox.text()
-        self.datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        sub_num = self.subNumBox.text()
+        experiment_id = self.experimentIDBox.text()
+        condition = self.conditionBox.text()
+        age = self.ageBox.text()
+        ra = self.raBox.text()
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
         if self.maleRadio.isChecked():
-            self.sex = 'male'
-        elif self.femaleRadio.isChecked():
-            self.sex = 'female'
+            sex = 'male'
+        else:
+            sex = 'female'
 
         # Get *selected* tasks and task order
-        self.tasks = []
+        selected_tasks = []
         for index in range(self.taskList.count()):
             # State 2 is set when item is selected
             if self.taskList.item(index).checkState() == 2:
                 # Add selected task to task list
-                self.tasks.append(str(self.taskList.item(index).text()))
+                selected_tasks.append(str(self.taskList.item(index).text()))
 
         # Check to see if a random order is desired
         # If so, shuffle tasks
         if self.random_order_selected():
-            random.shuffle(self.tasks)
+            random.shuffle(selected_tasks)
 
         # Check for required inputs
-        if not self.tasks:
+        if not selected_tasks:
             self.error_dialog('No tasks selected')
-        elif not self.ra:
+        elif not ra:
             self.error_dialog('Please enter RA name...')
-        elif not self.subNum:
+        elif not sub_num:
             self.error_dialog('Please enter a subject number...')
-        elif not self.experimentID:
+        elif not experiment_id:
             self.error_dialog('Please enter an experiment ID...')
-        elif not self.condition:
+        elif not condition:
             self.error_dialog('Please enter a condition number...')
-        elif not self.age:
+        elif not age:
             self.error_dialog('Please enter an age...')
-        elif not self.maleRadio.isChecked() and not self.femaleRadio.isChecked():
+        elif not self.maleRadio.isChecked() and not \
+                self.femaleRadio.isChecked():
             self.error_dialog('Please select a sex...')
         else:
             # Store subject info into a dataframe
-            self.subjectInfo = pd.DataFrame(
-                data=[(str(self.datetime), str(self.subNum),
-                       str(self.experimentID), str(self.condition),
-                       int(self.age), str(self.sex), str(self.ra),
-                       ', '.join(self.tasks))],
-                columns=['datetime', 'subNum', 'expID', 'condition',
+            subject_info = pd.DataFrame(
+                data=[(str(current_date), str(sub_num), str(experiment_id),
+                       str(condition), int(age), str(sex), str(ra),
+                       ', '.join(selected_tasks))],
+                columns=['datetime', 'sub_num', 'expID', 'condition',
                          'age', 'sex', 'RA', 'tasks']
             )
 
             # Set the output file name
-            self.datafileName = "%s_%s_%s.xls" % (self.experimentID,
-                                                  self.subNum, self.condition)
+            data_file_name = "%s_%s_%s.xls" % (experiment_id, sub_num,
+                                               condition)
 
             # Check if file already exists
-            self.output_file = os.path.join(self.dataPath, self.datafileName)
-            if os.path.isfile(self.output_file):
+            output_file = os.path.join(self.dataPath, data_file_name)
+            if os.path.isfile(output_file):
                 self.error_dialog('Data file already exists')
             else:
-                # TODO save each experiment data to their own directory
                 # Create the excel writer object and save the file
-                self.writer = pd.ExcelWriter(self.output_file)
-                self.subjectInfo.to_excel(self.writer, 'info', index=False)
-                self.writer.save()
+                writer = pd.ExcelWriter(output_file)
+                subject_info.to_excel(writer, 'info', index=False)
+                writer.save()
 
                 # Minimize battery UI
                 self.showMinimized()
@@ -317,60 +319,57 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
                 # Run each task
                 # Return and save their output to dataframe/excel
-                # TODO move data saving to end of each individual task module
-                for task in self.tasks:
+                for task in selected_tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
-                        antTask = ant.ANT(self.pygame_screen, background,
-                                          blocks=3)
+                        ant_task = ant.ANT(self.pygame_screen, background,
+                                           blocks=2)
                         # Run ANT
-                        self.antData = antTask.run()
+                        ant_data = ant_task.run()
                         # Save ANT data to excel
-                        self.antData.to_excel(self.writer, 'ANT', index=False)
+                        ant_data.to_excel(writer, 'ANT', index=False)
                     elif task == "Mental Rotation Task":
-                        mrtTask = mrt.MRT(self.pygame_screen, background)
+                        mrt_task = mrt.MRT(self.pygame_screen, background)
                         # Run MRT
-                        self.mrtData = mrtTask.run()
+                        mrt_data = mrt_task.run()
                         # Save MRT data to excel
-                        self.mrtData.to_excel(self.writer, 'MRT', index=False)
+                        mrt_data.to_excel(writer, 'MRT', index=False)
                     elif task == "Sustained Attention to Response Task (SART)":
-                        sartTask = sart.SART(self.pygame_screen, background)
+                        sart_task = sart.SART(self.pygame_screen, background)
                         # Run SART
-                        self.sartData = sartTask.run()
+                        sart_data = sart_task.run()
                         # Save SART data to excel
-                        self.sartData.to_excel(self.writer, 'SART',
-                                               index=False)
+                        sart_data.to_excel(writer, 'SART', index=False)
                     elif task == "Digit Span (backwards)":
-                        digitspanBackwardsTask = \
+                        digitspan_backwards_task = \
                             digitspan_backwards.DigitspanBackwards(
                                 self.pygame_screen, background)
                         # Run Digit span (Backwards)
-                        self.digitspanBackwardsData = digitspanBackwardsTask.run()
+                        digitspan_backwards_data = \
+                            digitspan_backwards_task.run()
                         # Save digit span (backwards) data to excel
-                        self.digitspanBackwardsData.to_excel(self.writer,
-                                                             'Digit span (backwards)',
-                                                             index=False)
+                        digitspan_backwards_data.to_excel(
+                            writer, 'Digit span (backwards)', index=False)
                     elif task == "Raven's Progressive Matrices":
-                        ravensTask = ravens.Ravens(self.pygame_screen,
-                                                   background,
-                                                   start=9, numTrials=12)
+                        ravens_task = ravens.Ravens(
+                            self.pygame_screen, background,
+                            start=9, numTrials=12)
                         # Run Raven's Matrices
-                        self.ravensData = ravensTask.run()
+                        ravens_data = ravens_task.run()
                         # Save ravens data to excel
-                        self.ravensData.to_excel(self.writer,
-                                                 'Ravens Matrices',
-                                                 index=False)
+                        ravens_data.to_excel(writer, 'Ravens Matrices',
+                                             index=False)
                     elif task == "Sternberg Task":
-                        sternbergTask = sternberg.Sternberg(
+                        sternberg_task = sternberg.Sternberg(
                             self.pygame_screen, background)
                         # Run Sternberg Task
-                        self.sternbergData = sternbergTask.run()
+                        sternberg_data = sternberg_task.run()
                         # Save sternberg data to excel
-                        self.sternbergData.to_excel(self.writer, 'Sternberg',
-                                                    index=False)
+                        sternberg_data.to_excel(writer, 'Sternberg',
+                                                index=False)
 
                     # Save excel file
-                    self.writer.save()
+                    writer.save()
 
                 # End of experiment screen
                 pygame.display.set_caption("Cognitive Battery")

@@ -217,7 +217,7 @@ class ANT(object):
         self.baseTime = int(round(time.time() * 1000))
         self.endTime = self.baseTime
 
-        # clear the event queue before checking for responses
+        # Clear the event queue before checking for responses
         pygame.event.clear()
         self.waitResponse = True
         while self.waitResponse:

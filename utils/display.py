@@ -100,7 +100,6 @@ def wait(duration):
     start_time = int(round(time.time() * 1000))
     while (int(round(time.time() * 1000)) - start_time) < duration:
         for event in pygame.event.get():
-            # TODO add quit hotkey to global Settings
             # Battery will quit if F12 is pressed while waiting
             if event.type == KEYDOWN and event.key == K_F12:
                 sys.exit(0)

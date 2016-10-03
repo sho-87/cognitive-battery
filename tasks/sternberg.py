@@ -59,7 +59,6 @@ class Sternberg(object):
 
         # Create practice trials
         # This gives 24 practice trials
-        # TODO add the ability to manually set the number of trials
         self.practice_combinations = self.combinations * 6
         random.shuffle(self.practice_combinations)
         self.practice_trials = self.create_trials(self.practice_combinations)
@@ -69,7 +68,6 @@ class Sternberg(object):
 
         for i in range(self.num_blocks):
             # This creates 48 trials per block
-            # TODO add the ability to manually set the number of trials
             block_combinations = self.combinations * 12
             random.shuffle(block_combinations)
 

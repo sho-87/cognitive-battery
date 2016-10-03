@@ -181,8 +181,8 @@ for statistics
 - Up/Down buttons now correctly disable if random order is selected
 - Pygame window now closes if the main battery UI is closed
 - Error now correctly displays if no tasks have been chosen
-- Pygame windows and backgrounds are now passed around the different
-tasks correctly
+- Pygame windows and backgrounds are now passed around the different tasks correctly
+- User input is no longer (pre)registered in digit span during digit display
 
 ###[1.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.0) *(2015-11-21)*
 - Initial release

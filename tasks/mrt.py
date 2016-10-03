@@ -20,7 +20,7 @@ class MRT(object):
         # get self.screen info
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
-        self.button = (self.screen_x - 1024) / 2  # TODO remove this magic num
+        self.button = (self.screen_x - 1024) / 2
 
         # Fill background
         self.background.fill((255, 255, 255))
