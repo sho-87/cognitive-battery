@@ -15,7 +15,7 @@ class Sternberg(object):
         self.screen = screen
         self.background = background
 
-        # Sets font and font size
+        # Set fonts and font sizes
         self.font = pygame.font.SysFont("arial", 30)
         self.stim_font = pygame.font.SysFont("arial", 50)
 
@@ -111,27 +111,19 @@ class Sternberg(object):
                      "center", "center")
         pygame.display.flip()
 
-        start_time = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - start_time < self.probe_warn_duration:
-            pass
+        display.wait(self.probe_warn_duration)
 
         # Display blank screen
-        self.screen.blit(self.background, (0, 0))
-        pygame.display.flip()
-
-        start_time = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - start_time < self.between_stim_duration:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_F12:
-                    sys.exit(0)
+        display.blank_screen(self.screen, self.background,
+                             self.between_stim_duration)
 
         # Display probe
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.stim_font, r['probe'],
                      "center", "center", (0, 0, 255))
-        display.text(self.screen, self.stim_font, "(yes)",
+        display.text(self.screen, self.font, "(yes)",
                      200, self.screen_y/2 + 200)
-        display.text(self.screen, self.stim_font, "(no)",
+        display.text(self.screen, self.font, "(no)",
                      self.screen_x - 200, self.screen_y/2 + 200)
         pygame.display.flip()
 
@@ -162,14 +154,8 @@ class Sternberg(object):
         df.set_value(i, "RT", rt)
 
         # Display blank screen
-        self.screen.blit(self.background, (0, 0))
-        pygame.display.flip()
-
-        start_time = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - start_time < self.between_stim_duration:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_F12:
-                    sys.exit(0)
+        display.blank_screen(self.screen, self.background,
+                             self.between_stim_duration)
 
         # Display feedback
         self.screen.blit(self.background, (0, 0))
@@ -185,21 +171,10 @@ class Sternberg(object):
 
         pygame.display.flip()
 
-        start_time = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - start_time < self.feedback_duration:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_F12:
-                    sys.exit(0)
+        display.wait(self.feedback_duration)
 
         # Display blank screen (ITI)
-        self.screen.blit(self.background, (0, 0))
-        pygame.display.flip()
-
-        start_time = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - start_time < self.ITI:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_F12:
-                    sys.exit(0)
+        display.blank_screen(self.screen, self.background, self.ITI)
 
     def display_sequence(self, sequence):
         for i, number in enumerate(sequence):
@@ -209,21 +184,11 @@ class Sternberg(object):
                          "center", "center")
             pygame.display.flip()
 
-            start_time = int(round(time.time() * 1000))
-            while int(round(time.time() * 1000)) - start_time < self.stim_duration:
-                for event in pygame.event.get():
-                    if event.type == KEYDOWN and event.key == K_F12:
-                        sys.exit(0)
+            display.wait(self.stim_duration)
 
             # Display blank screen
-            self.screen.blit(self.background, (0, 0))
-            pygame.display.flip()
-
-            start_time = int(round(time.time() * 1000))
-            while int(round(time.time() * 1000)) - start_time < self.between_stim_duration:
-                for event in pygame.event.get():
-                    if event.type == KEYDOWN and event.key == K_F12:
-                        sys.exit(0)
+            display.blank_screen(self.screen, self.background,
+                                 self.between_stim_duration)
 
     def run(self):
         # Instructions screen
@@ -251,17 +216,11 @@ class Sternberg(object):
                      "and as accurately, as possible",
                      100, 600)
 
-        display.space_text(self.screen, self.font, "center", 800)
+        display.text_space(self.screen, self.font, "center", 800)
 
         pygame.display.flip()
 
-        instruction_screen = True
-        while instruction_screen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    instruction_screen = False
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    sys.exit(0)
+        display.wait_for_space()
 
         # Practice ready screen
         self.screen.blit(self.background, (0, 0))
@@ -269,18 +228,12 @@ class Sternberg(object):
                      "We will begin with some practice trials...",
                      "center", "center")
 
-        display.space_text(self.screen, self.font,
+        display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 100)
 
         pygame.display.flip()
 
-        practice_ready_screen = True
-        while practice_ready_screen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    practice_ready_screen = False
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    sys.exit(0)
+        display.wait_for_space()
 
         # Practice trials
         for i, r in self.practice_trials.iterrows():
@@ -295,15 +248,11 @@ class Sternberg(object):
         # End screen
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "End of task", "center", "center")
-        display.space_text(self.screen, self.font,
+        display.text_space(self.screen, self.font,
                            "center", (self.screen_y / 2) + 100)
         pygame.display.flip()
 
-        end_screen = True
-        while end_screen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    end_screen = False
+        display.wait_for_space()
 
         # Concatenate blocks and add trial numbers
         all_data = pd.concat(self.blocks)

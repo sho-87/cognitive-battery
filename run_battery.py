@@ -367,7 +367,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                     self.writer.save()
 
                 # End of experiment screen
-                pygame.display.set_caption("End of Experiment")
+                pygame.display.set_caption("Cognitive Battery")
                 pygame.mouse.set_visible(1)
 
                 background.fill((255, 255, 255))
@@ -379,12 +379,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
                 pygame.display.flip()
 
-                end_experiment = True
-                while end_experiment:
-                    for event in pygame.event.get():
-                        if event.type == pygame.KEYDOWN and \
-                                        event.key == pygame.K_SPACE:
-                            end_experiment = False
+                display.wait_for_space()
 
                 # Quit pygame
                 pygame.quit()
