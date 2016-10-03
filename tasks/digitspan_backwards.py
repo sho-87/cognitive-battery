@@ -8,9 +8,10 @@ from sys import exit
 
 
 class DigitspanBackwards(object):
-    def __init__(self, screen):
+    def __init__(self, screen, background):
         # Get the pygame display window
         self.screen = screen
+        self.background = background
 
         # sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
@@ -20,9 +21,7 @@ class DigitspanBackwards(object):
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
-        # fills background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
+        # Fill background
         self.background.fill((255, 255, 255))
         pygame.display.set_caption("Backwards digit-span")
         pygame.mouse.set_visible(0)

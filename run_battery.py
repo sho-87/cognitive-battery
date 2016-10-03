@@ -7,9 +7,10 @@ import pandas as pd
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
+from utils import display
 from designer import battery_window_qt
 from interface import about_dialog, settings_window
-from tasks import ant, mrt, sart, ravens, digitspan_backwards
+from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
 class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
@@ -109,12 +110,14 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Open web browser to the license page
     def show_license(self):
         QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
+            QtCore.QUrl(
+                "https://github.com/sho-87/cognitive-battery/blob/master/LICENSE"))
 
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
         QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/tree/develop"))
+            QtCore.QUrl(
+                "https://github.com/sho-87/cognitive-battery/tree/develop"))
 
     # Open web browser to the github issues page
     def show_browse_issues(self):
@@ -124,7 +127,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Open web browser to the github new issue post
     def show_new_issue(self):
         QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://github.com/sho-87/cognitive-battery/issues/new"))
+            QtCore.QUrl(
+                "https://github.com/sho-87/cognitive-battery/issues/new"))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):
@@ -199,7 +203,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.task_width = self.settings.value("width").toInt()[0]
         self.task_height = self.settings.value("height").toInt()[0]
 
-    # Redefine the closeEvent method
+    # Override the closeEvent method
     def closeEvent(self, event):
         self.save_settings_window(self.size(), self.pos())
 
@@ -283,8 +287,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
                 # Center all pygame windows if not fullscreen
                 if not self.task_fullscreen:
-                    pos_x = str(self.res_width/2 - self.task_width/2)
-                    pos_y = str(self.res_height/2 - self.task_height/2)
+                    pos_x = str(self.res_width / 2 - self.task_width / 2)
+                    pos_y = str(self.res_height / 2 - self.task_height / 2)
 
                     os.environ['SDL_VIDEO_WINDOW_POS'] = \
                         "%s, %s" % (pos_x, pos_y)
@@ -292,6 +296,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                 # Initialize pygame
                 pygame.init()
 
+                # TODO add a borderless option to Settings
                 # Create primary task window
                 # pygame_screen is passed to each task as the display window
                 if self.task_fullscreen:
@@ -301,47 +306,80 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                     self.pygame_screen = pygame.display.set_mode(
                         (self.task_width, self.task_height))
 
+                background = pygame.Surface(self.pygame_screen.get_size())
+                background = background.convert()
+
                 # Run each task
                 # Return and save their output to dataframe/excel
                 # TODO move data saving to end of each individual task module
                 for task in self.tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
-                        antTask = ant.ANT(self.pygame_screen, blocks=3)
+                        antTask = ant.ANT(self.pygame_screen, background,
+                                          blocks=3)
                         # Run ANT
                         self.antData = antTask.run()
                         # Save ANT data to excel
                         self.antData.to_excel(self.writer, 'ANT', index=False)
                     elif task == "Mental Rotation Task":
-                        mrtTask = mrt.MRT(self.pygame_screen)
+                        mrtTask = mrt.MRT(self.pygame_screen, background)
                         # Run MRT
                         self.mrtData = mrtTask.run()
                         # Save MRT data to excel
                         self.mrtData.to_excel(self.writer, 'MRT', index=False)
                     elif task == "Sustained Attention to Response Task (SART)":
-                        sartTask = sart.SART(self.pygame_screen)
+                        sartTask = sart.SART(self.pygame_screen, background)
                         # Run SART
                         self.sartData = sartTask.run()
                         # Save SART data to excel
-                        self.sartData.to_excel(self.writer, 'SART', index=False)
+                        self.sartData.to_excel(self.writer, 'SART',
+                                               index=False)
                     elif task == "Digit Span (backwards)":
                         digitspanBackwardsTask = \
                             digitspan_backwards.DigitspanBackwards(
-                                self.pygame_screen)
+                                self.pygame_screen, background)
                         # Run Digit span (Backwards)
                         self.digitspanBackwardsData = digitspanBackwardsTask.run()
                         # Save digit span (backwards) data to excel
-                        self.digitspanBackwardsData.to_excel(self.writer, 'Digit span (backwards)', index=False)
+                        self.digitspanBackwardsData.to_excel(self.writer,
+                                                             'Digit span (backwards)',
+                                                             index=False)
                     elif task == "Raven's Progressive Matrices":
                         ravensTask = ravens.Ravens(self.pygame_screen,
+                                                   background,
                                                    start=9, numTrials=12)
                         # Run Raven's Matrices
                         self.ravensData = ravensTask.run()
                         # Save ravens data to excel
-                        self.ravensData.to_excel(self.writer, 'Ravens Matrices', index=False)
+                        self.ravensData.to_excel(self.writer,
+                                                 'Ravens Matrices',
+                                                 index=False)
+                    elif task == "Sternberg Task":
+                        sternbergTask = sternberg.Sternberg(
+                            self.pygame_screen, background)
+                        # Run Sternberg Task
+                        self.sternbergData = sternbergTask.run()
+                        # Save sternberg data to excel
+                        self.sternbergData.to_excel(self.writer, 'Sternberg',
+                                                    index=False)
 
                     # Save excel file
                     self.writer.save()
+
+                # End of experiment screen
+                pygame.display.set_caption("Cognitive Battery")
+                pygame.mouse.set_visible(1)
+
+                background.fill((255, 255, 255))
+                self.pygame_screen.blit(background, (0, 0))
+
+                font = pygame.font.SysFont("arial", 30)
+                display.text(self.pygame_screen, font, "End of Experiment",
+                             "center", "center")
+
+                pygame.display.flip()
+
+                display.wait_for_space()
 
                 # Quit pygame
                 pygame.quit()
@@ -367,6 +405,7 @@ def main():
                                    screen_resolution.height())
     battery_window.show()
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

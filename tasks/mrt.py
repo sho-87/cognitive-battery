@@ -9,9 +9,10 @@ from sys import exit
 
 
 class MRT(object):
-    def __init__(self, screen):
+    def __init__(self, screen, background):
         # Get the pygame display window
         self.screen = screen
+        self.background = background
 
         # sets font and font size
         self.xFont = pygame.font.SysFont("arial", 20)
@@ -21,9 +22,7 @@ class MRT(object):
         self.screen_y = self.screen.get_height()
         self.button = (self.screen_x - 1024) / 2  # TODO remove this magic num
 
-        # fills self.background
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
+        # Fill background
         self.background.fill((255, 255, 255))
         pygame.display.set_caption("Mental Rotation Task")
         pygame.mouse.set_visible(1)
