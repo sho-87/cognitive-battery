@@ -1,5 +1,6 @@
 import sys
 import random
+import time
 import pandas as pd
 import pygame
 
@@ -16,6 +17,7 @@ class Sternberg(object):
 
         # Sets font and font size
         self.font = pygame.font.SysFont("arial", 30)
+        self.stim_font = pygame.font.SysFont("arial", 50)
 
         # Get screen info
         self.screen_x = self.screen.get_width()
@@ -33,6 +35,7 @@ class Sternberg(object):
         self.stim_duration = 1200
         self.between_stim_duration = 250
         self.probe_warn_duration = 2000
+        self.probe_duration = 2500
         self.feedback_duration = 1000
         self.ITI = 750
         self.stim_set = range(10)
@@ -93,6 +96,135 @@ class Sternberg(object):
 
         return df
 
+    def display_trial(self, df, i, r):
+        # Clear screen
+        self.screen.blit(self.background, (0, 0))
+        pygame.display.flip()
+
+        # Display number sequence
+        self.display_sequence(r['set'])
+
+        # Display probe warning/question
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "Was the following number in"
+                                             " the original sequence?",
+                     "center", "center")
+        pygame.display.flip()
+
+        start_time = int(round(time.time() * 1000))
+        while int(round(time.time() * 1000)) - start_time < self.probe_warn_duration:
+            pass
+
+        # Display blank screen
+        self.screen.blit(self.background, (0, 0))
+        pygame.display.flip()
+
+        start_time = int(round(time.time() * 1000))
+        while int(round(time.time() * 1000)) - start_time < self.between_stim_duration:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+        # Display probe
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.stim_font, r['probe'],
+                     "center", "center", (0, 0, 255))
+        display.text(self.screen, self.stim_font, "(yes)",
+                     200, self.screen_y/2 + 200)
+        display.text(self.screen, self.stim_font, "(no)",
+                     self.screen_x - 200, self.screen_y/2 + 200)
+        pygame.display.flip()
+
+        start_time = int(round(time.time() * 1000))
+
+        # clear the event queue before checking for responses
+        pygame.event.clear()
+        wait_response = True
+        while wait_response:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_LEFT:
+                    df.set_value(i, "response", "present")
+                    wait_response = False
+                elif event.type == KEYDOWN and event.key == K_RIGHT:
+                    df.set_value(i, "response", "absent")
+                    wait_response = False
+                elif event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+            end_time = int(round(time.time() * 1000))
+
+            # if time limit has been reached, consider it a missed trial
+            if end_time - start_time >= self.probe_duration:
+                wait_response = False
+
+        # Store RT
+        rt = int(round(time.time() * 1000)) - start_time
+        df.set_value(i, "RT", rt)
+
+        # Display blank screen
+        self.screen.blit(self.background, (0, 0))
+        pygame.display.flip()
+
+        start_time = int(round(time.time() * 1000))
+        while int(round(time.time() * 1000)) - start_time < self.between_stim_duration:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+        # Display feedback
+        self.screen.blit(self.background, (0, 0))
+
+        if df["probeType"][i] == df["response"][i]:
+            df.set_value(i, "correct", 1)
+            display.text(self.screen, self.font, "correct",
+                         "center", "center", (0, 255, 0))
+        else:
+            df.set_value(i, "correct", 0)
+            display.text(self.screen, self.font, "incorrect",
+                         "center", "center", (255, 0, 0))
+
+        pygame.display.flip()
+
+        start_time = int(round(time.time() * 1000))
+        while int(round(time.time() * 1000)) - start_time < self.feedback_duration:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+        # Display blank screen (ITI)
+        self.screen.blit(self.background, (0, 0))
+        pygame.display.flip()
+
+        start_time = int(round(time.time() * 1000))
+        while int(round(time.time() * 1000)) - start_time < self.ITI:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+    def display_sequence(self, sequence):
+        for i, number in enumerate(sequence):
+            # Display number
+            self.screen.blit(self.background, (0, 0))
+            display.text(self.screen, self.stim_font, number,
+                         "center", "center")
+            pygame.display.flip()
+
+            start_time = int(round(time.time() * 1000))
+            while int(round(time.time() * 1000)) - start_time < self.stim_duration:
+                for event in pygame.event.get():
+                    if event.type == KEYDOWN and event.key == K_F12:
+                        sys.exit(0)
+
+            # Display blank screen
+            self.screen.blit(self.background, (0, 0))
+            pygame.display.flip()
+
+            start_time = int(round(time.time() * 1000))
+            while int(round(time.time() * 1000)) - start_time < self.between_stim_duration:
+                for event in pygame.event.get():
+                    if event.type == KEYDOWN and event.key == K_F12:
+                        sys.exit(0)
+
     def run(self):
         # Instructions screen
         self.screen.blit(self.background, (0, 0))
@@ -151,6 +283,10 @@ class Sternberg(object):
                     sys.exit(0)
 
         # Practice trials
+        for i, r in self.practice_trials.iterrows():
+            self.display_trial(self.practice_trials, i, r)
+
+        print self.practice_trials
 
         # Main trials ready screen
 
