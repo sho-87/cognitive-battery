@@ -9,6 +9,8 @@ results of which are returned as a dataframe for saving.
 Pull requests are welcome! Please see the [contribution](#contribution) 
 notes below.
 
+<br>
+
 ![Battery loading screen](images/battery_screenshot.png)
 
 The battery was originally designed for a resolution of 1280x1024,
