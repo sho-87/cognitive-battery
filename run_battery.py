@@ -203,7 +203,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.task_width = self.settings.value("width").toInt()[0]
         self.task_height = self.settings.value("height").toInt()[0]
 
-    # Redefine the closeEvent method
+    # Override the closeEvent method
     def closeEvent(self, event):
         self.save_settings_window(self.size(), self.pos())
 

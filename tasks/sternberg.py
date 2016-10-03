@@ -46,9 +46,10 @@ class Sternberg(object):
         self.stim_duration = 1200
         self.between_stim_duration = 250
         self.probe_warn_duration = 2000
-        self.probe_duration = 2500
+        self.probe_duration = 2250  # Max time per probe, from Martins (2012)
         self.feedback_duration = 1000
-        self.ITI = 750
+        self.ITI = 1500
+
         self.stim_set = range(10)
         self.set_size = (2, 6)
         self.probe_type = ("present", "absent")
@@ -115,11 +116,9 @@ class Sternberg(object):
         # Display number sequence
         self.display_sequence(r['set'])
 
-        # Display probe warning/question
+        # Display probe warning
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font, "Was the following number in"
-                                             " the original sequence?",
-                     "center", "center")
+        display.text(self.screen, self.stim_font, "+", "center", "center")
         pygame.display.flip()
 
         display.wait(self.probe_warn_duration)
@@ -135,7 +134,7 @@ class Sternberg(object):
 
         # Display key reminders if practice trials
         if trial_type == "practice":
-            yes_text = self.font.render("yes", 1, (0, 0, 0))
+            yes_text = self.font.render("(yes)", 1, (0, 0, 0))
             display.text(self.screen, self.font, yes_text,
                          300 - yes_text.get_rect().width/2,
                          self.screen_y/2 + 200)
@@ -143,7 +142,7 @@ class Sternberg(object):
                           300 - self.img_left.get_rect().width/2,
                           self.screen_y/2 + 250)
 
-            no_text = self.font.render("no", 1, (0, 0, 0))
+            no_text = self.font.render("(no)", 1, (0, 0, 0))
             display.text(self.screen, self.font, no_text,
                          self.screen_x - 300 - no_text.get_rect().width/2,
                          self.screen_y/2 + 200)
@@ -171,7 +170,7 @@ class Sternberg(object):
 
             end_time = int(round(time.time() * 1000))
 
-            # if time limit has been reached, consider it a missed trial
+            # If time limit has been reached, consider it a missed trial
             if end_time - start_time >= self.probe_duration:
                 wait_response = False
 
@@ -220,29 +219,36 @@ class Sternberg(object):
         # Instructions screen
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
-                     "You will see a sequence of numbers. "
+                     "You will see a sequence of numbers, one at a time. "
                      "Try your best to memorize them",
                      100, 100)
 
+        display.text(self.screen, self.stim_font, "8 - 5 - 4 - 1 - 0 - 9",
+                     "center", 200)
+
         display.text(self.screen, self.font,
-                     "You will then be shown a single test number", 100, 200)
+                     "You will then be shown a single test number in blue",
+                     100, 300)
+
+        display.text(self.screen, self.stim_font, "0",
+                     "center", 400, (0, 0, 255))
 
         display.text(self.screen, self.font,
                      "If this number was in the original sequence, "
                      "press the LEFT arrow",
-                     100, 400)
+                     100, 550)
 
         display.text(self.screen, self.font,
                      "If this number was NOT in the original sequence, "
                      "press the RIGHT arrow",
-                     100, 500)
+                     100, 650)
 
         display.text(self.screen, self.font,
                      "Try to do this as quickly, "
                      "and as accurately, as possible",
-                     100, 600)
+                     100, 750)
 
-        display.text_space(self.screen, self.font, "center", 800)
+        display.text_space(self.screen, self.font, "center", 900)
 
         pygame.display.flip()
 
