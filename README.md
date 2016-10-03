@@ -1,12 +1,13 @@
 #Cognitive Battery
+
+<img align="right" src="images/icon.png">
+
 A Python based battery of common cognitive psychology tasks. Designed to be 
 modular as each task is contained within a single Python script/module, the 
 results of which are returned as a dataframe for saving.
 
 Pull requests are welcome! Please see the [contribution](#contribution) 
 notes below.
-
-<img align="right" src="images/icon.png">
 
 ![Battery loading screen](images/battery_screenshot.png)
 
