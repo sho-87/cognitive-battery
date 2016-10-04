@@ -117,12 +117,13 @@ class ANT(object):
 
         # Offset the flanker stimulus to above/below fixation
         if location == "top":
-            self.screen.blit(stimulus, (
-                self.screen_x / 2 - self.flanker_w / 2,
-                self.screen_y / 2 - self.flanker_h - 31))
+            display.image(self.screen, stimulus,
+                          self.screen_x / 2 - self.flanker_w / 2,
+                          self.screen_y / 2 - self.flanker_h - 31)
         elif location == "bottom":
-            self.screen.blit(stimulus, (
-                self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 + 31))
+            display.image(self.screen, stimulus,
+                          self.screen_x / 2 - self.flanker_w / 2,
+                          self.screen_y / 2 + 31)
 
     def display_trial(self, trialNum, data, type):
         # check for a quit press after stimulus was shown
