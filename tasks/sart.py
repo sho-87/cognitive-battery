@@ -15,10 +15,10 @@ class SART(object):
         self.screen = screen
         self.background = background
 
-        # sets font and font size
-        self.instructionsFont = pygame.font.SysFont("arial", 30)
+        # Set font and font size
+        self.font = pygame.font.SysFont("arial", 30)
 
-        # get screen info
+        # Get screen info
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
@@ -53,7 +53,7 @@ class SART(object):
         self.allData["stimulus"] = self.numberSet
 
     def pressSpace(self, x, y):
-        self.space = self.instructionsFont.render(
+        self.space = self.font.render(
             "(Press spacebar when ready)", 1, (255, 255, 255))
         self.screen.blit(self.space, (x, y))
 
@@ -127,21 +127,21 @@ class SART(object):
         # Instructions
         self.screen.blit(self.background, (0, 0))
 
-        self.title = self.instructionsFont.render("SART", 1, (255, 255, 255))
+        self.title = self.font.render("SART", 1, (255, 255, 255))
         self.titleW = self.title.get_rect().width
         self.screen.blit(self.title, (
             self.screen_x / 2 - self.titleW / 2, self.screen_y / 2 - 250))
 
-        self.line1 = self.instructionsFont.render(
+        self.line1 = self.font.render(
             "Numbers will appear in the center of the screen.", 1,
             (255, 255, 255))
         self.screen.blit(self.line1, (100, self.screen_y / 2 - 100))
 
-        self.line2 = self.instructionsFont.render(
+        self.line2 = self.font.render(
             "Press the spacebar after you see a number.", 1, (255, 255, 255))
         self.screen.blit(self.line2, (100, self.screen_y / 2))
 
-        self.line3 = self.instructionsFont.render(
+        self.line3 = self.font.render(
             "However, if the number is a 3, do NOT press the spacebar.", 1,
             (255, 255, 255))
         self.screen.blit(self.line3, (100, self.screen_y / 2 + 100))
@@ -174,7 +174,7 @@ class SART(object):
                     exit()
 
                 self.screen.blit(self.background, (0, 0))
-                self.practiceInstructions = self.instructionsFont.render(
+                self.practiceInstructions = self.font.render(
                     "We will begin with a few practice trials...", 1,
                     (255, 255, 255))
                 self.screen.blit(self.practiceInstructions,
@@ -199,7 +199,7 @@ class SART(object):
                     self.practiceEndScreen = False
 
             self.screen.blit(self.background, (0, 0))
-            self.practiceEndLine = self.instructionsFont.render(
+            self.practiceEndLine = self.font.render(
                 "We will now begin the main trials...", 1, (255, 255, 255))
             self.screen.blit(self.practiceEndLine, (100, self.screen_y / 2))
 
@@ -224,8 +224,8 @@ class SART(object):
                     self.endScreen = False
 
             self.screen.blit(self.background, (0, 0))
-            self.endLine = self.instructionsFont.render("End of task.", 1,
-                                                        (255, 255, 255))
+            self.endLine = self.font.render("End of task.", 1,
+                                            (255, 255, 255))
             self.screen.blit(self.endLine, (100, self.screen_y / 2))
 
             self.pressSpace(100, (self.screen_y / 2) + 100)
