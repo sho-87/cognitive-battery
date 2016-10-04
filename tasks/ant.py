@@ -1,5 +1,6 @@
 import os
 import time
+import random
 import pandas as pd
 import numpy as np
 import pygame
@@ -75,25 +76,25 @@ class ANT(object):
         # Create output dataframe
         self.allData = pd.DataFrame()
 
-    def createBlock(self, blockNum, combinations, type):
-        if type == "main":
-            curCombinations = combinations * 2
-            np.random.shuffle(curCombinations)
-        elif type == "practice":
+    def create_block(self, block_num, combinations, trial_type):
+        if trial_type == "main":
+            cur_combinations = combinations * 2
+            np.random.shuffle(cur_combinations)
+        else:
             np.random.shuffle(combinations)
-            curCombinations = combinations[:len(combinations) / 2]
+            cur_combinations = combinations[:len(combinations) / 2]
 
-        # add combinations to dataframe
-        self.curBlock = pd.DataFrame(data=curCombinations, columns=(
+        # Add combinations to dataframe
+        cur_block = pd.DataFrame(data=cur_combinations, columns=(
             'congruency', 'cue', 'location', 'direction'))
 
-        # add timing info to dataframe
-        self.curBlock["block"] = blockNum + 1
-        self.curBlock["fixationTime"] = [x for x in np.random.randint(
+        # Add timing info to dataframe
+        cur_block["block"] = block_num + 1
+        cur_block["fixationTime"] = [x for x in np.random.randint(
             self.fixation_duration_range[0], self.fixation_duration_range[1],
-            len(curCombinations))]
+            len(cur_combinations))]
 
-        return self.curBlock
+        return cur_block
 
     def pressSpace(self, x, y):
         self.space = self.instructionsFont.render(
@@ -286,7 +287,7 @@ class ANT(object):
             pass
 
     def runBlock(self, blockNum, totalBlocks, type):
-        self.curBlock = self.createBlock(blockNum, self.combinations, type)
+        self.curBlock = self.create_block(blockNum, self.combinations, type)
 
         for j in range(self.curBlock.shape[0]):
             self.displayTrial(j, self.curBlock, type)
