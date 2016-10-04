@@ -31,7 +31,7 @@ class SART(object):
         # Experiment options
         self.BLANK_DURATION = 500
         self.STIM_DURATION = 250
-        self.ITI = 900
+        self.MASK_DURATION = 900
         self.STIMSIZES_PT = (48, 72, 94, 100, 120)  # in point
         self.STIMSIZES_MM = (12, 18, 23, 24, 29)  # in mm from original paper
 
@@ -43,7 +43,7 @@ class SART(object):
         self.base_dir = os.path.dirname(os.path.realpath(__file__))
         self.image_path = os.path.join(self.base_dir, "images", "SART")
 
-        # This uses the 29mm mask image (as described by Robertson 1997)
+        # Use the 29mm mask image (as described by Robertson 1997)
         self.img_mask = pygame.image.load(
             os.path.join(self.image_path, 'mask_29.png'))
 
@@ -65,31 +65,55 @@ class SART(object):
         key_press = 0
         data.set_value(i, 'RT', 1150)
 
+        # Display number
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, trial_font, str(data["stimulus"][i]),
+                     "center", "center", (255, 255, 255))
+        pygame.display.flip()
+
         # Get start time in ms
         start_time = int(round(time.time() * 1000))
 
+        # Clear the event queue before checking for responses
         pygame.event.clear()
-        # Keep trial to under 1150ms
-        while int(round(time.time() * 1000)) - start_time <= 1150:
+        wait_response = True
+        while wait_response:
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_SPACE:
                     key_press = 1
-                    data.set_value(i, 'RT', int(
-                        round(time.time() * 1000)) - start_time)
+                    data.set_value(i, 'RT',
+                                   int(round(time.time() * 1000)) - start_time)
                 elif event.type == KEYDOWN and event.key == K_F12:
                     sys.exit(0)
 
-            self.screen.blit(self.background, (0, 0))
+            end_time = int(round(time.time() * 1000))
 
-            # Display stim for 250ms
-            if int(round(time.time() * 1000))-start_time <= self.STIM_DURATION:
-                display.text(self.screen, trial_font, str(data["stimulus"][i]),
-                             "center", "center", (255, 255, 255))
-            else:
-                # Display post stim mask for 900ms
-                display.image(self.screen, self.img_mask, "center", "center")
+            # Stop this loop if stim duration has passed
+            if end_time - start_time >= self.STIM_DURATION:
+                wait_response = False
 
-            pygame.display.flip()
+        # Display mask
+        self.screen.blit(self.background, (0, 0))
+        display.image(self.screen, self.img_mask, "center", "center")
+        pygame.display.flip()
+
+        wait_response = True
+        while wait_response:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN and event.key == K_SPACE:
+                    if key_press == 0:
+                        key_press = 1
+                        data.set_value(
+                            i, 'RT',
+                            int(round(time.time() * 1000)) - start_time)
+                elif event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
+
+            end_time = int(round(time.time() * 1000))
+
+            # Stop this loop if mask duration has passed
+            if end_time - start_time >= self.MASK_DURATION:
+                wait_response = False
 
         # Check if response is correct
         if data["stimulus"][i] == 3:
