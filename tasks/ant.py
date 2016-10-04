@@ -15,10 +15,10 @@ class ANT(object):
         self.screen = screen
         self.background = background
 
-        # sets font and font size
+        # Sets font and font size
         self.instructionsFont = pygame.font.SysFont("arial", 30)
 
-        # get screen info
+        # Get screen info
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
@@ -27,54 +27,52 @@ class ANT(object):
         pygame.display.set_caption("ANT Task")
         pygame.mouse.set_visible(0)
 
-        # get images
-        self.directory = os.path.dirname(os.path.realpath(__file__))
-        self.imagePath = self.directory + "\images\\ANT\\"
+        # Get images
+        self.base_dir = os.path.dirname(os.path.realpath(__file__))
+        self.image_path = os.path.join(self.base_dir, "images", "ANT")
 
         self.img_left_congruent = pygame.image.load(
-            self.imagePath + 'left_congruent.png')
+            os.path.join(self.image_path, 'left_congruent.png'))
         self.img_left_incongruent = pygame.image.load(
-            self.imagePath + 'left_incongruent.png')
+            os.path.join(self.image_path, 'left_incongruent.png'))
         self.img_right_congruent = pygame.image.load(
-            self.imagePath + 'right_congruent.png')
+            os.path.join(self.image_path, 'right_congruent.png'))
         self.img_right_incongruent = pygame.image.load(
-            self.imagePath + 'right_incongruent.png')
+            os.path.join(self.image_path, 'right_incongruent.png'))
         self.img_left_neutral = pygame.image.load(
-            self.imagePath + 'left_neutral.png')
+            os.path.join(self.image_path, 'left_neutral.png'))
         self.img_right_neutral = pygame.image.load(
-            self.imagePath + 'right_neutral.png')
+            os.path.join(self.image_path, 'right_neutral.png'))
 
-        self.img_fixation = pygame.image.load(self.imagePath + 'fixation.png')
-        self.img_cue = pygame.image.load(self.imagePath + 'cue.png')
+        self.img_fixation = pygame.image.load(
+            os.path.join(self.image_path, 'fixation.png'))
+        self.img_cue = pygame.image.load(
+            os.path.join(self.image_path, 'cue.png'))
 
-        # get image dimensions
-        self.flankerW = self.img_left_incongruent.get_rect().width
-        self.flankerH = self.img_left_incongruent.get_rect().height
-        self.fixationW = self.img_fixation.get_rect().width
-        self.fixationH = self.img_fixation.get_rect().height
+        # Get image dimensions
+        self.flanker_w, self.flanker_h =\
+            self.img_left_incongruent.get_rect().size
 
-        # set number of blocks
-        self.numBlocks = blocks
+        self.fixation_w, self.fixation_h = self.img_fixation.get_rect().size
+
+        # Set number of blocks
+        self.num_blocks = blocks
 
         # Specify factor levels, and task timings as used by Fan et al. (2002).
+        self.congruency_levels = ["congruent", "incongruent", 'neutral']
+        self.cue_levels = ["nocue", "center", "spatial", 'double']
+        self.location_levels = ['top', 'bottom']
+        self.direction_levels = ['left', 'right']
 
-        self.congruencyLevels = ["congruent", "incongruent", 'neutral']
-
-        self.cueLevels = ["nocue", "center", "spatial", 'double']
-
-        self.locationLevels = ['top', 'bottom']
-
-        self.directionLevels = ['left', 'right']
-
-        self.fixationDurationRange = [400, 1600]
+        self.fixation_duration_range = [400, 1600]
 
         # Create level combinations
         # level combinations give us 48 trials.
         self.combinations = list(
-            product(self.congruencyLevels, self.cueLevels, self.locationLevels,
-                    self.directionLevels))
+            product(self.congruency_levels, self.cue_levels,
+                    self.location_levels, self.direction_levels))
 
-        # create output dataframe
+        # Create output dataframe
         self.allData = pd.DataFrame()
 
     def createBlock(self, blockNum, combinations, type):
@@ -92,7 +90,7 @@ class ANT(object):
         # add timing info to dataframe
         self.curBlock["block"] = blockNum + 1
         self.curBlock["fixationTime"] = [x for x in np.random.randint(
-            self.fixationDurationRange[0], self.fixationDurationRange[1],
+            self.fixation_duration_range[0], self.fixation_duration_range[1],
             len(curCombinations))]
 
         return self.curBlock
@@ -123,11 +121,11 @@ class ANT(object):
         # offset the flanker stimulus to above/below fixation
         if location == "top":
             self.screen.blit(self.stimulus, (
-                self.screen_x / 2 - self.flankerW / 2,
-                self.screen_y / 2 - self.flankerH - 31))
+                self.screen_x / 2 - self.flanker_w / 2,
+                self.screen_y / 2 - self.flanker_h - 31))
         elif location == "bottom":
             self.screen.blit(self.stimulus, (
-                self.screen_x / 2 - self.flankerW / 2, self.screen_y / 2 + 31))
+                self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 + 31))
 
     def displayTrial(self, trialNum, data, type):
         # check for a quit press after stimulus was shown
@@ -141,8 +139,8 @@ class ANT(object):
         # display fixation period
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixationW / 2,
-            self.screen_y / 2 - self.fixationH / 2))
+            self.screen_x / 2 - self.fixation_w / 2,
+            self.screen_y / 2 - self.fixation_h / 2))
         pygame.display.flip()
 
         self.baseTime = int(round(time.time() * 1000))
@@ -154,33 +152,33 @@ class ANT(object):
         self.screen.blit(self.background, (0, 0))
         if data.at[trialNum, "cue"] == "nocue":
             self.screen.blit(self.img_fixation, (
-                self.screen_x / 2 - self.fixationW / 2,
-                self.screen_y / 2 - self.fixationH / 2))
+                self.screen_x / 2 - self.fixation_w / 2,
+                self.screen_y / 2 - self.fixation_h / 2))
         elif data.at[trialNum, "cue"] == "center":
             self.screen.blit(self.img_cue, (
-                self.screen_x / 2 - self.fixationW / 2,
-                self.screen_y / 2 - self.fixationH / 2))
+                self.screen_x / 2 - self.fixation_w / 2,
+                self.screen_y / 2 - self.fixation_h / 2))
         elif data.at[trialNum, "cue"] == "double":
             self.screen.blit(self.img_fixation, (
-                self.screen_x / 2 - self.fixationW / 2,
-                self.screen_y / 2 - self.fixationH / 2))
+                self.screen_x / 2 - self.fixation_w / 2,
+                self.screen_y / 2 - self.fixation_h / 2))
             self.screen.blit(self.img_cue, (
-                self.screen_x / 2 - self.fixationW / 2,
-                self.screen_y / 2 - self.fixationH - 31))
+                self.screen_x / 2 - self.fixation_w / 2,
+                self.screen_y / 2 - self.fixation_h - 31))
             self.screen.blit(self.img_cue, (
-                self.screen_x / 2 - self.fixationW / 2,
+                self.screen_x / 2 - self.fixation_w / 2,
                 self.screen_y / 2 + 31))
         elif data.at[trialNum, "cue"] == "spatial":
             self.screen.blit(self.img_fixation, (
-                self.screen_x / 2 - self.fixationW / 2,
-                self.screen_y / 2 - self.fixationH / 2))
+                self.screen_x / 2 - self.fixation_w / 2,
+                self.screen_y / 2 - self.fixation_h / 2))
             if data.at[trialNum, "location"] == "top":
                 self.screen.blit(self.img_cue, (
-                    self.screen_x / 2 - self.fixationW / 2,
-                    self.screen_y / 2 - self.fixationH - 31))
+                    self.screen_x / 2 - self.fixation_w / 2,
+                    self.screen_y / 2 - self.fixation_h - 31))
             elif data.at[trialNum, "location"] == "bottom":
                 self.screen.blit(self.img_cue, (
-                    self.screen_x / 2 - self.fixationW / 2,
+                    self.screen_x / 2 - self.fixation_w / 2,
                     self.screen_y / 2 + 31))
 
         pygame.display.flip()
@@ -193,8 +191,8 @@ class ANT(object):
         # prestim interval (400ms)
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixationW / 2,
-            self.screen_y / 2 - self.fixationH / 2))
+            self.screen_x / 2 - self.fixation_w / 2,
+            self.screen_y / 2 - self.fixation_h / 2))
 
         pygame.display.flip()
 
@@ -205,8 +203,8 @@ class ANT(object):
         # display target
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixationW / 2,
-            self.screen_y / 2 - self.fixationH / 2))
+            self.screen_x / 2 - self.fixation_w / 2,
+            self.screen_y / 2 - self.fixation_h / 2))
 
         self.displayFlanker(trialNum, data, data.at[trialNum, "congruency"],
                             data.at[trialNum, "location"],
@@ -275,8 +273,8 @@ class ANT(object):
         # ITI
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixationW / 2,
-            self.screen_y / 2 - self.fixationH / 2))
+            self.screen_x / 2 - self.fixation_w / 2,
+            self.screen_y / 2 - self.fixation_h / 2))
 
         pygame.display.flip()
 
@@ -332,7 +330,7 @@ class ANT(object):
         self.screen.blit(self.line1, (100, self.screen_y / 2 - 200))
 
         self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixationW / 2, self.screen_y / 2 - 150))
+            self.screen_x / 2 - self.fixation_w / 2, self.screen_y / 2 - 150))
 
         self.line2 = self.instructionsFont.render(
             "Then, a set of arrows will appear somewhere on the screen:", 1,
@@ -340,7 +338,7 @@ class ANT(object):
         self.screen.blit(self.line2, (100, self.screen_y / 2 - 100))
 
         self.screen.blit(self.img_left_incongruent, (
-            self.screen_x / 2 - self.flankerW / 2, self.screen_y / 2 - 50))
+            self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 - 50))
 
         self.line3 = self.instructionsFont.render(
             "Use the left/right arrow keys to indicate the direction of the CENTER arrow only.",
@@ -413,8 +411,8 @@ class ANT(object):
             pygame.display.flip()
 
         # Main task
-        for i in range(self.numBlocks):
-            self.runBlock(i, self.numBlocks, "main")
+        for i in range(self.num_blocks):
+            self.runBlock(i, self.num_blocks, "main")
 
         # create trial number column
         self.trialNums = np.arange(1, self.allData.shape[0] + 1)
