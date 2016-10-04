@@ -129,9 +129,7 @@ class ANT(object):
     def display_trial(self, trial_num, data, trial_type):
         # Check for a quit press after stimulus was shown
         for event in pygame.event.get():
-            if event.type == KEYDOWN and event.key == K_F9:
-                return self.all_data
-            elif event.type == KEYDOWN and event.key == K_F12:
+            if event.type == KEYDOWN and event.key == K_F12:
                 sys.exit(0)
 
         # Display fixation
@@ -212,8 +210,6 @@ class ANT(object):
                 elif event.type == KEYDOWN and event.key == K_RIGHT:
                     response = "right"
                     wait_response = False
-                elif event.type == KEYDOWN and event.key == K_F9:
-                    return self.all_data
                 elif event.type == KEYDOWN and event.key == K_F12:
                     sys.exit(0)
 
