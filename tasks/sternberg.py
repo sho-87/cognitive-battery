@@ -42,12 +42,12 @@ class Sternberg(object):
         # Experiment options
         # Timings are taken from Sternberg (1966)
         # Block sizes are taken from Martins (2012)
-        self.num_blocks = blocks
-        self.stim_duration = 1200
-        self.between_stim_duration = 250
-        self.probe_warn_duration = 2000
-        self.probe_duration = 2250  # Max time per probe, from Martins (2012)
-        self.feedback_duration = 1000
+        self.NUM_BLOCKS = blocks
+        self.STIM_DURATION = 1200
+        self.BETWEEN_STIM_DURATION = 250
+        self.PROBE_WARN_DURATION = 2000
+        self.PROBE_DURATION = 2250  # Max time per probe, from Martins (2012)
+        self.FEEDBACK_DURATION = 1000
         self.ITI = 1500
 
         self.stim_set = range(10)
@@ -66,7 +66,7 @@ class Sternberg(object):
         # Create main trial blocks
         self.blocks = []  # List will contain a dataframe for each block
 
-        for i in range(self.num_blocks):
+        for i in range(self.NUM_BLOCKS):
             # This creates 48 trials per block
             block_combinations = self.combinations * 12
             random.shuffle(block_combinations)
@@ -119,11 +119,11 @@ class Sternberg(object):
         display.text(self.screen, self.stim_font, "+", "center", "center")
         pygame.display.flip()
 
-        display.wait(self.probe_warn_duration)
+        display.wait(self.PROBE_WARN_DURATION)
 
         # Display blank screen
         display.blank_screen(self.screen, self.background,
-                             self.between_stim_duration)
+                             self.BETWEEN_STIM_DURATION)
 
         # Display probe
         self.screen.blit(self.background, (0, 0))
@@ -172,7 +172,7 @@ class Sternberg(object):
             end_time = int(round(time.time() * 1000))
 
             # If time limit has been reached, consider it a missed trial
-            if end_time - start_time >= self.probe_duration:
+            if end_time - start_time >= self.PROBE_DURATION:
                 wait_response = False
 
         # Store RT
@@ -181,7 +181,7 @@ class Sternberg(object):
 
         # Display blank screen
         display.blank_screen(self.screen, self.background,
-                             self.between_stim_duration)
+                             self.BETWEEN_STIM_DURATION)
 
         # Display feedback
         self.screen.blit(self.background, (0, 0))
@@ -197,7 +197,7 @@ class Sternberg(object):
 
         pygame.display.flip()
 
-        display.wait(self.feedback_duration)
+        display.wait(self.FEEDBACK_DURATION)
 
         # Display blank screen (ITI)
         display.blank_screen(self.screen, self.background, self.ITI)
@@ -210,11 +210,11 @@ class Sternberg(object):
                          "center", "center")
             pygame.display.flip()
 
-            display.wait(self.stim_duration)
+            display.wait(self.STIM_DURATION)
 
             # Display blank screen
             display.blank_screen(self.screen, self.background,
-                                 self.between_stim_duration)
+                                 self.BETWEEN_STIM_DURATION)
 
     def run(self):
         # Instructions screen
