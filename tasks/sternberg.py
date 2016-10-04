@@ -50,12 +50,12 @@ class Sternberg(object):
         self.FEEDBACK_DURATION = 1000
         self.ITI = 1500
 
-        self.stim_set = range(10)
-        self.set_size = (2, 6)
-        self.probe_type = ("present", "absent")
+        self.STIM_SET = range(10)
+        self.SET_SIZE = (2, 6)
+        self.PROBE_TYPE = ("present", "absent")
 
         # Create condition combinations
-        self.combinations = list(product(self.set_size, self.probe_type))
+        self.combinations = list(product(self.SET_SIZE, self.PROBE_TYPE))
 
         # Create practice trials
         # This gives 24 practice trials
@@ -80,8 +80,8 @@ class Sternberg(object):
 
         for i, r in df.iterrows():
             # Store the current used set
-            used_set = random.sample(self.stim_set, r['setSize'])
-            unused_set = list(set(self.stim_set) - set(used_set))
+            used_set = random.sample(self.STIM_SET, r['setSize'])
+            unused_set = list(set(self.STIM_SET) - set(used_set))
 
             df.set_value(i, 'set', ''.join(str(x) for x in used_set))
 
