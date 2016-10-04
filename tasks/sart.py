@@ -75,10 +75,8 @@ class SART(object):
                     key_press = 1
                     data.set_value(i, 'RT', int(
                         round(time.time() * 1000)) - start_time)
-                elif event.type == KEYDOWN and event.key == K_F9:
-                    return self.all_data
                 elif event.type == KEYDOWN and event.key == K_F12:
-                    sys.exit()
+                    sys.exit(0)
 
             self.screen.blit(self.background, (0, 0))
 
@@ -115,112 +113,80 @@ class SART(object):
         display.text(self.screen, self.font, "SART",
                      "center", self.screen_y/2 - 250, (255, 255, 255))
 
-        self.line1 = self.font.render(
-            "Numbers will appear in the center of the screen.", 1,
-            (255, 255, 255))
-        self.screen.blit(self.line1, (100, self.screen_y / 2 - 100))
+        display.text(self.screen, self.font,
+                     "Numbers will appear in the center of the screen.",
+                     100, self.screen_y/2 - 100, (255, 255, 255))
 
-        self.line2 = self.font.render(
-            "Press the spacebar after you see a number.", 1, (255, 255, 255))
-        self.screen.blit(self.line2, (100, self.screen_y / 2))
+        display.text(self.screen, self.font,
+                     "Press the spacebar after you see a number.",
+                     100, "center", (255, 255, 255))
 
-        self.line3 = self.font.render(
-            "However, if the number is a 3, do NOT press the spacebar.", 1,
-            (255, 255, 255))
-        self.screen.blit(self.line3, (100, self.screen_y / 2 + 100))
+        display.text(self.screen, self.font,
+                     "However, if the number is a 3, "
+                     "do NOT press the spacebar.",
+                     100, self.screen_y/2 + 100, (255, 255, 255))
 
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 250, (255, 255, 255))
 
-        self.instructions = True
-        while self.instructions:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructions = False
-                elif event.type == KEYDOWN and event.key == K_F4:
-                    return pd.DataFrame()
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
+        pygame.display.flip()
 
-            pygame.display.flip()
+        display.wait_for_space()
 
         # Instructions Practice
-        self.instructionsPractice = True
-        while self.instructionsPractice:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructionsPractice = False
-                elif event.type == KEYDOWN and event.key == K_F4:
-                    return pd.DataFrame()
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We will begin with a few practice trials...",
+                     "center", "center", (255, 255, 255))
 
-                self.screen.blit(self.background, (0, 0))
-                self.practiceInstructions = self.font.render(
-                    "We will begin with a few practice trials...", 1,
-                    (255, 255, 255))
-                self.screen.blit(self.practiceInstructions,
-                                 (100, self.screen_y / 2))
+        display.text_space(self.screen, self.font,
+                           "center",
+                           self.screen_y/2 + 100, (255, 255, 255))
 
-                display.text_space(self.screen, self.font,
-                                   "center",
-                                   self.screen_y/2 + 100, (255, 255, 255))
+        pygame.display.flip()
 
-                pygame.display.flip()
+        display.wait_for_space()
 
-        # Practice trials
-        self.practiceTrials = pd.DataFrame([5, 7, 7, 3, 9, 2, 1, 3, 8, 6],
-                                           columns=['stimulus'])
+        # Show practice trials
+        practice_trials = pd.DataFrame([5, 7, 7, 3, 9, 2, 1, 3, 8, 6],
+                                       columns=['stimulus'])
 
-        for i in range(self.practiceTrials.shape[0]):
-            self.display_trial(i, self.practiceTrials)
+        for i in range(practice_trials.shape[0]):
+            self.display_trial(i, practice_trials)
 
         # Practice end screen
-        self.practiceEndScreen = True
-        while self.practiceEndScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.practiceEndScreen = False
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We will now begin the main trials...",
+                     "center", "center", (255, 255, 255))
 
-            self.screen.blit(self.background, (0, 0))
-            self.practiceEndLine = self.font.render(
-                "We will now begin the main trials...", 1, (255, 255, 255))
-            self.screen.blit(self.practiceEndLine, (100, self.screen_y / 2))
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100, (255, 255, 255))
 
-            display.text_space(self.screen, self.font,
-                               "center",
-                               self.screen_y/2 + 100, (255, 255, 255))
+        pygame.display.flip()
 
-            pygame.display.flip()
+        display.wait_for_space()
 
-        # Main trials
+        # Show main trials
         for i in range(self.all_data.shape[0]):
             self.display_trial(i, self.all_data)
 
-        # rearrange dataframe
+        # Rearrange dataframe
         columns = ['trial', 'stimulus', 'stimSize', 'RT', 'key press',
                    'accuracy']
         self.all_data = self.all_data[columns]
 
         # End screen
-        self.endScreen = True
-        while self.endScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.endScreen = False
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "End of task", "center", "center", (255, 255, 255))
 
-            self.screen.blit(self.background, (0, 0))
-            self.endLine = self.font.render("End of task.", 1,
-                                            (255, 255, 255))
-            self.screen.blit(self.endLine, (100, self.screen_y / 2))
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100, (255, 255, 255))
 
-            display.text_space(self.screen, self.font,
-                               "center",
-                               self.screen_y/2 + 100, (255, 255, 255))
+        pygame.display.flip()
 
-            pygame.display.flip()
+        display.wait_for_space()
 
         print "- SART complete"
 
