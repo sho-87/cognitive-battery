@@ -97,7 +97,7 @@ class ANT(object):
 
         return cur_block
 
-    def displayFlanker(self, trialNum, data, flankerType, location, direction):
+    def display_flanker(self, trialNum, data, flankerType, location, direction):
         # left
         if direction == "left":
             if flankerType == "congruent":
@@ -124,7 +124,7 @@ class ANT(object):
             self.screen.blit(self.stimulus, (
                 self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 + 31))
 
-    def displayTrial(self, trialNum, data, type):
+    def display_trial(self, trialNum, data, type):
         # check for a quit press after stimulus was shown
         for event in pygame.event.get():
             if event.type == KEYDOWN and event.key == K_F4:
@@ -203,9 +203,9 @@ class ANT(object):
             self.screen_x / 2 - self.fixation_w / 2,
             self.screen_y / 2 - self.fixation_h / 2))
 
-        self.displayFlanker(trialNum, data, data.at[trialNum, "congruency"],
-                            data.at[trialNum, "location"],
-                            data.at[trialNum, "direction"])
+        self.display_flanker(trialNum, data, data.at[trialNum, "congruency"],
+                             data.at[trialNum, "location"],
+                             data.at[trialNum, "direction"])
 
         pygame.display.flip()
 
@@ -282,11 +282,11 @@ class ANT(object):
         while int(round(time.time() * 1000)) - self.baseTime < self.ITI:
             pass
 
-    def runBlock(self, blockNum, totalBlocks, type):
+    def run_block(self, blockNum, totalBlocks, type):
         self.curBlock = self.create_block(blockNum, self.combinations, type)
 
         for j in range(self.curBlock.shape[0]):
-            self.displayTrial(j, self.curBlock, type)
+            self.display_trial(j, self.curBlock, type)
 
         if type == "main":
             # add block data to allData
@@ -385,7 +385,7 @@ class ANT(object):
 
         # Practice trials
         for i in range(1):
-            self.runBlock(i, 1, "practice")
+            self.run_block(i, 1, "practice")
 
         # Instructions Practice End
         self.practiceEndScreen = True
@@ -413,7 +413,7 @@ class ANT(object):
 
         # Main task
         for i in range(self.num_blocks):
-            self.runBlock(i, self.num_blocks, "main")
+            self.run_block(i, self.num_blocks, "main")
 
         # create trial number column
         self.trialNums = np.arange(1, self.allData.shape[0] + 1)
