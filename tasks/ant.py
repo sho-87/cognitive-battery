@@ -1,6 +1,5 @@
 import os
 import time
-import random
 import pandas as pd
 import numpy as np
 import pygame
@@ -8,6 +7,8 @@ import pygame
 from pygame.locals import *
 from itertools import product
 from sys import exit
+
+from utils import display
 
 
 class ANT(object):
@@ -17,7 +18,7 @@ class ANT(object):
         self.background = background
 
         # Sets font and font size
-        self.instructionsFont = pygame.font.SysFont("arial", 30)
+        self.font = pygame.font.SysFont("arial", 30)
 
         # Get screen info
         self.screen_x = self.screen.get_width()
@@ -95,11 +96,6 @@ class ANT(object):
             len(cur_combinations))]
 
         return cur_block
-
-    def pressSpace(self, x, y):
-        self.space = self.instructionsFont.render(
-            "(Press spacebar when ready)", 1, (0, 0, 0))
-        self.screen.blit(self.space, (x, y))
 
     def displayFlanker(self, trialNum, data, flankerType, location, direction):
         # left
@@ -253,11 +249,11 @@ class ANT(object):
         if type == "practice":
             self.screen.blit(self.background, (0, 0))
             if self.correct == 1:
-                self.feedback = self.instructionsFont.render("correct", 1,
-                                                             (0, 255, 0))
+                self.feedback = self.font.render("correct", 1,
+                                                 (0, 255, 0))
             elif self.correct == 0:
-                self.feedback = self.instructionsFont.render("incorrect", 1,
-                                                             (255, 0, 0))
+                self.feedback = self.font.render("incorrect", 1,
+                                                 (255, 0, 0))
 
             self.feedbackW = self.feedback.get_rect().width
             self.feedbackH = self.feedback.get_rect().height
@@ -306,12 +302,13 @@ class ANT(object):
 
                 self.screen.blit(self.background, (0, 0))
 
-                self.blockText = self.instructionsFont.render(
+                self.blockText = self.font.render(
                     "End of current block. Start next block when you're ready...",
                     1, (0, 0, 0))
                 self.screen.blit(self.blockText, (100, self.screen_y / 2))
 
-                self.pressSpace(100, (self.screen_y / 2) + 100)
+                display.text_space(self.screen, self.font,
+                                   100, (self.screen_y / 2) + 100)
 
                 pygame.display.flip()
 
@@ -319,13 +316,13 @@ class ANT(object):
         # Instructions
         self.screen.blit(self.background, (0, 0))
 
-        self.title = self.instructionsFont.render("Attentional Network Test",
-                                                  1, (0, 0, 0))
+        self.title = self.font.render("Attentional Network Test",
+                                      1, (0, 0, 0))
         self.titleW = self.title.get_rect().width
         self.screen.blit(self.title, (
             self.screen_x / 2 - self.titleW / 2, self.screen_y / 2 - 300))
 
-        self.line1 = self.instructionsFont.render(
+        self.line1 = self.font.render(
             "Keep your eyes on the fixation cross at the start of each trial:",
             1, (0, 0, 0))
         self.screen.blit(self.line1, (100, self.screen_y / 2 - 200))
@@ -333,7 +330,7 @@ class ANT(object):
         self.screen.blit(self.img_fixation, (
             self.screen_x / 2 - self.fixation_w / 2, self.screen_y / 2 - 150))
 
-        self.line2 = self.instructionsFont.render(
+        self.line2 = self.font.render(
             "Then, a set of arrows will appear somewhere on the screen:", 1,
             (0, 0, 0))
         self.screen.blit(self.line2, (100, self.screen_y / 2 - 100))
@@ -341,16 +338,17 @@ class ANT(object):
         self.screen.blit(self.img_left_incongruent, (
             self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 - 50))
 
-        self.line3 = self.instructionsFont.render(
+        self.line3 = self.font.render(
             "Use the left/right arrow keys to indicate the direction of the CENTER arrow only.",
             1, (0, 0, 0))
         self.screen.blit(self.line3, (100, self.screen_y / 2))
 
-        self.line4 = self.instructionsFont.render(
+        self.line4 = self.font.render(
             "In example above, the correct answer is LEFT.", 1, (0, 0, 0))
         self.screen.blit(self.line4, (100, self.screen_y / 2 + 50))
 
-        self.pressSpace(100, (self.screen_y / 2) + 300)
+        display.text_space(self.screen, self.font,
+                           100, (self.screen_y / 2) + 300)
 
         self.instructions = True
         while self.instructions:
@@ -374,13 +372,14 @@ class ANT(object):
                     exit()
 
                 self.screen.blit(self.background, (0, 0))
-                self.practiceInstructions = self.instructionsFont.render(
+                self.practiceInstructions = self.font.render(
                     "We will begin with a few practice trials...", 1,
                     (0, 0, 0))
                 self.screen.blit(self.practiceInstructions,
                                  (100, self.screen_y / 2))
 
-                self.pressSpace(100, (self.screen_y / 2) + 100)
+                display.text_space(self.screen, self.font,
+                                   100, (self.screen_y / 2) + 100)
 
                 pygame.display.flip()
 
@@ -396,18 +395,19 @@ class ANT(object):
                     self.practiceEndScreen = False
 
             self.screen.blit(self.background, (0, 0))
-            self.practiceEndLine = self.instructionsFont.render(
+            self.practiceEndLine = self.font.render(
                 "We will now begin the main trials...", 1, (0, 0, 0))
             self.screen.blit(self.practiceEndLine,
                              (100, self.screen_y / 2 - 50))
 
-            self.practiceEndLine2 = self.instructionsFont.render(
+            self.practiceEndLine2 = self.font.render(
                 "You will not receive feedback after each trial.", 1,
                 (0, 0, 0))
             self.screen.blit(self.practiceEndLine2,
                              (100, self.screen_y / 2 + 50))
 
-            self.pressSpace(100, (self.screen_y / 2) + 200)
+            display.text_space(self.screen, self.font,
+                               100, (self.screen_y / 2) + 200)
 
             pygame.display.flip()
 
@@ -433,11 +433,12 @@ class ANT(object):
                     self.endScreen = False
 
             self.screen.blit(self.background, (0, 0))
-            self.endLine = self.instructionsFont.render("End of task.", 1,
-                                                        (0, 0, 0))
+            self.endLine = self.font.render("End of task.", 1,
+                                            (0, 0, 0))
             self.screen.blit(self.endLine, (100, self.screen_y / 2))
 
-            self.pressSpace(100, (self.screen_y / 2) + 100)
+            display.text_space(self.screen, self.font,
+                               100, (self.screen_y / 2) + 100)
 
             pygame.display.flip()
 
