@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 import time
 import random
 import pandas as pd
@@ -29,12 +29,13 @@ class SART(object):
         pygame.mouse.set_visible(0)
 
         # Experiment options
+        self.BLANK_DURATION = 500
         self.STIM_DURATION = 250
         self.ITI = 900
         self.STIMSIZES_PT = (48, 72, 94, 100, 120)  # in point
         self.STIMSIZES_MM = (12, 18, 23, 24, 29)  # in mm from original paper
 
-        # Generate font renders of different sizes
+        # Generate font renderers of different sizes
         for size in self.STIMSIZES_PT:
             self.stim_fonts.append(pygame.font.SysFont("arial", size))
 
@@ -115,19 +116,24 @@ class SART(object):
 
         display.text(self.screen, self.font,
                      "Numbers will appear in the center of the screen.",
-                     100, self.screen_y/2 - 100, (255, 255, 255))
+                     100, self.screen_y/2 - 150, (255, 255, 255))
 
         display.text(self.screen, self.font,
                      "Press the spacebar after you see a number.",
-                     100, "center", (255, 255, 255))
+                     100, self.screen_y/2 - 50, (255, 255, 255))
 
         display.text(self.screen, self.font,
                      "However, if the number is a 3, "
                      "do NOT press the spacebar.",
-                     100, self.screen_y/2 + 100, (255, 255, 255))
+                     100, self.screen_y/2 + 50, (255, 255, 255))
+
+        display.text(self.screen, self.font,
+                     "Please respond as quickly, "
+                     "and as accurately, as possible",
+                     100, self.screen_y/2 + 150, (255, 255, 255))
 
         display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 250, (255, 255, 255))
+                           "center", self.screen_y/2 + 300, (255, 255, 255))
 
         pygame.display.flip()
 
@@ -147,6 +153,9 @@ class SART(object):
 
         display.wait_for_space()
 
+        # Blank screen
+        display.blank_screen(self.screen, self.background, self.BLANK_DURATION)
+
         # Show practice trials
         practice_trials = pd.DataFrame([5, 7, 7, 3, 9, 2, 1, 3, 8, 6],
                                        columns=['stimulus'])
@@ -157,6 +166,10 @@ class SART(object):
         # Practice end screen
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
+                     "End of practice trials",
+                     "center", self.screen_y/2 - 100, (255, 255, 255))
+
+        display.text(self.screen, self.font,
                      "We will now begin the main trials...",
                      "center", "center", (255, 255, 255))
 
@@ -166,6 +179,9 @@ class SART(object):
         pygame.display.flip()
 
         display.wait_for_space()
+
+        # Blank screen
+        display.blank_screen(self.screen, self.background, self.BLANK_DURATION)
 
         # Show main trials
         for i in range(self.all_data.shape[0]):
