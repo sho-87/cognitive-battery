@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 import time
 import pandas as pd
 import numpy as np
@@ -7,7 +7,6 @@ import pygame
 
 from pygame.locals import *
 from itertools import product
-
 from utils import display
 
 
@@ -74,10 +73,8 @@ class ANT(object):
             os.path.join(self.image_path, 'cue.png'))
 
         # Get image dimensions
-        self.flanker_w, self.flanker_h =\
-            self.img_left_incongruent.get_rect().size
-
-        self.fixation_w, self.fixation_h = self.img_fixation.get_rect().size
+        self.flanker_h = self.img_left_incongruent.get_rect().height
+        self.fixation_h = self.img_fixation.get_rect().height
 
         # Create output dataframe
         self.all_data = pd.DataFrame()
@@ -88,7 +85,7 @@ class ANT(object):
             np.random.shuffle(cur_combinations)
         else:
             np.random.shuffle(combinations)
-            cur_combinations = combinations[:len(combinations) / 2]
+            cur_combinations = combinations[:len(combinations)/2]
 
         # Add combinations to dataframe
         cur_block = pd.DataFrame(data=cur_combinations, columns=(
@@ -127,7 +124,7 @@ class ANT(object):
                 self.screen_y/2 - self.flanker_h - self.TARGET_OFFSET)
         elif location == "bottom":
             display.image(self.screen, stimulus, "center",
-                          self.screen_y / 2 + self.TARGET_OFFSET)
+                          self.screen_y/2 + self.TARGET_OFFSET)
 
     def display_trial(self, trial_num, data, trial_type):
         # Check for a quit press after stimulus was shown
@@ -164,7 +161,7 @@ class ANT(object):
                 self.screen, self.img_cue, "center",
                 self.screen_y/2 - self.fixation_h - self.TARGET_OFFSET)
             display.image(self.screen, self.img_cue,
-                          "center", self.screen_y / 2 + self.TARGET_OFFSET)
+                          "center", self.screen_y/2 + self.TARGET_OFFSET)
         elif cue_type == "spatial":
             cue_location = data["location"][trial_num]
 
@@ -178,7 +175,7 @@ class ANT(object):
                     self.screen_y/2 - self.fixation_h - self.TARGET_OFFSET)
             elif cue_location == "bottom":
                 display.image(self.screen, self.img_cue, "center",
-                              self.screen_y / 2 + self.TARGET_OFFSET)
+                              self.screen_y/2 + self.TARGET_OFFSET)
 
         pygame.display.flip()
 
@@ -199,7 +196,6 @@ class ANT(object):
         self.display_flanker(data["congruency"][trial_num],
                              data["location"][trial_num],
                              data["direction"][trial_num])
-
         pygame.display.flip()
 
         start_time = int(round(time.time() * 1000))
@@ -244,7 +240,6 @@ class ANT(object):
             else:
                 display.text(self.screen, self.font, "incorrect",
                              "center", "center", (255, 0, 0))
-
             pygame.display.flip()
 
             display.wait(self.FEEDBACK_DURATION)
@@ -252,7 +247,6 @@ class ANT(object):
         # Display fixation during ITI
         self.screen.blit(self.background, (0, 0))
         display.image(self.screen, self.img_fixation, "center", "center")
-
         pygame.display.flip()
 
         iti = self.ITI_MAX - rt - data["fixationTime"][trial_num]
@@ -278,10 +272,8 @@ class ANT(object):
                          "End of current block. "
                          "Start next block when you're ready...",
                          100, "center")
-
             display.text_space(self.screen, self.font,
-                               100, (self.screen_y / 2) + 100)
-
+                               100, (self.screen_y/2) + 100)
             pygame.display.flip()
 
             display.wait_for_space()
@@ -289,37 +281,28 @@ class ANT(object):
     def run(self):
         # Instructions
         self.screen.blit(self.background, (0, 0))
-
         display.text(self.screen, self.font, "Attentional Network Test",
                      "center", self.screen_y/2 - 300)
-
         display.text(self.screen, self.font,
                      "Keep your eyes on the fixation cross at the "
                      "start of each trial:",
                      100, self.screen_y/2 - 200)
-
         display.image(self.screen, self.img_fixation,
                       "center", self.screen_y/2 - 150)
-
         display.text(self.screen, self.font,
                      "A set of arrows will appear somewhere on the screen:",
                      100, self.screen_y/2 - 100)
-
         display.image(self.screen, self.img_left_incongruent,
                       "center", self.screen_y/2 - 50)
-
         display.text(self.screen, self.font,
                      "Use the Left / Right arrow keys to indicate "
                      "the direction of the CENTER arrow.",
                      100, self.screen_y/2 + 50)
-
         display.text(self.screen, self.font,
                      "In example above, you should press the Left arrow.",
                      100, self.screen_y/2 + 100)
-
         display.text_space(self.screen, self.font,
                            "center", (self.screen_y/2) + 300)
-
         pygame.display.flip()
 
         display.wait_for_space()
@@ -329,10 +312,8 @@ class ANT(object):
         display.text(self.screen, self.font,
                      "We'll begin with a some practice trials...",
                      "center", "center")
-
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 100)
-
         pygame.display.flip()
 
         display.wait_for_space()
@@ -345,14 +326,11 @@ class ANT(object):
         display.text(self.screen, self.font,
                      "We will now begin the main trials...",
                      100, self.screen_y/2 - 50)
-
         display.text(self.screen, self.font,
                      "You will not receive feedback after each trial.",
                      100, self.screen_y/2 + 50)
-
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 200)
-
         pygame.display.flip()
 
         display.wait_for_space()
@@ -373,7 +351,6 @@ class ANT(object):
         # End screen
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "End of task", "center", "center")
-
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 100)
         pygame.display.flip()
