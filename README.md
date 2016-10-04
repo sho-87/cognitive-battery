@@ -145,6 +145,7 @@ In no particular order...
 - Create an analysis tool for summarizing/aggregating participant data for
 the different battery tasks. The goal is to output summary data that is ready
 for statistics
+- Add option for manually specifying a save data location
 - Compile an executable binary version of the entire battery
     - This will make it possible run the battery without dealing with Python
      module installation
@@ -168,7 +169,7 @@ for statistics
 ###[1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1.0) *(unreleased)*
 
 **General**
-- Moved a number of text/background display methods into their own package (`utils`)
+- Moved a number of text, image and background display functions into their own package (`utils`)
 
 **User Interface**
 - Created separate class for UI layout and import into main script
@@ -182,11 +183,13 @@ for statistics
 **Tasks**
 - All tasks (and their images) moved to separate directory
 - Improved integration with pygame
+- SART timing has been fine tuned to better match the original publication
 - Added the Sternberg Task
 
 **Bug Fixes**
 - Up/Down buttons now correctly disable if random order is selected
 - Pygame window now closes if the main battery UI is closed
+- CPU time and memory were being used up needlessly in certain tasks. This has been improved
 - Error now correctly displays if no tasks have been chosen
 - Pygame windows and backgrounds are now passed around the different tasks correctly
 - User input is no longer (pre)registered in digit span during digit display
