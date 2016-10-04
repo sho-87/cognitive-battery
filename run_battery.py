@@ -21,7 +21,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.setupUi(self)
 
         # Set app icon
-        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon.png')))
+        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
 
         # Get screen resolution
         self.res_width = res_width
@@ -302,6 +302,11 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
                 # Initialize pygame
                 pygame.init()
+
+                # Set pygame icon image
+                image = os.path.join(self.directory, "images", "icon_sml.png")
+                icon_img = pygame.image.load(image)
+                pygame.display.set_icon(icon_img)
 
                 # Create primary task window
                 # pygame_screen is passed to each task as the display window
