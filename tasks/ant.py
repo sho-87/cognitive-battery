@@ -125,7 +125,7 @@ class ANT(object):
                           self.screen_x / 2 - self.flanker_w / 2,
                           self.screen_y / 2 + 31)
 
-    def display_trial(self, trialNum, data, type):
+    def display_trial(self, trial_num, data, trial_type):
         # check for a quit press after stimulus was shown
         for event in pygame.event.get():
             if event.type == KEYDOWN and event.key == K_F4:
@@ -143,20 +143,20 @@ class ANT(object):
 
         self.baseTime = int(round(time.time() * 1000))
         while int(round(time.time() * 1000)) - self.baseTime < data.at[
-            trialNum, "fixationTime"]:
+            trial_num, "fixationTime"]:
             pass
 
         # cues
         self.screen.blit(self.background, (0, 0))
-        if data.at[trialNum, "cue"] == "nocue":
+        if data.at[trial_num, "cue"] == "nocue":
             self.screen.blit(self.img_fixation, (
                 self.screen_x / 2 - self.fixation_w / 2,
                 self.screen_y / 2 - self.fixation_h / 2))
-        elif data.at[trialNum, "cue"] == "center":
+        elif data.at[trial_num, "cue"] == "center":
             self.screen.blit(self.img_cue, (
                 self.screen_x / 2 - self.fixation_w / 2,
                 self.screen_y / 2 - self.fixation_h / 2))
-        elif data.at[trialNum, "cue"] == "double":
+        elif data.at[trial_num, "cue"] == "double":
             self.screen.blit(self.img_fixation, (
                 self.screen_x / 2 - self.fixation_w / 2,
                 self.screen_y / 2 - self.fixation_h / 2))
@@ -166,15 +166,15 @@ class ANT(object):
             self.screen.blit(self.img_cue, (
                 self.screen_x / 2 - self.fixation_w / 2,
                 self.screen_y / 2 + 31))
-        elif data.at[trialNum, "cue"] == "spatial":
+        elif data.at[trial_num, "cue"] == "spatial":
             self.screen.blit(self.img_fixation, (
                 self.screen_x / 2 - self.fixation_w / 2,
                 self.screen_y / 2 - self.fixation_h / 2))
-            if data.at[trialNum, "location"] == "top":
+            if data.at[trial_num, "location"] == "top":
                 self.screen.blit(self.img_cue, (
                     self.screen_x / 2 - self.fixation_w / 2,
                     self.screen_y / 2 - self.fixation_h - 31))
-            elif data.at[trialNum, "location"] == "bottom":
+            elif data.at[trial_num, "location"] == "bottom":
                 self.screen.blit(self.img_cue, (
                     self.screen_x / 2 - self.fixation_w / 2,
                     self.screen_y / 2 + 31))
@@ -204,9 +204,9 @@ class ANT(object):
             self.screen_x / 2 - self.fixation_w / 2,
             self.screen_y / 2 - self.fixation_h / 2))
 
-        self.display_flanker(data.at[trialNum, "congruency"],
-                             data.at[trialNum, "location"],
-                             data.at[trialNum, "direction"])
+        self.display_flanker(data.at[trial_num, "congruency"],
+                             data.at[trial_num, "location"],
+                             data.at[trial_num, "direction"])
 
         pygame.display.flip()
 
@@ -236,18 +236,18 @@ class ANT(object):
 
         self.rt = int(round(time.time() * 1000)) - self.baseTime
 
-        data.set_value(trialNum, 'response', self.response)
-        data.set_value(trialNum, 'RT', self.rt)
+        data.set_value(trial_num, 'response', self.response)
+        data.set_value(trial_num, 'RT', self.rt)
 
-        if self.response == data.at[trialNum, "direction"]:
+        if self.response == data.at[trial_num, "direction"]:
             self.correct = 1
         else:
             self.correct = 0
 
-        data.set_value(trialNum, 'correct', self.correct)
+        data.set_value(trial_num, 'correct', self.correct)
 
         # if practice, display feedback
-        if type == "practice":
+        if trial_type == "practice":
             self.screen.blit(self.background, (0, 0))
             if self.correct == 1:
                 self.feedback = self.font.render("correct", 1,
@@ -276,8 +276,8 @@ class ANT(object):
 
         pygame.display.flip()
 
-        self.ITI = 3500 - self.rt - data.at[trialNum, 'fixationTime']
-        data.set_value(trialNum, 'ITI', self.ITI)
+        self.ITI = 3500 - self.rt - data.at[trial_num, 'fixationTime']
+        data.set_value(trial_num, 'ITI', self.ITI)
 
         self.baseTime = int(round(time.time() * 1000))
         while int(round(time.time() * 1000)) - self.baseTime < self.ITI:
