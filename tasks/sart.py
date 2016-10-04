@@ -1,5 +1,6 @@
 import os
 import time
+import random
 import pandas as pd
 import numpy as np
 import pygame
@@ -24,33 +25,35 @@ class SART(object):
 
         # Fill background
         self.background.fill((0, 0, 0))
-        pygame.display.set_caption("SART Task")
+        pygame.display.set_caption("SART")
         pygame.mouse.set_visible(0)
 
-        # get mask image
-        self.directory = os.path.dirname(os.path.realpath(__file__))
-        self.imagePath = self.directory + "\images\\SART\\"
-        # this uses the 29mm mask image (as described by Robertson 1997)
-        self.maskImage = pygame.image.load(self.imagePath + 'mask_29.png')
-        self.maskX, self.maskY = self.maskImage.get_rect().size
+        # Experiment options
+        self.STIM_DURATION = 250
+        self.ITI = 900
+        self.STIMSIZES_PT = (48, 72, 94, 100, 120)  # in point
+        self.STIMSIZES_MM = (12, 18, 23, 24, 29)  # in mm from original paper
 
-        # set variables
-        self.stimDuration = 0.25
-        self.ITI = 0.9
-        self.stimSizes_pt = [48, 72, 94, 100,
-                             120]  # in point as per original paper
-        self.stimSizes_mm = [12, 18, 23, 24,
-                             29]  # in mm, maintaining original ratio
+        # Get mask image
+        self.base_dir = os.path.dirname(os.path.realpath(__file__))
+        self.image_path = os.path.join(self.base_dir, "images", "SART")
 
-        # create trial sequence
-        self.numberSet = np.repeat(np.arange(1, 10), 25)
-        np.random.shuffle(self.numberSet)
-        self.trialNum = np.arange(1, 226)
+        # This uses the 29mm mask image (as described by Robertson 1997)
+        self.img_mask = pygame.image.load(
+            os.path.join(self.image_path, 'mask_29.png'))
+        self.maskX, self.maskY = self.img_mask.get_rect().size
 
-        # create output dataframe
-        self.allData = pd.DataFrame()
-        self.allData["trial"] = self.trialNum
-        self.allData["stimulus"] = self.numberSet
+        # Create trial sequence
+        self.number_set = range(1, 10)*25  # Numbers 1-9
+        random.shuffle(self.number_set)
+        self.trial_num = range(1, len(self.number_set)+1)
+
+        # Create output dataframe
+        self.all_data = pd.DataFrame()
+        self.all_data["trial"] = self.trial_num
+        self.all_data["stimulus"] = self.number_set
+
+        print self.all_data
 
     def pressSpace(self, x, y):
         self.space = self.font.render(
@@ -60,7 +63,7 @@ class SART(object):
     def displayTrial(self, i, data):
         # randomly choose font size
         self.sizeIndex = np.random.randint(0, 5)
-        self.stimulusFont = pygame.font.SysFont("arial", self.stimSizes_pt[
+        self.stimulusFont = pygame.font.SysFont("arial", self.STIMSIZES_PT[
             self.sizeIndex])
 
         # set stimulus
@@ -98,7 +101,7 @@ class SART(object):
                     self.screen_y / 2 - self.stimulusH / 2))
             else:
                 # display post stim mask for 900ms
-                self.screen.blit(self.maskImage, (
+                self.screen.blit(self.img_mask, (
                     [self.screen_x / 2 - self.maskX / 2,
                      self.screen_y / 2 - self.maskY / 2],
                     [self.screen_x / 2 + self.maskX / 2,
@@ -121,7 +124,7 @@ class SART(object):
         # store key press data in dataframe
         data.set_value(i, 'key press', self.keyPress)
         data.set_value(i, 'accuracy', self.accuracy)
-        data.set_value(i, 'stimSize', self.stimSizes_pt[self.sizeIndex])
+        data.set_value(i, 'stimSize', self.STIMSIZES_PT[self.sizeIndex])
 
     def run(self):
         # Instructions
@@ -208,13 +211,13 @@ class SART(object):
             pygame.display.flip()
 
         # Main trials
-        for i in range(self.allData.shape[0]):
-            self.displayTrial(i, self.allData)
+        for i in range(self.all_data.shape[0]):
+            self.displayTrial(i, self.all_data)
 
         # rearrange dataframe
         columns = ['trial', 'stimulus', 'stimSize', 'RT', 'key press',
                    'accuracy']
-        self.allData = self.allData[columns]
+        self.all_data = self.all_data[columns]
 
         # End screen
         self.endScreen = True
@@ -234,4 +237,4 @@ class SART(object):
 
         print "- SART complete"
 
-        return self.allData
+        return self.all_data
