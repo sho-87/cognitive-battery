@@ -191,11 +191,11 @@ class SART(object):
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
                      "End of practice trials",
-                     "center", self.screen_y/2 - 100, (255, 255, 255))
+                     100, self.screen_y/2 - 100, (255, 255, 255))
 
         display.text(self.screen, self.font,
                      "We will now begin the main trials...",
-                     "center", "center", (255, 255, 255))
+                     100, "center", (255, 255, 255))
 
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 100, (255, 255, 255))
