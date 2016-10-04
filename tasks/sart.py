@@ -1,12 +1,11 @@
+import sys
 import os
 import time
 import random
 import pandas as pd
-import numpy as np
 import pygame
 
 from pygame.locals import *
-from sys import exit
 from utils import display
 
 
@@ -18,6 +17,7 @@ class SART(object):
 
         # Set font and font size
         self.font = pygame.font.SysFont("arial", 30)
+        self.stim_fonts = []
 
         # Get screen info
         self.screen_x = self.screen.get_width()
@@ -34,6 +34,10 @@ class SART(object):
         self.STIMSIZES_PT = (48, 72, 94, 100, 120)  # in point
         self.STIMSIZES_MM = (12, 18, 23, 24, 29)  # in mm from original paper
 
+        # Generate font renders of different sizes
+        for size in self.STIMSIZES_PT:
+            self.stim_fonts.append(pygame.font.SysFont("arial", size))
+
         # Get mask image
         self.base_dir = os.path.dirname(os.path.realpath(__file__))
         self.image_path = os.path.join(self.base_dir, "images", "SART")
@@ -41,7 +45,6 @@ class SART(object):
         # This uses the 29mm mask image (as described by Robertson 1997)
         self.img_mask = pygame.image.load(
             os.path.join(self.image_path, 'mask_29.png'))
-        self.maskX, self.maskY = self.img_mask.get_rect().size
 
         # Create trial sequence
         self.number_set = range(1, 10)*25  # Numbers 1-9
@@ -53,82 +56,64 @@ class SART(object):
         self.all_data["trial"] = self.trial_num
         self.all_data["stimulus"] = self.number_set
 
-        print self.all_data
+    def display_trial(self, i, data):
+        # Randomly choose font size for this trial
+        size_index = random.randint(0, len(self.stim_fonts)-1)
+        trial_font = self.stim_fonts[size_index]
 
-    def displayTrial(self, i, data):
-        # randomly choose font size
-        self.sizeIndex = np.random.randint(0, 5)
-        self.stimulusFont = pygame.font.SysFont("arial", self.STIMSIZES_PT[
-            self.sizeIndex])
-
-        # set stimulus
-        self.stimulusText = self.stimulusFont.render(
-            str(data.at[i, "stimulus"]), 1, (255, 255, 255))
-        self.stimulusH = self.stimulusText.get_rect().height
-        self.stimulusW = self.stimulusText.get_rect().width
-
-        self.keyPress = 0
+        key_press = 0
         data.set_value(i, 'RT', 1150)
 
-        # get start time in ms
-        self.baseTime = int(round(time.time() * 1000))
+        # Get start time in ms
+        start_time = int(round(time.time() * 1000))
 
         pygame.event.clear()
-        # keep trial to under 1150ms
-        while int(round(time.time() * 1000)) - self.baseTime <= 1150:
+        # Keep trial to under 1150ms
+        while int(round(time.time() * 1000)) - start_time <= 1150:
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.keyPress = 1
+                    key_press = 1
                     data.set_value(i, 'RT', int(
-                        round(time.time() * 1000)) - self.baseTime)
-                elif event.type == KEYDOWN and event.key == K_F4:
-                    return pd.DataFrame()
+                        round(time.time() * 1000)) - start_time)
+                elif event.type == KEYDOWN and event.key == K_F9:
+                    return self.all_data
                 elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
+                    sys.exit()
 
             self.screen.blit(self.background, (0, 0))
 
-            # display stim for 250ms
-            if int(round(time.time() * 1000)) - self.baseTime <= 250:
-                self.screen.blit(self.stimulusText, (
-                    self.screen_x / 2 - self.stimulusW / 2,
-                    self.screen_y / 2 - self.stimulusH / 2))
+            # Display stim for 250ms
+            if int(round(time.time() * 1000))-start_time <= self.STIM_DURATION:
+                display.text(self.screen, trial_font, str(data["stimulus"][i]),
+                             "center", "center", (255, 255, 255))
             else:
-                # display post stim mask for 900ms
-                self.screen.blit(self.img_mask, (
-                    [self.screen_x / 2 - self.maskX / 2,
-                     self.screen_y / 2 - self.maskY / 2],
-                    [self.screen_x / 2 + self.maskX / 2,
-                     self.screen_y / 2 + self.maskY / 2]))
+                # Display post stim mask for 900ms
+                display.image(self.screen, self.img_mask, "center", "center")
 
             pygame.display.flip()
 
-        # check if response is correct
-        if data.at[i, "stimulus"] == 3:
-            if self.keyPress == 0:
-                self.accuracy = 1
+        # Check if response is correct
+        if data["stimulus"][i] == 3:
+            if key_press == 0:
+                accuracy = 1
             else:
-                self.accuracy = 0
+                accuracy = 0
         else:
-            if self.keyPress == 0:
-                self.accuracy = 0
+            if key_press == 0:
+                accuracy = 0
             else:
-                self.accuracy = 1
+                accuracy = 1
 
-        # store key press data in dataframe
-        data.set_value(i, 'key press', self.keyPress)
-        data.set_value(i, 'accuracy', self.accuracy)
-        data.set_value(i, 'stimSize', self.STIMSIZES_PT[self.sizeIndex])
+        # Store key press data in dataframe
+        data.set_value(i, 'key press', key_press)
+        data.set_value(i, 'accuracy', accuracy)
+        data.set_value(i, 'stimSize', self.STIMSIZES_PT[size_index])
 
     def run(self):
         # Instructions
         self.screen.blit(self.background, (0, 0))
-
-        self.title = self.font.render("SART", 1, (255, 255, 255))
-        self.titleW = self.title.get_rect().width
-        self.screen.blit(self.title, (
-            self.screen_x / 2 - self.titleW / 2, self.screen_y / 2 - 250))
+        display.text(self.screen, self.font, "SART",
+                     "center", self.screen_y/2 - 250, (255, 255, 255))
 
         self.line1 = self.font.render(
             "Numbers will appear in the center of the screen.", 1,
@@ -144,7 +129,8 @@ class SART(object):
             (255, 255, 255))
         self.screen.blit(self.line3, (100, self.screen_y / 2 + 100))
 
-        display.text_space(self.screen, self.font, 100, self.screen_y/2 + 250)
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 250, (255, 255, 255))
 
         self.instructions = True
         while self.instructions:
@@ -179,7 +165,8 @@ class SART(object):
                                  (100, self.screen_y / 2))
 
                 display.text_space(self.screen, self.font,
-                                   100, self.screen_y/2 + 100)
+                                   "center",
+                                   self.screen_y/2 + 100, (255, 255, 255))
 
                 pygame.display.flip()
 
@@ -188,7 +175,7 @@ class SART(object):
                                            columns=['stimulus'])
 
         for i in range(self.practiceTrials.shape[0]):
-            self.displayTrial(i, self.practiceTrials)
+            self.display_trial(i, self.practiceTrials)
 
         # Practice end screen
         self.practiceEndScreen = True
@@ -203,13 +190,14 @@ class SART(object):
             self.screen.blit(self.practiceEndLine, (100, self.screen_y / 2))
 
             display.text_space(self.screen, self.font,
-                               100, self.screen_y/2 + 100)
+                               "center",
+                               self.screen_y/2 + 100, (255, 255, 255))
 
             pygame.display.flip()
 
         # Main trials
         for i in range(self.all_data.shape[0]):
-            self.displayTrial(i, self.all_data)
+            self.display_trial(i, self.all_data)
 
         # rearrange dataframe
         columns = ['trial', 'stimulus', 'stimSize', 'RT', 'key press',
@@ -229,7 +217,8 @@ class SART(object):
             self.screen.blit(self.endLine, (100, self.screen_y / 2))
 
             display.text_space(self.screen, self.font,
-                               100, self.screen_y/2 + 100)
+                               "center",
+                               self.screen_y/2 + 100, (255, 255, 255))
 
             pygame.display.flip()
 
