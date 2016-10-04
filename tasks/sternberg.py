@@ -315,14 +315,14 @@ class Sternberg(object):
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "End of task", "center", "center")
         display.text_space(self.screen, self.font,
-                           "center", (self.screen_y / 2) + 100)
+                           "center", self.screen_y/2 + 100)
         pygame.display.flip()
 
         display.wait_for_space()
 
         # Concatenate blocks and add trial numbers
         all_data = pd.concat(self.blocks)
-        all_data['trialNum'] = range(1, len(all_data)+1)
+        all_data['trialNum'] = range(1, len(all_data) + 1)
 
         print "- Sternberg Task complete"
 

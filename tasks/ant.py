@@ -26,7 +26,7 @@ class ANT(object):
 
         # Fill background
         self.background.fill((255, 255, 255))
-        pygame.display.set_caption("ANT Task")
+        pygame.display.set_caption("Attentional Network Test")
         pygame.mouse.set_visible(0)
 
         # Experiment options
@@ -260,165 +260,125 @@ class ANT(object):
 
         display.wait(iti)
 
-    def run_block(self, blockNum, totalBlocks, type):
-        self.curBlock = self.create_block(blockNum, self.combinations, type)
+    def run_block(self, block_num, total_blocks, block_type):
+        cur_block = self.create_block(
+            block_num, self.combinations, block_type)
 
-        for j in range(self.curBlock.shape[0]):
-            self.display_trial(j, self.curBlock, type)
+        for i in range(cur_block.shape[0]):
+            self.display_trial(i, cur_block, block_type)
 
-        if type == "main":
-            # add block data to all_data
-            self.all_data = pd.concat([self.all_data, self.curBlock])
+        if block_type == "main":
+            # Add block data to all_data
+            self.all_data = pd.concat([self.all_data, cur_block])
 
-        # end of block screen
-        if blockNum != totalBlocks - 1:
-            self.blockEnd = True
-            while self.blockEnd:
-                for event in pygame.event.get():
-                    if event.type == KEYDOWN and event.key == K_SPACE:
-                        self.blockEnd = False
-
-                self.screen.blit(self.background, (0, 0))
-
-                self.blockText = self.font.render(
-                    "End of current block. Start next block when you're ready...",
-                    1, (0, 0, 0))
-                self.screen.blit(self.blockText, (100, self.screen_y / 2))
-
-                display.text_space(self.screen, self.font,
-                                   100, (self.screen_y / 2) + 100)
-
-                pygame.display.flip()
-
-    def run(self):
-        # Instructions
-        self.screen.blit(self.background, (0, 0))
-
-        self.title = self.font.render("Attentional Network Test",
-                                      1, (0, 0, 0))
-        self.titleW = self.title.get_rect().width
-        self.screen.blit(self.title, (
-            self.screen_x / 2 - self.titleW / 2, self.screen_y / 2 - 300))
-
-        self.line1 = self.font.render(
-            "Keep your eyes on the fixation cross at the start of each trial:",
-            1, (0, 0, 0))
-        self.screen.blit(self.line1, (100, self.screen_y / 2 - 200))
-
-        self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixation_w / 2, self.screen_y / 2 - 150))
-
-        self.line2 = self.font.render(
-            "Then, a set of arrows will appear somewhere on the screen:", 1,
-            (0, 0, 0))
-        self.screen.blit(self.line2, (100, self.screen_y / 2 - 100))
-
-        self.screen.blit(self.img_left_incongruent, (
-            self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 - 50))
-
-        self.line3 = self.font.render(
-            "Use the left/right arrow keys to indicate the direction of the CENTER arrow only.",
-            1, (0, 0, 0))
-        self.screen.blit(self.line3, (100, self.screen_y / 2))
-
-        self.line4 = self.font.render(
-            "In example above, the correct answer is LEFT.", 1, (0, 0, 0))
-        self.screen.blit(self.line4, (100, self.screen_y / 2 + 50))
-
-        display.text_space(self.screen, self.font,
-                           100, (self.screen_y / 2) + 300)
-
-        self.instructions = True
-        while self.instructions:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructions = False
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    sys.exit()
-
-            pygame.display.flip()
-
-        # Instructions Practice
-        self.instructionsPractice = True
-        while self.instructionsPractice:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructionsPractice = False
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    sys.exit()
-
-                self.screen.blit(self.background, (0, 0))
-                self.practiceInstructions = self.font.render(
-                    "We will begin with a few practice trials...", 1,
-                    (0, 0, 0))
-                self.screen.blit(self.practiceInstructions,
-                                 (100, self.screen_y / 2))
-
-                display.text_space(self.screen, self.font,
-                                   100, (self.screen_y / 2) + 100)
-
-                pygame.display.flip()
-
-        # Practice trials
-        for i in range(1):
-            self.run_block(i, 1, "practice")
-
-        # Instructions Practice End
-        self.practiceEndScreen = True
-        while self.practiceEndScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.practiceEndScreen = False
-
+        # End of block screen
+        if block_num != total_blocks - 1:  # If not the final block
             self.screen.blit(self.background, (0, 0))
-            self.practiceEndLine = self.font.render(
-                "We will now begin the main trials...", 1, (0, 0, 0))
-            self.screen.blit(self.practiceEndLine,
-                             (100, self.screen_y / 2 - 50))
-
-            self.practiceEndLine2 = self.font.render(
-                "You will not receive feedback after each trial.", 1,
-                (0, 0, 0))
-            self.screen.blit(self.practiceEndLine2,
-                             (100, self.screen_y / 2 + 50))
-
-            display.text_space(self.screen, self.font,
-                               100, (self.screen_y / 2) + 200)
-
-            pygame.display.flip()
-
-        # Main task
-        for i in range(self.NUM_BLOCKS):
-            self.run_block(i, self.NUM_BLOCKS, "main")
-
-        # create trial number column
-        self.trialNums = np.arange(1, self.all_data.shape[0] + 1)
-        self.all_data["trial"] = self.trialNums
-
-        # rearrange the dataframe
-        self.columns = ['trial', 'block', 'congruency', 'cue', 'location',
-                        'fixationTime', 'ITI', 'direction', 'response',
-                        'correct', 'RT']
-        self.all_data = self.all_data[self.columns]
-
-        # End screen
-        self.endScreen = True
-        while self.endScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.endScreen = False
-
-            self.screen.blit(self.background, (0, 0))
-            self.endLine = self.font.render("End of task.", 1,
-                                            (0, 0, 0))
-            self.screen.blit(self.endLine, (100, self.screen_y / 2))
+            display.text(self.screen, self.font,
+                         "End of current block. "
+                         "Start next block when you're ready...",
+                         100, "center")
 
             display.text_space(self.screen, self.font,
                                100, (self.screen_y / 2) + 100)
 
             pygame.display.flip()
+
+            display.wait_for_space()
+
+    def run(self):
+        # Instructions
+        self.screen.blit(self.background, (0, 0))
+
+        display.text(self.screen, self.font, "Attentional Network Test",
+                     "center", self.screen_y/2 - 300)
+
+        display.text(self.screen, self.font,
+                     "Keep your eyes on the fixation cross at the "
+                     "start of each trial:",
+                     100, self.screen_y/2 - 200)
+
+        display.image(self.screen, self.img_fixation,
+                      "center", self.screen_y/2 - 150)
+
+        display.text(self.screen, self.font,
+                     "A set of arrows will appear somewhere on the screen:",
+                     100, self.screen_y/2 - 100)
+
+        display.image(self.screen, self.img_left_incongruent,
+                      "center", self.screen_y/2 - 50)
+
+        display.text(self.screen, self.font,
+                     "Use the Left / Right arrow keys to indicate "
+                     "the direction of the CENTER arrow.",
+                     100, self.screen_y/2 + 50)
+
+        display.text(self.screen, self.font,
+                     "In example above, you should press the Left arrow.",
+                     100, self.screen_y/2 + 100)
+
+        display.text_space(self.screen, self.font,
+                           "center", (self.screen_y/2) + 300)
+
+        pygame.display.flip()
+
+        display.wait_for_space()
+
+        # Instructions Practice
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We'll begin with a some practice trials...",
+                     "center", "center")
+
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
+
+        pygame.display.flip()
+
+        display.wait_for_space()
+
+        # Practice trials
+        self.run_block(0, 1, "practice")
+
+        # Instructions Practice End
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We will now begin the main trials...",
+                     100, self.screen_y/2 - 50)
+
+        display.text(self.screen, self.font,
+                     "You will not receive feedback after each trial.",
+                     100, self.screen_y/2 + 50)
+
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 200)
+
+        pygame.display.flip()
+
+        display.wait_for_space()
+
+        # Main task
+        for i in range(self.NUM_BLOCKS):
+            self.run_block(i, self.NUM_BLOCKS, "main")
+
+        # Create trial number column
+        self.all_data["trial"] = range(1, len(self.all_data) + 1)
+
+        # Rearrange the dataframe
+        columns = ['trial', 'block', 'congruency', 'cue', 'location',
+                   'fixationTime', 'ITI', 'direction',
+                   'response', 'correct', 'RT']
+        self.all_data = self.all_data[columns]
+
+        # End screen
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "End of task", "center", "center")
+
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
+        pygame.display.flip()
+
+        display.wait_for_space()
 
         print "- ANT complete"
 
