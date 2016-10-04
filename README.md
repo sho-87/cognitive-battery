@@ -175,6 +175,7 @@ for statistics
 - Changed UI base class to `QTMainWindow`
 - Created conversion script for building a Python module from UI file
 - Added Menu and Status bar to UI
+- Added application icons
 - Added global Settings window
 - Application now stores (and restores) the size and position of windows
 
