@@ -1,3 +1,4 @@
+import sys
 import os
 import time
 import pandas as pd
@@ -6,7 +7,6 @@ import pygame
 
 from pygame.locals import *
 from itertools import product
-from sys import exit
 
 from utils import display
 
@@ -131,7 +131,7 @@ class ANT(object):
                 return pd.DataFrame()
             elif event.type == KEYDOWN and event.key == K_F12:
                 pygame.quit()
-                exit()
+                sys.exit()
 
         # display fixation period
         self.screen.blit(self.background, (0, 0))
@@ -357,7 +357,7 @@ class ANT(object):
                     self.instructions = False
                 elif event.type == KEYDOWN and event.key == K_F12:
                     pygame.quit()
-                    exit()
+                    sys.exit()
 
             pygame.display.flip()
 
@@ -369,7 +369,7 @@ class ANT(object):
                     self.instructionsPractice = False
                 elif event.type == KEYDOWN and event.key == K_F12:
                     pygame.quit()
-                    exit()
+                    sys.exit()
 
                 self.screen.blit(self.background, (0, 0))
                 self.practiceInstructions = self.font.render(
