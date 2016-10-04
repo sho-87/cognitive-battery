@@ -55,11 +55,6 @@ class SART(object):
 
         print self.all_data
 
-    def pressSpace(self, x, y):
-        self.space = self.font.render(
-            "(Press spacebar when ready)", 1, (255, 255, 255))
-        self.screen.blit(self.space, (x, y))
-
     def displayTrial(self, i, data):
         # randomly choose font size
         self.sizeIndex = np.random.randint(0, 5)
@@ -149,7 +144,7 @@ class SART(object):
             (255, 255, 255))
         self.screen.blit(self.line3, (100, self.screen_y / 2 + 100))
 
-        self.pressSpace(100, (self.screen_y / 2) + 250)
+        display.text_space(self.screen, self.font, 100, self.screen_y/2 + 250)
 
         self.instructions = True
         while self.instructions:
@@ -183,7 +178,8 @@ class SART(object):
                 self.screen.blit(self.practiceInstructions,
                                  (100, self.screen_y / 2))
 
-                self.pressSpace(100, (self.screen_y / 2) + 100)
+                display.text_space(self.screen, self.font,
+                                   100, self.screen_y/2 + 100)
 
                 pygame.display.flip()
 
@@ -206,7 +202,8 @@ class SART(object):
                 "We will now begin the main trials...", 1, (255, 255, 255))
             self.screen.blit(self.practiceEndLine, (100, self.screen_y / 2))
 
-            self.pressSpace(100, (self.screen_y / 2) + 100)
+            display.text_space(self.screen, self.font,
+                               100, self.screen_y/2 + 100)
 
             pygame.display.flip()
 
@@ -231,7 +228,8 @@ class SART(object):
                                             (255, 255, 255))
             self.screen.blit(self.endLine, (100, self.screen_y / 2))
 
-            self.pressSpace(100, (self.screen_y / 2) + 100)
+            display.text_space(self.screen, self.font,
+                               100, self.screen_y/2 + 100)
 
             pygame.display.flip()
 
