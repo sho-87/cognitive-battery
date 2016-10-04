@@ -97,31 +97,31 @@ class ANT(object):
 
         return cur_block
 
-    def display_flanker(self, trialNum, data, flankerType, location, direction):
-        # left
+    def display_flanker(self, flanker_type, location, direction):
+        # Left flanker
         if direction == "left":
-            if flankerType == "congruent":
-                self.stimulus = self.img_left_congruent
-            elif flankerType == "incongruent":
-                self.stimulus = self.img_left_incongruent
-            elif flankerType == "neutral":
-                self.stimulus = self.img_left_neutral
-        # right
-        elif direction == "right":
-            if flankerType == "congruent":
-                self.stimulus = self.img_right_congruent
-            elif flankerType == "incongruent":
-                self.stimulus = self.img_right_incongruent
-            elif flankerType == "neutral":
-                self.stimulus = self.img_right_neutral
+            if flanker_type == "congruent":
+                stimulus = self.img_left_congruent
+            elif flanker_type == "incongruent":
+                stimulus = self.img_left_incongruent
+            else:
+                stimulus = self.img_left_neutral
+        # Right flanker
+        else:
+            if flanker_type == "congruent":
+                stimulus = self.img_right_congruent
+            elif flanker_type == "incongruent":
+                stimulus = self.img_right_incongruent
+            else:
+                stimulus = self.img_right_neutral
 
-        # offset the flanker stimulus to above/below fixation
+        # Offset the flanker stimulus to above/below fixation
         if location == "top":
-            self.screen.blit(self.stimulus, (
+            self.screen.blit(stimulus, (
                 self.screen_x / 2 - self.flanker_w / 2,
                 self.screen_y / 2 - self.flanker_h - 31))
         elif location == "bottom":
-            self.screen.blit(self.stimulus, (
+            self.screen.blit(stimulus, (
                 self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 + 31))
 
     def display_trial(self, trialNum, data, type):
@@ -203,7 +203,7 @@ class ANT(object):
             self.screen_x / 2 - self.fixation_w / 2,
             self.screen_y / 2 - self.fixation_h / 2))
 
-        self.display_flanker(trialNum, data, data.at[trialNum, "congruency"],
+        self.display_flanker(data.at[trialNum, "congruency"],
                              data.at[trialNum, "location"],
                              data.at[trialNum, "direction"])
 
