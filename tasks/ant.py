@@ -273,7 +273,7 @@ class ANT(object):
                          "Start next block when you're ready...",
                          100, "center")
             display.text_space(self.screen, self.font,
-                               100, (self.screen_y/2) + 100)
+                               "center", (self.screen_y/2) + 100)
             pygame.display.flip()
 
             display.wait_for_space()
