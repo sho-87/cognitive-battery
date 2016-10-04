@@ -42,20 +42,20 @@ class Sternberg(object):
         # Experiment options
         # Timings are taken from Sternberg (1966)
         # Block sizes are taken from Martins (2012)
-        self.num_blocks = blocks
-        self.stim_duration = 1200
-        self.between_stim_duration = 250
-        self.probe_warn_duration = 2000
-        self.probe_duration = 2250  # Max time per probe, from Martins (2012)
-        self.feedback_duration = 1000
+        self.NUM_BLOCKS = blocks
+        self.STIM_DURATION = 1200
+        self.BETWEEN_STIM_DURATION = 250
+        self.PROBE_WARN_DURATION = 2000
+        self.PROBE_DURATION = 2250  # Max time per probe, from Martins (2012)
+        self.FEEDBACK_DURATION = 1000
         self.ITI = 1500
 
-        self.stim_set = range(10)
-        self.set_size = (2, 6)
-        self.probe_type = ("present", "absent")
+        self.STIM_SET = range(10)
+        self.SET_SIZE = (2, 6)
+        self.PROBE_TYPE = ("present", "absent")
 
         # Create condition combinations
-        self.combinations = list(product(self.set_size, self.probe_type))
+        self.combinations = list(product(self.SET_SIZE, self.PROBE_TYPE))
 
         # Create practice trials
         # This gives 24 practice trials
@@ -66,7 +66,7 @@ class Sternberg(object):
         # Create main trial blocks
         self.blocks = []  # List will contain a dataframe for each block
 
-        for i in range(self.num_blocks):
+        for i in range(self.NUM_BLOCKS):
             # This creates 48 trials per block
             block_combinations = self.combinations * 12
             random.shuffle(block_combinations)
@@ -80,8 +80,8 @@ class Sternberg(object):
 
         for i, r in df.iterrows():
             # Store the current used set
-            used_set = random.sample(self.stim_set, r['setSize'])
-            unused_set = list(set(self.stim_set) - set(used_set))
+            used_set = random.sample(self.STIM_SET, r['setSize'])
+            unused_set = list(set(self.STIM_SET) - set(used_set))
 
             df.set_value(i, 'set', ''.join(str(x) for x in used_set))
 
@@ -119,11 +119,11 @@ class Sternberg(object):
         display.text(self.screen, self.stim_font, "+", "center", "center")
         pygame.display.flip()
 
-        display.wait(self.probe_warn_duration)
+        display.wait(self.PROBE_WARN_DURATION)
 
         # Display blank screen
         display.blank_screen(self.screen, self.background,
-                             self.between_stim_duration)
+                             self.BETWEEN_STIM_DURATION)
 
         # Display probe
         self.screen.blit(self.background, (0, 0))
@@ -135,14 +135,17 @@ class Sternberg(object):
             display.image(self.screen, self.img_left,
                           450 - self.img_left.get_rect().width/2,
                           self.screen_y/2 + 150)
+
             yes_text = self.font.render("(yes)", 1, (0, 0, 0))
             display.text(self.screen, self.font, yes_text,
                          450 - yes_text.get_rect().width/2,
                          self.screen_y/2 + 160)
 
-            display.image(self.screen, self.img_right,
-                          self.screen_x-450-self.img_right.get_rect().width/2,
-                          self.screen_y/2 + 150)
+            display.image(
+                self.screen, self.img_right,
+                self.screen_x - 450 - self.img_right.get_rect().width/2,
+                self.screen_y/2 + 150)
+
             no_text = self.font.render("(no)", 1, (0, 0, 0))
             display.text(self.screen, self.font, no_text,
                          self.screen_x - 450 - no_text.get_rect().width/2,
@@ -169,7 +172,7 @@ class Sternberg(object):
             end_time = int(round(time.time() * 1000))
 
             # If time limit has been reached, consider it a missed trial
-            if end_time - start_time >= self.probe_duration:
+            if end_time - start_time >= self.PROBE_DURATION:
                 wait_response = False
 
         # Store RT
@@ -178,7 +181,7 @@ class Sternberg(object):
 
         # Display blank screen
         display.blank_screen(self.screen, self.background,
-                             self.between_stim_duration)
+                             self.BETWEEN_STIM_DURATION)
 
         # Display feedback
         self.screen.blit(self.background, (0, 0))
@@ -194,7 +197,7 @@ class Sternberg(object):
 
         pygame.display.flip()
 
-        display.wait(self.feedback_duration)
+        display.wait(self.FEEDBACK_DURATION)
 
         # Display blank screen (ITI)
         display.blank_screen(self.screen, self.background, self.ITI)
@@ -207,11 +210,11 @@ class Sternberg(object):
                          "center", "center")
             pygame.display.flip()
 
-            display.wait(self.stim_duration)
+            display.wait(self.STIM_DURATION)
 
             # Display blank screen
             display.blank_screen(self.screen, self.background,
-                                 self.between_stim_duration)
+                                 self.BETWEEN_STIM_DURATION)
 
     def run(self):
         # Instructions screen
@@ -312,14 +315,14 @@ class Sternberg(object):
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "End of task", "center", "center")
         display.text_space(self.screen, self.font,
-                           "center", (self.screen_y / 2) + 100)
+                           "center", self.screen_y/2 + 100)
         pygame.display.flip()
 
         display.wait_for_space()
 
         # Concatenate blocks and add trial numbers
         all_data = pd.concat(self.blocks)
-        all_data['trialNum'] = range(1, len(all_data)+1)
+        all_data['trialNum'] = range(1, len(all_data) + 1)
 
         print "- Sternberg Task complete"
 

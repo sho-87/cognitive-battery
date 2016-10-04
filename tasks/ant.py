@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import pandas as pd
 import numpy as np
@@ -6,7 +7,7 @@ import pygame
 
 from pygame.locals import *
 from itertools import product
-from sys import exit
+from utils import display
 
 
 class ANT(object):
@@ -16,7 +17,7 @@ class ANT(object):
         self.background = background
 
         # Sets font and font size
-        self.instructionsFont = pygame.font.SysFont("arial", 30)
+        self.font = pygame.font.SysFont("arial", 30)
 
         # Get screen info
         self.screen_x = self.screen.get_width()
@@ -24,8 +25,30 @@ class ANT(object):
 
         # Fill background
         self.background.fill((255, 255, 255))
-        pygame.display.set_caption("ANT Task")
+        pygame.display.set_caption("Attentional Network Test")
         pygame.mouse.set_visible(0)
+
+        # Experiment options
+        self.NUM_BLOCKS = blocks
+        self.FIXATION_DURATION_RANGE = (400, 1600)  # Range of fixation times
+        self.CUE_DURATION = 100
+        self.PRE_STIM_FIXATION_DURATION = 400
+        self.TARGET_OFFSET = 31  # Stimulus vertical offset
+        self.FLANKER_DURATION = 1700
+        self.FEEDBACK_DURATION = 1000
+        self.ITI_MAX = 3500
+
+        # Specify factor levels, and task timings as used by Fan et al. (2002).
+        self.CONGRUENCY_LEVELS = ("congruent", "incongruent", 'neutral')
+        self.CUE_LEVELS = ("nocue", "center", "spatial", 'double')
+        self.LOCATION_LEVELS = ('top', 'bottom')
+        self.DIRECTION_LEVELS = ('left', 'right')
+
+        # Create level combinations
+        # Level combinations give us 48 trials.
+        self.combinations = list(
+            product(self.CONGRUENCY_LEVELS, self.CUE_LEVELS,
+                    self.LOCATION_LEVELS, self.DIRECTION_LEVELS))
 
         # Get images
         self.base_dir = os.path.dirname(os.path.realpath(__file__))
@@ -50,396 +73,290 @@ class ANT(object):
             os.path.join(self.image_path, 'cue.png'))
 
         # Get image dimensions
-        self.flanker_w, self.flanker_h =\
-            self.img_left_incongruent.get_rect().size
-
-        self.fixation_w, self.fixation_h = self.img_fixation.get_rect().size
-
-        # Set number of blocks
-        self.num_blocks = blocks
-
-        # Specify factor levels, and task timings as used by Fan et al. (2002).
-        self.congruency_levels = ["congruent", "incongruent", 'neutral']
-        self.cue_levels = ["nocue", "center", "spatial", 'double']
-        self.location_levels = ['top', 'bottom']
-        self.direction_levels = ['left', 'right']
-
-        self.fixation_duration_range = [400, 1600]
-
-        # Create level combinations
-        # level combinations give us 48 trials.
-        self.combinations = list(
-            product(self.congruency_levels, self.cue_levels,
-                    self.location_levels, self.direction_levels))
+        self.flanker_h = self.img_left_incongruent.get_rect().height
+        self.fixation_h = self.img_fixation.get_rect().height
 
         # Create output dataframe
-        self.allData = pd.DataFrame()
+        self.all_data = pd.DataFrame()
 
-    def createBlock(self, blockNum, combinations, type):
-        if type == "main":
-            curCombinations = combinations * 2
-            np.random.shuffle(curCombinations)
-        elif type == "practice":
+    def create_block(self, block_num, combinations, trial_type):
+        if trial_type == "main":
+            cur_combinations = combinations * 2
+            np.random.shuffle(cur_combinations)
+        else:
             np.random.shuffle(combinations)
-            curCombinations = combinations[:len(combinations) / 2]
+            cur_combinations = combinations[:len(combinations)/2]
 
-        # add combinations to dataframe
-        self.curBlock = pd.DataFrame(data=curCombinations, columns=(
+        # Add combinations to dataframe
+        cur_block = pd.DataFrame(data=cur_combinations, columns=(
             'congruency', 'cue', 'location', 'direction'))
 
-        # add timing info to dataframe
-        self.curBlock["block"] = blockNum + 1
-        self.curBlock["fixationTime"] = [x for x in np.random.randint(
-            self.fixation_duration_range[0], self.fixation_duration_range[1],
-            len(curCombinations))]
+        # Add timing info to dataframe
+        cur_block["block"] = block_num + 1
+        cur_block["fixationTime"] = [x for x in np.random.randint(
+            self.FIXATION_DURATION_RANGE[0], self.FIXATION_DURATION_RANGE[1],
+            len(cur_combinations))]
 
-        return self.curBlock
+        return cur_block
 
-    def pressSpace(self, x, y):
-        self.space = self.instructionsFont.render(
-            "(Press spacebar when ready)", 1, (0, 0, 0))
-        self.screen.blit(self.space, (x, y))
-
-    def displayFlanker(self, trialNum, data, flankerType, location, direction):
-        # left
+    def display_flanker(self, flanker_type, location, direction):
+        # Left flanker
         if direction == "left":
-            if flankerType == "congruent":
-                self.stimulus = self.img_left_congruent
-            elif flankerType == "incongruent":
-                self.stimulus = self.img_left_incongruent
-            elif flankerType == "neutral":
-                self.stimulus = self.img_left_neutral
-        # right
-        elif direction == "right":
-            if flankerType == "congruent":
-                self.stimulus = self.img_right_congruent
-            elif flankerType == "incongruent":
-                self.stimulus = self.img_right_incongruent
-            elif flankerType == "neutral":
-                self.stimulus = self.img_right_neutral
+            if flanker_type == "congruent":
+                stimulus = self.img_left_congruent
+            elif flanker_type == "incongruent":
+                stimulus = self.img_left_incongruent
+            else:
+                stimulus = self.img_left_neutral
+        # Right flanker
+        else:
+            if flanker_type == "congruent":
+                stimulus = self.img_right_congruent
+            elif flanker_type == "incongruent":
+                stimulus = self.img_right_incongruent
+            else:
+                stimulus = self.img_right_neutral
 
-        # offset the flanker stimulus to above/below fixation
+        # Offset the flanker stimulus to above/below fixation
         if location == "top":
-            self.screen.blit(self.stimulus, (
-                self.screen_x / 2 - self.flanker_w / 2,
-                self.screen_y / 2 - self.flanker_h - 31))
+            display.image(
+                self.screen, stimulus, "center",
+                self.screen_y/2 - self.flanker_h - self.TARGET_OFFSET)
         elif location == "bottom":
-            self.screen.blit(self.stimulus, (
-                self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 + 31))
+            display.image(self.screen, stimulus, "center",
+                          self.screen_y/2 + self.TARGET_OFFSET)
 
-    def displayTrial(self, trialNum, data, type):
-        # check for a quit press after stimulus was shown
+    def display_trial(self, trial_num, data, trial_type):
+        # Check for a quit press after stimulus was shown
         for event in pygame.event.get():
-            if event.type == KEYDOWN and event.key == K_F4:
-                return pd.DataFrame()
+            if event.type == KEYDOWN and event.key == K_F9:
+                return self.all_data
             elif event.type == KEYDOWN and event.key == K_F12:
-                pygame.quit()
-                exit()
+                sys.exit(0)
 
-        # display fixation period
+        # Display fixation
         self.screen.blit(self.background, (0, 0))
-        self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixation_w / 2,
-            self.screen_y / 2 - self.fixation_h / 2))
+        display.image(self.screen, self.img_fixation, "center", "center")
         pygame.display.flip()
 
-        self.baseTime = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - self.baseTime < data.at[
-            trialNum, "fixationTime"]:
-            pass
+        display.wait(data["fixationTime"][trial_num])
 
-        # cues
+        # Display cue
         self.screen.blit(self.background, (0, 0))
-        if data.at[trialNum, "cue"] == "nocue":
-            self.screen.blit(self.img_fixation, (
-                self.screen_x / 2 - self.fixation_w / 2,
-                self.screen_y / 2 - self.fixation_h / 2))
-        elif data.at[trialNum, "cue"] == "center":
-            self.screen.blit(self.img_cue, (
-                self.screen_x / 2 - self.fixation_w / 2,
-                self.screen_y / 2 - self.fixation_h / 2))
-        elif data.at[trialNum, "cue"] == "double":
-            self.screen.blit(self.img_fixation, (
-                self.screen_x / 2 - self.fixation_w / 2,
-                self.screen_y / 2 - self.fixation_h / 2))
-            self.screen.blit(self.img_cue, (
-                self.screen_x / 2 - self.fixation_w / 2,
-                self.screen_y / 2 - self.fixation_h - 31))
-            self.screen.blit(self.img_cue, (
-                self.screen_x / 2 - self.fixation_w / 2,
-                self.screen_y / 2 + 31))
-        elif data.at[trialNum, "cue"] == "spatial":
-            self.screen.blit(self.img_fixation, (
-                self.screen_x / 2 - self.fixation_w / 2,
-                self.screen_y / 2 - self.fixation_h / 2))
-            if data.at[trialNum, "location"] == "top":
-                self.screen.blit(self.img_cue, (
-                    self.screen_x / 2 - self.fixation_w / 2,
-                    self.screen_y / 2 - self.fixation_h - 31))
-            elif data.at[trialNum, "location"] == "bottom":
-                self.screen.blit(self.img_cue, (
-                    self.screen_x / 2 - self.fixation_w / 2,
-                    self.screen_y / 2 + 31))
+
+        cue_type = data["cue"][trial_num]
+
+        if cue_type == "nocue":
+            # Display fixation in the center
+            display.image(self.screen, self.img_fixation, "center", "center")
+        elif cue_type == "center":
+            # Display cue in the center
+            display.image(self.screen, self.img_cue, "center", "center")
+        elif cue_type == "double":
+            # Display fixation in the center
+            display.image(self.screen, self.img_fixation, "center", "center")
+
+            # Display cue above and below fixation
+            display.image(
+                self.screen, self.img_cue, "center",
+                self.screen_y/2 - self.fixation_h - self.TARGET_OFFSET)
+            display.image(self.screen, self.img_cue,
+                          "center", self.screen_y/2 + self.TARGET_OFFSET)
+        elif cue_type == "spatial":
+            cue_location = data["location"][trial_num]
+
+            # Display fixation in the center
+            display.image(self.screen, self.img_fixation, "center", "center")
+
+            # Display cue at target location
+            if cue_location == "top":
+                display.image(
+                    self.screen, self.img_cue, "center",
+                    self.screen_y/2 - self.fixation_h - self.TARGET_OFFSET)
+            elif cue_location == "bottom":
+                display.image(self.screen, self.img_cue, "center",
+                              self.screen_y/2 + self.TARGET_OFFSET)
 
         pygame.display.flip()
 
-        # display cue for 100ms
-        self.baseTime = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - self.baseTime < 100:
-            pass
+        # Display cue for certain duration
+        display.wait(self.CUE_DURATION)
 
-        # prestim interval (400ms)
+        # Prestim interval with fixation
         self.screen.blit(self.background, (0, 0))
-        self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixation_w / 2,
-            self.screen_y / 2 - self.fixation_h / 2))
-
+        display.image(self.screen, self.img_fixation, "center", "center")
         pygame.display.flip()
 
-        self.baseTime = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - self.baseTime < 400:
-            pass
+        display.wait(self.PRE_STIM_FIXATION_DURATION)
 
-        # display target
+        # Display flanker target
         self.screen.blit(self.background, (0, 0))
-        self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixation_w / 2,
-            self.screen_y / 2 - self.fixation_h / 2))
+        display.image(self.screen, self.img_fixation, "center", "center")
 
-        self.displayFlanker(trialNum, data, data.at[trialNum, "congruency"],
-                            data.at[trialNum, "location"],
-                            data.at[trialNum, "direction"])
-
+        self.display_flanker(data["congruency"][trial_num],
+                             data["location"][trial_num],
+                             data["direction"][trial_num])
         pygame.display.flip()
 
-        self.baseTime = int(round(time.time() * 1000))
-        self.endTime = self.baseTime
+        start_time = int(round(time.time() * 1000))
 
         # Clear the event queue before checking for responses
         pygame.event.clear()
-        self.waitResponse = True
-        while self.waitResponse:
+        response = "NA"
+        wait_response = True
+        while wait_response:
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_LEFT:
-                    self.response = "left"
-                    self.waitResponse = False
+                    response = "left"
+                    wait_response = False
                 elif event.type == KEYDOWN and event.key == K_RIGHT:
-                    self.response = "right"
-                    self.waitResponse = False
-                elif event.type == KEYDOWN and event.key == K_F4:
-                    return pd.DataFrame()
+                    response = "right"
+                    wait_response = False
+                elif event.type == KEYDOWN and event.key == K_F9:
+                    return self.all_data
+                elif event.type == KEYDOWN and event.key == K_F12:
+                    sys.exit(0)
 
-            self.endTime = int(round(time.time() * 1000))
+            end_time = int(round(time.time() * 1000))
 
-            # if time limit has been reached, consider it a missed trial
-            if self.endTime - self.baseTime >= 1700:
-                self.response = "NA"
-                self.waitResponse = False
+            # If time limit has been reached, consider it a missed trial
+            if end_time - start_time >= self.FLANKER_DURATION:
+                wait_response = False
 
-        self.rt = int(round(time.time() * 1000)) - self.baseTime
+        # Store reaction time and response
+        rt = int(round(time.time() * 1000)) - start_time
+        data.set_value(trial_num, 'RT', rt)
+        data.set_value(trial_num, 'response', response)
 
-        data.set_value(trialNum, 'response', self.response)
-        data.set_value(trialNum, 'RT', self.rt)
+        correct = 1 if response == data["direction"][trial_num] else 0
+        data.set_value(trial_num, 'correct', correct)
 
-        if self.response == data.at[trialNum, "direction"]:
-            self.correct = 1
-        else:
-            self.correct = 0
-
-        data.set_value(trialNum, 'correct', self.correct)
-
-        # if practice, display feedback
-        if type == "practice":
+        # Display feedback if practice trials
+        if trial_type == "practice":
             self.screen.blit(self.background, (0, 0))
-            if self.correct == 1:
-                self.feedback = self.instructionsFont.render("correct", 1,
-                                                             (0, 255, 0))
-            elif self.correct == 0:
-                self.feedback = self.instructionsFont.render("incorrect", 1,
-                                                             (255, 0, 0))
-
-            self.feedbackW = self.feedback.get_rect().width
-            self.feedbackH = self.feedback.get_rect().height
-            self.screen.blit(self.feedback, (
-                self.screen_x / 2 - self.feedbackW / 2,
-                self.screen_y / 2 - self.feedbackH / 2))
-
+            if correct == 1:
+                display.text(self.screen, self.font, "correct",
+                             "center", "center", (0, 255, 0))
+            else:
+                display.text(self.screen, self.font, "incorrect",
+                             "center", "center", (255, 0, 0))
             pygame.display.flip()
 
-            self.baseTime = int(round(time.time() * 1000))
-            while int(round(time.time() * 1000)) - self.baseTime < 1000:
-                pass
+            display.wait(self.FEEDBACK_DURATION)
 
-        # ITI
+        # Display fixation during ITI
         self.screen.blit(self.background, (0, 0))
-        self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixation_w / 2,
-            self.screen_y / 2 - self.fixation_h / 2))
-
+        display.image(self.screen, self.img_fixation, "center", "center")
         pygame.display.flip()
 
-        self.ITI = 3500 - self.rt - data.at[trialNum, 'fixationTime']
-        data.set_value(trialNum, 'ITI', self.ITI)
+        iti = self.ITI_MAX - rt - data["fixationTime"][trial_num]
+        data.set_value(trial_num, 'ITI', iti)
 
-        self.baseTime = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - self.baseTime < self.ITI:
-            pass
+        display.wait(iti)
 
-    def runBlock(self, blockNum, totalBlocks, type):
-        self.curBlock = self.createBlock(blockNum, self.combinations, type)
+    def run_block(self, block_num, total_blocks, block_type):
+        cur_block = self.create_block(
+            block_num, self.combinations, block_type)
 
-        for j in range(self.curBlock.shape[0]):
-            self.displayTrial(j, self.curBlock, type)
+        for i in range(cur_block.shape[0]):
+            self.display_trial(i, cur_block, block_type)
 
-        if type == "main":
-            # add block data to allData
-            self.allData = pd.concat([self.allData, self.curBlock])
+        if block_type == "main":
+            # Add block data to all_data
+            self.all_data = pd.concat([self.all_data, cur_block])
 
-        # end of block screen
-        if blockNum != totalBlocks - 1:
-            self.blockEnd = True
-            while self.blockEnd:
-                for event in pygame.event.get():
-                    if event.type == KEYDOWN and event.key == K_SPACE:
-                        self.blockEnd = False
+        # End of block screen
+        if block_num != total_blocks - 1:  # If not the final block
+            self.screen.blit(self.background, (0, 0))
+            display.text(self.screen, self.font,
+                         "End of current block. "
+                         "Start next block when you're ready...",
+                         100, "center")
+            display.text_space(self.screen, self.font,
+                               "center", (self.screen_y/2) + 100)
+            pygame.display.flip()
 
-                self.screen.blit(self.background, (0, 0))
-
-                self.blockText = self.instructionsFont.render(
-                    "End of current block. Start next block when you're ready...",
-                    1, (0, 0, 0))
-                self.screen.blit(self.blockText, (100, self.screen_y / 2))
-
-                self.pressSpace(100, (self.screen_y / 2) + 100)
-
-                pygame.display.flip()
+            display.wait_for_space()
 
     def run(self):
         # Instructions
         self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "Attentional Network Test",
+                     "center", self.screen_y/2 - 300)
+        display.text(self.screen, self.font,
+                     "Keep your eyes on the fixation cross at the "
+                     "start of each trial:",
+                     100, self.screen_y/2 - 200)
+        display.image(self.screen, self.img_fixation,
+                      "center", self.screen_y/2 - 150)
+        display.text(self.screen, self.font,
+                     "A set of arrows will appear somewhere on the screen:",
+                     100, self.screen_y/2 - 100)
+        display.image(self.screen, self.img_left_incongruent,
+                      "center", self.screen_y/2 - 50)
+        display.text(self.screen, self.font,
+                     "Use the Left / Right arrow keys to indicate "
+                     "the direction of the CENTER arrow.",
+                     100, self.screen_y/2 + 50)
+        display.text(self.screen, self.font,
+                     "In example above, you should press the Left arrow.",
+                     100, self.screen_y/2 + 100)
+        display.text_space(self.screen, self.font,
+                           "center", (self.screen_y/2) + 300)
+        pygame.display.flip()
 
-        self.title = self.instructionsFont.render("Attentional Network Test",
-                                                  1, (0, 0, 0))
-        self.titleW = self.title.get_rect().width
-        self.screen.blit(self.title, (
-            self.screen_x / 2 - self.titleW / 2, self.screen_y / 2 - 300))
-
-        self.line1 = self.instructionsFont.render(
-            "Keep your eyes on the fixation cross at the start of each trial:",
-            1, (0, 0, 0))
-        self.screen.blit(self.line1, (100, self.screen_y / 2 - 200))
-
-        self.screen.blit(self.img_fixation, (
-            self.screen_x / 2 - self.fixation_w / 2, self.screen_y / 2 - 150))
-
-        self.line2 = self.instructionsFont.render(
-            "Then, a set of arrows will appear somewhere on the screen:", 1,
-            (0, 0, 0))
-        self.screen.blit(self.line2, (100, self.screen_y / 2 - 100))
-
-        self.screen.blit(self.img_left_incongruent, (
-            self.screen_x / 2 - self.flanker_w / 2, self.screen_y / 2 - 50))
-
-        self.line3 = self.instructionsFont.render(
-            "Use the left/right arrow keys to indicate the direction of the CENTER arrow only.",
-            1, (0, 0, 0))
-        self.screen.blit(self.line3, (100, self.screen_y / 2))
-
-        self.line4 = self.instructionsFont.render(
-            "In example above, the correct answer is LEFT.", 1, (0, 0, 0))
-        self.screen.blit(self.line4, (100, self.screen_y / 2 + 50))
-
-        self.pressSpace(100, (self.screen_y / 2) + 300)
-
-        self.instructions = True
-        while self.instructions:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructions = False
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
-
-            pygame.display.flip()
+        display.wait_for_space()
 
         # Instructions Practice
-        self.instructionsPractice = True
-        while self.instructionsPractice:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructionsPractice = False
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We'll begin with a some practice trials...",
+                     "center", "center")
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
+        pygame.display.flip()
 
-                self.screen.blit(self.background, (0, 0))
-                self.practiceInstructions = self.instructionsFont.render(
-                    "We will begin with a few practice trials...", 1,
-                    (0, 0, 0))
-                self.screen.blit(self.practiceInstructions,
-                                 (100, self.screen_y / 2))
-
-                self.pressSpace(100, (self.screen_y / 2) + 100)
-
-                pygame.display.flip()
+        display.wait_for_space()
 
         # Practice trials
-        for i in range(1):
-            self.runBlock(i, 1, "practice")
+        self.run_block(0, 1, "practice")
 
         # Instructions Practice End
-        self.practiceEndScreen = True
-        while self.practiceEndScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.practiceEndScreen = False
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We will now begin the main trials...",
+                     100, self.screen_y/2 - 50)
+        display.text(self.screen, self.font,
+                     "You will not receive feedback after each trial.",
+                     100, self.screen_y/2 + 50)
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 200)
+        pygame.display.flip()
 
-            self.screen.blit(self.background, (0, 0))
-            self.practiceEndLine = self.instructionsFont.render(
-                "We will now begin the main trials...", 1, (0, 0, 0))
-            self.screen.blit(self.practiceEndLine,
-                             (100, self.screen_y / 2 - 50))
-
-            self.practiceEndLine2 = self.instructionsFont.render(
-                "You will not receive feedback after each trial.", 1,
-                (0, 0, 0))
-            self.screen.blit(self.practiceEndLine2,
-                             (100, self.screen_y / 2 + 50))
-
-            self.pressSpace(100, (self.screen_y / 2) + 200)
-
-            pygame.display.flip()
+        display.wait_for_space()
 
         # Main task
-        for i in range(self.num_blocks):
-            self.runBlock(i, self.num_blocks, "main")
+        for i in range(self.NUM_BLOCKS):
+            self.run_block(i, self.NUM_BLOCKS, "main")
 
-        # create trial number column
-        self.trialNums = np.arange(1, self.allData.shape[0] + 1)
-        self.allData["trial"] = self.trialNums
+        # Create trial number column
+        self.all_data["trial"] = range(1, len(self.all_data) + 1)
 
-        # rearrange the dataframe
-        self.columns = ['trial', 'block', 'congruency', 'cue', 'location',
-                        'fixationTime', 'ITI', 'direction', 'response',
-                        'correct', 'RT']
-        self.allData = self.allData[self.columns]
+        # Rearrange the dataframe
+        columns = ['trial', 'block', 'congruency', 'cue', 'location',
+                   'fixationTime', 'ITI', 'direction',
+                   'response', 'correct', 'RT']
+        self.all_data = self.all_data[columns]
 
         # End screen
-        self.endScreen = True
-        while self.endScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.endScreen = False
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "End of task", "center", "center")
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
+        pygame.display.flip()
 
-            self.screen.blit(self.background, (0, 0))
-            self.endLine = self.instructionsFont.render("End of task.", 1,
-                                                        (0, 0, 0))
-            self.screen.blit(self.endLine, (100, self.screen_y / 2))
-
-            self.pressSpace(100, (self.screen_y / 2) + 100)
-
-            pygame.display.flip()
+        display.wait_for_space()
 
         print "- ANT complete"
 
-        return self.allData
+        return self.all_data

@@ -96,6 +96,7 @@ def wait(duration):
     Parameters:
     duration -- duration of the wait in milliseconds
     """
+    pygame.event.clear()  # Clear any events in the queue
 
     start_time = int(round(time.time() * 1000))
     while (int(round(time.time() * 1000)) - start_time) < duration:
@@ -111,6 +112,7 @@ def wait_for_space():
     The current screen will be held until the spacebar, or the `Quit` key,
     is pressed.
     """
+    pygame.event.clear()  # Clear any events in the queue
 
     waiting = True
     while waiting:
