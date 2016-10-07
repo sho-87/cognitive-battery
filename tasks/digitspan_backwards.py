@@ -13,8 +13,8 @@ class DigitspanBackwards(object):
         self.screen = screen
         self.background = background
 
-        # sets font and font size
-        self.instructionsFont = pygame.font.SysFont("arial", 30)
+        # Set fonts and font sizes
+        self.font = pygame.font.SysFont("arial", 30)
         self.stimulusFont = pygame.font.SysFont("arial", 80)
 
         # get screen info
@@ -62,7 +62,7 @@ class DigitspanBackwards(object):
             self.allData.set_value(i, 'sequence', self.generatedSequence)
 
     def pressSpace(self, x, y):
-        self.space = self.instructionsFont.render(
+        self.space = self.font.render(
             "(Press spacebar when ready)", 1, (0, 0, 0))
         self.screen.blit(self.space, (x, y))
 
@@ -135,7 +135,7 @@ class DigitspanBackwards(object):
 
             self.screen.blit(self.background, (0, 0))
 
-            self.entryInstructions = self.instructionsFont.render(
+            self.entryInstructions = self.font.render(
                 "Type the sequence in backwards order:", 1, (0, 0, 0))
 
             self.sequenceText = self.stimulusFont.render(
@@ -155,39 +155,39 @@ class DigitspanBackwards(object):
         # Instructions
         self.screen.blit(self.background, (0, 0))
 
-        self.title = self.instructionsFont.render("Backwards Digit Span", 1,
-                                                  (0, 0, 0))
+        self.title = self.font.render("Backwards Digit Span", 1,
+                                      (0, 0, 0))
         self.titleW = self.title.get_rect().width
         self.screen.blit(self.title, (
             self.screen_x / 2 - self.titleW / 2, self.screen_y / 2 - 300))
 
-        self.line1 = self.instructionsFont.render(
+        self.line1 = self.font.render(
             "You will be shown a number sequence, one number at a time.", 1,
             (0, 0, 0))
         self.screen.blit(self.line1, (100, self.screen_y / 2 - 200))
 
-        self.line2 = self.instructionsFont.render(
+        self.line2 = self.font.render(
             "Memorize the number sequence.", 1, (0, 0, 0))
         self.screen.blit(self.line2, (100, self.screen_y / 2 - 100))
 
-        self.line3 = self.instructionsFont.render(
+        self.line3 = self.font.render(
             "You will then be asked to type the sequence in reverse/backwards order. For example...",
             1, (0, 0, 0))
         self.screen.blit(self.line3, (100, self.screen_y / 2))
 
-        self.line4 = self.instructionsFont.render("Sequence: 1 2 3 4 5", 1,
-                                                  (0, 0, 0))
+        self.line4 = self.font.render("Sequence: 1 2 3 4 5", 1,
+                                      (0, 0, 0))
         self.line4W = self.line4.get_rect().width
         self.screen.blit(self.line4, (
             self.screen_x / 2 - self.line4W / 2, self.screen_y / 2 + 100))
 
-        self.line5 = self.instructionsFont.render("Correct: 5 4 3 2 1", 1,
-                                                  (0, 0, 0))
+        self.line5 = self.font.render("Correct: 5 4 3 2 1", 1,
+                                      (0, 0, 0))
         self.line5W = self.line5.get_rect().width
         self.screen.blit(self.line5, (
             self.screen_x / 2 - self.line5W / 2, self.screen_y / 2 + 150))
 
-        self.line6 = self.instructionsFont.render(
+        self.line6 = self.font.render(
             "The sequences will get longer throughout the experiment.", 1,
             (0, 0, 0))
         self.screen.blit(self.line6, (100, self.screen_y / 2 + 250))
@@ -220,7 +220,7 @@ class DigitspanBackwards(object):
                     exit()
 
                 self.screen.blit(self.background, (0, 0))
-                self.practiceInstructions = self.instructionsFont.render(
+                self.practiceInstructions = self.font.render(
                     "We will begin with a practice trial...", 1, (0, 0, 0))
                 self.screen.blit(self.practiceInstructions,
                                  (100, self.screen_y / 2))
@@ -238,11 +238,11 @@ class DigitspanBackwards(object):
         self.screen.blit(self.background, (0, 0))
 
         if list(reversed(self.correctSequence_p)) == self.userSequence_p:
-            self.feedbackLine = self.instructionsFont.render("Correct", 1,
-                                                             (0, 255, 0))
+            self.feedbackLine = self.font.render("Correct", 1,
+                                                 (0, 255, 0))
         else:
-            self.feedbackLine = self.instructionsFont.render("Incorrect", 1,
-                                                             (255, 0, 0))
+            self.feedbackLine = self.font.render("Incorrect", 1,
+                                                 (255, 0, 0))
 
         self.feedbackLineH = self.feedbackLine.get_rect().height
         self.feedbackLineW = self.feedbackLine.get_rect().width
@@ -265,7 +265,7 @@ class DigitspanBackwards(object):
                     self.practiceEndScreen = False
 
             self.screen.blit(self.background, (0, 0))
-            self.practiceEndLine = self.instructionsFont.render(
+            self.practiceEndLine = self.font.render(
                 "We will now begin the main trials...", 1, (0, 0, 0))
             self.screen.blit(self.practiceEndLine, (100, self.screen_y / 2))
 
@@ -297,8 +297,8 @@ class DigitspanBackwards(object):
                     self.endScreen = False
 
             self.screen.blit(self.background, (0, 0))
-            self.endLine = self.instructionsFont.render("End of task.", 1,
-                                                        (0, 0, 0))
+            self.endLine = self.font.render("End of task.", 1,
+                                            (0, 0, 0))
             self.screen.blit(self.endLine, (100, self.screen_y / 2))
 
             self.pressSpace(100, (self.screen_y / 2) + 100)
