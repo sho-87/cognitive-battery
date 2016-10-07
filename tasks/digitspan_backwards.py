@@ -26,40 +26,42 @@ class DigitspanBackwards(object):
         pygame.display.set_caption("Backwards Digitspan")
         pygame.mouse.set_visible(0)
 
-        # set stimulus timings
-        self.stimDuration = 1000
-        self.ITI = 100
+        # Experiment options
+        self.STIM_DURATION = 1000  # Duration of each digit
+        self.ITI = 100  # Time between trials
+        self.START_LENGTH = 3  # Length of smallest sequence
+        self.END_LENGTH = 9  # Length of largest sequence
+        self.NUM_REPEATS = 2  # Num of times each sequence length is repeated
 
-        # create digit lengths
-        self.startLength = 3
-        self.endLength = 9
-        self.numLengths = self.endLength - self.startLength + 1
-        self.numRepetitions = 2
-        self.trialNum = np.arange(1, self.numLengths * self.numRepetitions + 1)
+        self.num_lengths = self.END_LENGTH - self.START_LENGTH + 1
 
-        self.digitLengths = np.asarray(
-            [j for i in range(self.startLength, self.endLength + 1) for j in
-             [i, i]])
+        # Generate all possible number sequence lengths for experiment
+        self.digit_lengths = np.asarray(
+            [j for i in range(self.START_LENGTH, self.END_LENGTH + 1) for j in
+             [i] * self.NUM_REPEATS])
 
-        # main dataframe
-        self.allData = pd.DataFrame()
-        self.allData["trial"] = self.trialNum
-        self.allData["length"] = self.digitLengths
+        # Create main dataframe
+        self.all_data = pd.DataFrame()
+        self.all_data["trial"] = range(1,
+                                       self.num_lengths * self.NUM_REPEATS + 1)
+        self.all_data["length"] = self.digit_lengths
 
-        # create digit sequences
-        for i in range(self.allData.shape[0]):
-            # set initial empty sequence
-            self.generatedSequence = ''
-            for j in range(self.allData.at[i, 'length']):
+        # Create digit sequences
+        for i in range(len(self.all_data)):
+            # Set initial empty sequence
+            generated_sequence = ''
+            for j in range(self.all_data['length'][i]):
                 # generate initial random number
                 self.randomNum = str(np.random.randint(1, 10))
                 # if that number is in the sequence, generate new number
-                while self.randomNum in [c for c in self.generatedSequence]:
+                while self.randomNum in [c for c in generated_sequence]:
                     self.randomNum = str(np.random.randint(1, 10))
                 # add number to the sequence
-                self.generatedSequence += self.randomNum
+                generated_sequence += self.randomNum
             # add sequence to dataframe
-            self.allData.set_value(i, 'sequence', self.generatedSequence)
+            self.all_data.set_value(i, 'sequence', generated_sequence)
+
+        print self.all_data
 
     def pressSpace(self, x, y):
         self.space = self.font.render(
@@ -82,7 +84,7 @@ class DigitspanBackwards(object):
 
             self.baseTime = int(round(time.time() * 1000))
             while int(
-                    round(time.time() * 1000)) - self.baseTime < self.stimDuration:
+                    round(time.time() * 1000)) - self.baseTime < self.STIM_DURATION:
                 pass
 
             self.screen.blit(self.background, (0, 0))
@@ -274,20 +276,20 @@ class DigitspanBackwards(object):
             pygame.display.flip()
 
         # Main trials
-        for i in range(self.allData.shape[0]):
-            self.correctSequence = self.displayNumbers(i, self.allData)
+        for i in range(self.all_data.shape[0]):
+            self.correctSequence = self.displayNumbers(i, self.all_data)
             self.userSequence = self.numberEntry()
 
-            self.allData.set_value(i, 'userSequence',
+            self.all_data.set_value(i, 'userSequence',
                                    ''.join(self.userSequence))
 
             if len(self.correctSequence) != len(self.userSequence):
-                self.allData.set_value(i, 'correct', 0)
+                self.all_data.set_value(i, 'correct', 0)
             else:
                 if list(reversed(self.correctSequence)) == self.userSequence:
-                    self.allData.set_value(i, 'correct', 1)
+                    self.all_data.set_value(i, 'correct', 1)
                 else:
-                    self.allData.set_value(i, 'correct', 0)
+                    self.all_data.set_value(i, 'correct', 0)
 
         # End screen
         self.endScreen = True
@@ -307,4 +309,4 @@ class DigitspanBackwards(object):
 
         print "- Digit span (backwards) complete"
 
-        return self.allData
+        return self.all_data
