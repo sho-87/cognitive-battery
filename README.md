@@ -77,9 +77,6 @@ Currently implemented tasks:
 * **Attention Network Test (ANT)**
   - Based on the original version by
   [Fan et al. (2002)](http://www.mitpressjournals.org/doi/abs/10.1162/089892902317361886#.VlEwI9irSHs)
-  - I have also included the shortened version by
-  [Fan et al. (2005)](http://www.sciencedirect.com/science/article/pii/S1053811905000984).
-  While this version works, it is currently not included in the main battery.
 * **Digit Span (backwards)**
   - Based on the version used by
   [Berman et al. (2008)](http://pss.sagepub.com/content/19/12/1207) and
@@ -185,6 +182,7 @@ for statistics
 - Improved integration with pygame
 - SART timing has been fine tuned to better match the original publication
 - Added the Sternberg Task
+- Short version of the ANT has been removed
 
 **Bug Fixes**
 - Up/Down buttons now correctly disable if random order is selected
