@@ -1,4 +1,5 @@
 import time
+import random
 import pandas as pd
 import numpy as np
 import pygame
@@ -48,20 +49,10 @@ class DigitspanBackwards(object):
 
         # Create digit sequences
         for i in range(len(self.all_data)):
-            # Set initial empty sequence
-            generated_sequence = ''
-            for j in range(self.all_data['length'][i]):
-                # generate initial random number
-                self.randomNum = str(np.random.randint(1, 10))
-                # if that number is in the sequence, generate new number
-                while self.randomNum in [c for c in generated_sequence]:
-                    self.randomNum = str(np.random.randint(1, 10))
-                # add number to the sequence
-                generated_sequence += self.randomNum
-            # add sequence to dataframe
-            self.all_data.set_value(i, 'sequence', generated_sequence)
-
-        print self.all_data
+            generated_sequence = random.sample(range(1, 10),
+                                               self.all_data['length'][i])
+            self.all_data.set_value(
+                i, 'sequence', ''.join(str(n) for n in generated_sequence))
 
     def pressSpace(self, x, y):
         self.space = self.font.render(
