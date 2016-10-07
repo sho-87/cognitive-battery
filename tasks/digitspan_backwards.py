@@ -1,3 +1,4 @@
+import sys
 import time
 import random
 import pandas as pd
@@ -5,7 +6,6 @@ import numpy as np
 import pygame
 
 from pygame.locals import *
-from sys import exit
 from utils import display
 
 
@@ -31,6 +31,7 @@ class DigitspanBackwards(object):
         # Experiment options
         self.STIM_DURATION = 1000  # Duration of each digit
         self.INTER_NUMBER_DURATION = 100  # Time between numbers
+        self.NUMBERS_USED = range(1, 10)  # Set of digits that can be used
         self.START_LENGTH = 3  # Length of smallest sequence
         self.END_LENGTH = 9  # Length of largest sequence
         self.NUM_REPEATS = 2  # Num of times each sequence length is repeated
@@ -50,7 +51,7 @@ class DigitspanBackwards(object):
 
         # Create digit sequences
         for i in range(len(self.all_data)):
-            generated_sequence = random.sample(range(1, 10),
+            generated_sequence = random.sample(self.NUMBERS_USED,
                                                self.all_data['length'][i])
             self.all_data.set_value(
                 i, 'sequence', ''.join(str(n) for n in generated_sequence))
@@ -71,62 +72,43 @@ class DigitspanBackwards(object):
 
         return data['sequence'][i]
 
-    def numberEntry(self):
-        self.userSequence = []
+    def number_entry(self):
+        user_sequence = ""
 
         # Clear the event queue before checking for responses
         pygame.event.clear()
 
-        self.entry = True
-        while self.entry:
+        entry = True
+        while entry:
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_RETURN:
-                    self.entry = False
+                    entry = False
                 elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
+                    sys.exit(0)
                 elif event.type == KEYDOWN and event.key == K_BACKSPACE:
-                    if self.userSequence:
-                        self.userSequence.pop()
+                    if user_sequence:
+                        # Remove last number in entered string
+                        user_sequence = user_sequence[:-1]
                 elif event.type == KEYDOWN:
-                    if event.key == K_0:
-                        self.userSequence.append(str(0))
-                    elif event.key == K_1:
-                        self.userSequence.append(str(1))
-                    elif event.key == K_2:
-                        self.userSequence.append(str(2))
-                    elif event.key == K_3:
-                        self.userSequence.append(str(3))
-                    elif event.key == K_4:
-                        self.userSequence.append(str(4))
-                    elif event.key == K_5:
-                        self.userSequence.append(str(5))
-                    elif event.key == K_6:
-                        self.userSequence.append(str(6))
-                    elif event.key == K_7:
-                        self.userSequence.append(str(7))
-                    elif event.key == K_8:
-                        self.userSequence.append(str(8))
-                    elif event.key == K_9:
-                        self.userSequence.append(str(9))
+                    try:
+                        # Only allow key press of used numbers
+                        key_pressed = int(pygame.key.name(event.key))
+                        if key_pressed in self.NUMBERS_USED:
+                            user_sequence += pygame.key.name(event.key)
+                    except ValueError:
+                        pass
 
             self.screen.blit(self.background, (0, 0))
+            display.text(self.screen, self.font,
+                         "Type the sequence in backwards order:",
+                         50, self.screen_y/4)
 
-            self.entryInstructions = self.font.render(
-                "Type the sequence in backwards order:", 1, (0, 0, 0))
+            display.text(self.screen, self.stimulus_font, user_sequence,
+                         "center", "center")
 
-            self.sequenceText = self.stimulus_font.render(
-                ''.join(self.userSequence), 1, (0, 0, 0))
-            self.sequenceTextH = self.sequenceText.get_rect().height
-            self.sequenceTextW = self.sequenceText.get_rect().width
-
-            self.screen.blit(self.entryInstructions, (10, self.screen_y / 4))
-            self.screen.blit(self.sequenceText, (
-                self.screen_x / 2 - self.sequenceTextW / 2,
-                self.screen_y / 2 - self.sequenceTextH / 2))
             pygame.display.flip()
 
-        return self.userSequence
+        return user_sequence
 
     def run(self):
         # Instructions
@@ -211,7 +193,7 @@ class DigitspanBackwards(object):
         # Practice trial
         self.practiceData = pd.DataFrame(['13579'], columns=['sequence'])
         self.correctSequence_p = self.display_numbers(0, self.practiceData)
-        self.userSequence_p = self.numberEntry()
+        self.userSequence_p = self.number_entry()
 
         # Practice feedback screen
         self.screen.blit(self.background, (0, 0))
@@ -256,15 +238,15 @@ class DigitspanBackwards(object):
         # Main trials
         for i in range(self.all_data.shape[0]):
             self.correctSequence = self.display_numbers(i, self.all_data)
-            self.userSequence = self.numberEntry()
+            self.user_sequence = self.number_entry()
 
-            self.all_data.set_value(i, 'userSequence',
-                                   ''.join(self.userSequence))
+            self.all_data.set_value(i, 'user_sequence',
+                                   ''.join(self.user_sequence))
 
-            if len(self.correctSequence) != len(self.userSequence):
+            if len(self.correctSequence) != len(self.user_sequence):
                 self.all_data.set_value(i, 'correct', 0)
             else:
-                if list(reversed(self.correctSequence)) == self.userSequence:
+                if list(reversed(self.correctSequence)) == self.user_sequence:
                     self.all_data.set_value(i, 'correct', 1)
                 else:
                     self.all_data.set_value(i, 'correct', 0)
