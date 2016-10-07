@@ -1,5 +1,4 @@
 import sys
-import time
 import random
 import pandas as pd
 import numpy as np
@@ -19,7 +18,7 @@ class DigitspanBackwards(object):
         self.font = pygame.font.SysFont("arial", 30)
         self.stimulus_font = pygame.font.SysFont("arial", 80)
 
-        # get screen info
+        # Get screen info
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
@@ -31,6 +30,7 @@ class DigitspanBackwards(object):
         # Experiment options
         self.STIM_DURATION = 1000  # Duration of each digit
         self.INTER_NUMBER_DURATION = 100  # Time between numbers
+        self.FEEDBACK_DURATION = 2000  # Duration of feedback screen
         self.NUMBERS_USED = range(1, 10)  # Set of digits that can be used
         self.START_LENGTH = 3  # Length of smallest sequence
         self.END_LENGTH = 9  # Length of largest sequence
@@ -110,6 +110,12 @@ class DigitspanBackwards(object):
 
         return user_sequence
 
+    def check_answer(self, user_string, actual_string):
+        if user_string[::-1] == actual_string:
+            return True
+        else:
+            return False
+
     def run(self):
         # Instructions
         self.screen.blit(self.background, (0, 0))
@@ -165,82 +171,57 @@ class DigitspanBackwards(object):
         display.wait_for_space()
 
         # Practice trial
-        self.practiceData = pd.DataFrame(['13579'], columns=['sequence'])
-        self.correctSequence_p = self.display_numbers(0, self.practiceData)
-        self.userSequence_p = self.number_entry()
+        practice_data = pd.DataFrame(['13579'], columns=['sequence'])
+        correct_sequence_p = self.display_numbers(0, practice_data)
+        user_sequence_p = self.number_entry()
 
         # Practice feedback screen
         self.screen.blit(self.background, (0, 0))
 
-        if list(reversed(self.correctSequence_p)) == self.userSequence_p:
-            self.feedbackLine = self.font.render("Correct", 1,
-                                                 (0, 255, 0))
+        # Check if reverse of user input matches the correct sequence
+        if self.check_answer(user_sequence_p, correct_sequence_p):
+            display.text(self.screen, self.font, "Correct",
+                         "center", "center", (0, 255, 0))
         else:
-            self.feedbackLine = self.font.render("Incorrect", 1,
-                                                 (255, 0, 0))
-
-        self.feedbackLineH = self.feedbackLine.get_rect().height
-        self.feedbackLineW = self.feedbackLine.get_rect().width
-
-        self.screen.blit(self.feedbackLine, (
-            self.screen_x / 2 - self.feedbackLineW / 2,
-            self.screen_y / 2 - self.feedbackLineH / 2))
+            display.text(self.screen, self.font, "Incorrect",
+                         "center", "center", (255, 0, 0))
 
         pygame.display.flip()
 
-        self.baseTime = int(round(time.time() * 1000))
-        while int(round(time.time() * 1000)) - self.baseTime < 2000:
-            pass
+        display.wait(self.FEEDBACK_DURATION)
 
         # Practice end screen
-        self.practiceEndScreen = True
-        while self.practiceEndScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.practiceEndScreen = False
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font,
+                     "We will now begin the main trials...", 100, "center")
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
 
-            self.screen.blit(self.background, (0, 0))
-            self.practiceEndLine = self.font.render(
-                "We will now begin the main trials...", 1, (0, 0, 0))
-            self.screen.blit(self.practiceEndLine, (100, self.screen_y / 2))
+        pygame.display.flip()
 
-            display.text_space(self.screen, self.font,
-                               "center", self.screen_y/2 + 100)
-
-            pygame.display.flip()
+        display.wait_for_space()
 
         # Main trials
-        for i in range(self.all_data.shape[0]):
-            self.correctSequence = self.display_numbers(i, self.all_data)
-            self.user_sequence = self.number_entry()
+        for i in range(len(self.all_data)):
+            correct_sequence = self.display_numbers(i, self.all_data)
+            user_sequence = self.number_entry()
 
-            self.all_data.set_value(i, 'user_sequence',
-                                   ''.join(self.user_sequence))
+            self.all_data.set_value(i, 'user_sequence', user_sequence)
 
-            if len(self.correctSequence) != len(self.user_sequence):
-                self.all_data.set_value(i, 'correct', 0)
+            if self.check_answer(user_sequence, correct_sequence):
+                self.all_data.set_value(i, 'correct', 1)
             else:
-                if list(reversed(self.correctSequence)) == self.user_sequence:
-                    self.all_data.set_value(i, 'correct', 1)
-                else:
-                    self.all_data.set_value(i, 'correct', 0)
+                self.all_data.set_value(i, 'correct', 0)
 
         # End screen
-        self.endScreen = True
-        while self.endScreen:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.endScreen = False
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "End of task", "center", "center")
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
 
-            self.screen.blit(self.background, (0, 0))
-            self.endLine = self.font.render("End of task.", 1,
-                                            (0, 0, 0))
-            self.screen.blit(self.endLine, (100, self.screen_y / 2))
+        pygame.display.flip()
 
-            display.text_space(self.screen, self.font,
-                               "center", self.screen_y/2 + 100)
-
-            pygame.display.flip()
+        display.wait_for_space()
 
         print "- Digit span (backwards) complete"
 
