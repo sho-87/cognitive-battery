@@ -219,35 +219,36 @@ class Sternberg(object):
     def run(self):
         # Instructions screen
         self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "Sternberg Task", "center", 100)
         display.text(self.screen, self.font,
                      "You will see a sequence of numbers, one at a time. "
                      "Try your best to memorize them",
-                     100, 100)
+                     100, 200)
 
         display.text(self.screen, self.stim_font, "8 - 5 - 4 - 1 - 0 - 9",
-                     "center", 200)
+                     "center", 300)
 
         display.text(self.screen, self.font,
                      "You will then be shown a single test number in blue",
-                     100, 300)
+                     100, 400)
 
         display.text(self.screen, self.stim_font, "0",
-                     "center", 400, (0, 0, 255))
+                     "center", 500, (0, 0, 255))
 
         display.text(self.screen, self.font,
                      "If this number was in the original sequence, "
                      "press the LEFT arrow",
-                     100, 550)
+                     100, 600)
 
         display.text(self.screen, self.font,
                      "If this number was NOT in the original sequence, "
                      "press the RIGHT arrow",
-                     100, 650)
+                     100, 700)
 
         display.text(self.screen, self.font,
                      "Try to do this as quickly, "
                      "and as accurately, as possible",
-                     100, 750)
+                     100, 800)
 
         display.text_space(self.screen, self.font, "center", 900)
 
