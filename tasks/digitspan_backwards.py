@@ -6,6 +6,7 @@ import pygame
 
 from pygame.locals import *
 from sys import exit
+from utils import display
 
 
 class DigitspanBackwards(object):
@@ -53,11 +54,6 @@ class DigitspanBackwards(object):
                                                self.all_data['length'][i])
             self.all_data.set_value(
                 i, 'sequence', ''.join(str(n) for n in generated_sequence))
-
-    def pressSpace(self, x, y):
-        self.space = self.font.render(
-            "(Press spacebar when ready)", 1, (0, 0, 0))
-        self.screen.blit(self.space, (x, y))
 
     def displayNumbers(self, i, data):
         self.sequence = [c for c in data.at[i, 'sequence']]
@@ -185,7 +181,8 @@ class DigitspanBackwards(object):
             (0, 0, 0))
         self.screen.blit(self.line6, (100, self.screen_y / 2 + 250))
 
-        self.pressSpace(100, (self.screen_y / 2) + 350)
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 350)
 
         self.instructions = True
         while self.instructions:
@@ -218,7 +215,8 @@ class DigitspanBackwards(object):
                 self.screen.blit(self.practiceInstructions,
                                  (100, self.screen_y / 2))
 
-                self.pressSpace(100, (self.screen_y / 2) + 100)
+                display.text_space(self.screen, self.font,
+                                   "center", self.screen_y/2 + 100)
 
                 pygame.display.flip()
 
@@ -262,7 +260,8 @@ class DigitspanBackwards(object):
                 "We will now begin the main trials...", 1, (0, 0, 0))
             self.screen.blit(self.practiceEndLine, (100, self.screen_y / 2))
 
-            self.pressSpace(100, (self.screen_y / 2) + 100)
+            display.text_space(self.screen, self.font,
+                               "center", self.screen_y/2 + 100)
 
             pygame.display.flip()
 
@@ -294,7 +293,8 @@ class DigitspanBackwards(object):
                                             (0, 0, 0))
             self.screen.blit(self.endLine, (100, self.screen_y / 2))
 
-            self.pressSpace(100, (self.screen_y / 2) + 100)
+            display.text_space(self.screen, self.font,
+                               "center", self.screen_y/2 + 100)
 
             pygame.display.flip()
 
