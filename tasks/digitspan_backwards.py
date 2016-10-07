@@ -17,7 +17,7 @@ class DigitspanBackwards(object):
 
         # Set fonts and font sizes
         self.font = pygame.font.SysFont("arial", 30)
-        self.stimulusFont = pygame.font.SysFont("arial", 80)
+        self.stimulus_font = pygame.font.SysFont("arial", 80)
 
         # get screen info
         self.screen_x = self.screen.get_width()
@@ -30,7 +30,7 @@ class DigitspanBackwards(object):
 
         # Experiment options
         self.STIM_DURATION = 1000  # Duration of each digit
-        self.ITI = 100  # Time between trials
+        self.INTER_NUMBER_DURATION = 100  # Time between numbers
         self.START_LENGTH = 3  # Length of smallest sequence
         self.END_LENGTH = 9  # Length of largest sequence
         self.NUM_REPEATS = 2  # Num of times each sequence length is repeated
@@ -55,33 +55,21 @@ class DigitspanBackwards(object):
             self.all_data.set_value(
                 i, 'sequence', ''.join(str(n) for n in generated_sequence))
 
-    def displayNumbers(self, i, data):
-        self.sequence = [c for c in data.at[i, 'sequence']]
-
-        for number in self.sequence:
-            self.stimulusText = self.stimulusFont.render(number, 1, (0, 0, 0))
-            self.stimulusH = self.stimulusText.get_rect().height
-            self.stimulusW = self.stimulusText.get_rect().width
-
+    def display_numbers(self, i, data):
+        for number in data['sequence'][i]:
             self.screen.blit(self.background, (0, 0))
-            self.screen.blit(self.stimulusText, (
-                self.screen_x / 2 - self.stimulusW / 2,
-                self.screen_y / 2 - self.stimulusH / 2))
+            display.text(self.screen, self.stimulus_font, number,
+                         "center", "center")
             pygame.display.flip()
 
-            self.baseTime = int(round(time.time() * 1000))
-            while int(
-                    round(time.time() * 1000)) - self.baseTime < self.STIM_DURATION:
-                pass
+            display.wait(self.STIM_DURATION)
 
             self.screen.blit(self.background, (0, 0))
             pygame.display.flip()
 
-            self.baseTime = int(round(time.time() * 1000))
-            while int(round(time.time() * 1000)) - self.baseTime < self.ITI:
-                pass
+            display.wait(self.INTER_NUMBER_DURATION)
 
-        return self.sequence
+        return data['sequence'][i]
 
     def numberEntry(self):
         self.userSequence = []
@@ -127,7 +115,7 @@ class DigitspanBackwards(object):
             self.entryInstructions = self.font.render(
                 "Type the sequence in backwards order:", 1, (0, 0, 0))
 
-            self.sequenceText = self.stimulusFont.render(
+            self.sequenceText = self.stimulus_font.render(
                 ''.join(self.userSequence), 1, (0, 0, 0))
             self.sequenceTextH = self.sequenceText.get_rect().height
             self.sequenceTextW = self.sequenceText.get_rect().width
@@ -222,7 +210,7 @@ class DigitspanBackwards(object):
 
         # Practice trial
         self.practiceData = pd.DataFrame(['13579'], columns=['sequence'])
-        self.correctSequence_p = self.displayNumbers(0, self.practiceData)
+        self.correctSequence_p = self.display_numbers(0, self.practiceData)
         self.userSequence_p = self.numberEntry()
 
         # Practice feedback screen
@@ -267,7 +255,7 @@ class DigitspanBackwards(object):
 
         # Main trials
         for i in range(self.all_data.shape[0]):
-            self.correctSequence = self.displayNumbers(i, self.all_data)
+            self.correctSequence = self.display_numbers(i, self.all_data)
             self.userSequence = self.numberEntry()
 
             self.all_data.set_value(i, 'userSequence',
