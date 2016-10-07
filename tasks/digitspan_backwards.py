@@ -114,81 +114,55 @@ class DigitspanBackwards(object):
         # Instructions
         self.screen.blit(self.background, (0, 0))
 
-        self.title = self.font.render("Backwards Digit Span", 1,
-                                      (0, 0, 0))
-        self.titleW = self.title.get_rect().width
-        self.screen.blit(self.title, (
-            self.screen_x / 2 - self.titleW / 2, self.screen_y / 2 - 300))
+        display.text(self.screen, self.font, "Backwards Digit Span",
+                     "center", self.screen_y/2 - 300)
 
-        self.line1 = self.font.render(
-            "You will be shown a number sequence, one number at a time.", 1,
-            (0, 0, 0))
-        self.screen.blit(self.line1, (100, self.screen_y / 2 - 200))
+        display.text(self.screen, self.font,
+                     "You will be shown a number sequence, "
+                     "one number at a time",
+                     100, self.screen_y/2 - 200)
 
-        self.line2 = self.font.render(
-            "Memorize the number sequence.", 1, (0, 0, 0))
-        self.screen.blit(self.line2, (100, self.screen_y / 2 - 100))
+        display.text(self.screen, self.font,
+                     "Memorize the number sequence",
+                     100, self.screen_y/2 - 100)
 
-        self.line3 = self.font.render(
-            "You will then be asked to type the sequence in reverse/backwards order. For example...",
-            1, (0, 0, 0))
-        self.screen.blit(self.line3, (100, self.screen_y / 2))
+        display.text(self.screen, self.font,
+                     "You will then be asked to type the sequence "
+                     "in reverse/backwards order. For example...",
+                     100, "center")
 
-        self.line4 = self.font.render("Sequence: 1 2 3 4 5", 1,
-                                      (0, 0, 0))
-        self.line4W = self.line4.get_rect().width
-        self.screen.blit(self.line4, (
-            self.screen_x / 2 - self.line4W / 2, self.screen_y / 2 + 100))
+        display.text(self.screen, self.font,
+                     "Sequence: 1 2 3 4 5",
+                     "center", self.screen_y/2 + 100)
 
-        self.line5 = self.font.render("Correct: 5 4 3 2 1", 1,
-                                      (0, 0, 0))
-        self.line5W = self.line5.get_rect().width
-        self.screen.blit(self.line5, (
-            self.screen_x / 2 - self.line5W / 2, self.screen_y / 2 + 150))
+        display.text(self.screen, self.font,
+                     "Correct: 5 4 3 2 1",
+                     "center", self.screen_y/2 + 150)
 
-        self.line6 = self.font.render(
-            "The sequences will get longer throughout the experiment.", 1,
-            (0, 0, 0))
-        self.screen.blit(self.line6, (100, self.screen_y / 2 + 250))
+        display.text(self.screen, self.font,
+                     "The sequences will get longer throughout the experiment",
+                     100, self.screen_y/2 + 250)
 
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 350)
 
-        self.instructions = True
-        while self.instructions:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructions = False
-                elif event.type == KEYDOWN and event.key == K_F4:
-                    return pd.DataFrame()
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
+        pygame.display.flip()
 
-            pygame.display.flip()
+        display.wait_for_space()
 
         # Instructions Practice
-        self.instructionsPractice = True
-        while self.instructionsPractice:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN and event.key == K_SPACE:
-                    self.instructionsPractice = False
-                elif event.type == KEYDOWN and event.key == K_F4:
-                    return pd.DataFrame()
-                elif event.type == KEYDOWN and event.key == K_F12:
-                    pygame.quit()
-                    exit()
+        self.screen.blit(self.background, (0, 0))
 
-                self.screen.blit(self.background, (0, 0))
-                self.practiceInstructions = self.font.render(
-                    "We will begin with a practice trial...", 1, (0, 0, 0))
-                self.screen.blit(self.practiceInstructions,
-                                 (100, self.screen_y / 2))
+        display.text(self.screen, self.font,
+                     "We will begin with a practice trial...",
+                     100, "center")
 
-                display.text_space(self.screen, self.font,
-                                   "center", self.screen_y/2 + 100)
+        display.text_space(self.screen, self.font,
+                           "center", self.screen_y/2 + 100)
 
-                pygame.display.flip()
+        pygame.display.flip()
+
+        display.wait_for_space()
 
         # Practice trial
         self.practiceData = pd.DataFrame(['13579'], columns=['sequence'])
