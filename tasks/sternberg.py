@@ -186,14 +186,19 @@ class Sternberg(object):
         # Display feedback
         self.screen.blit(self.background, (0, 0))
 
-        if df["probeType"][i] == df["response"][i]:
-            df.set_value(i, "correct", 1)
-            display.text(self.screen, self.font, "correct",
-                         "center", "center", (0, 255, 0))
-        else:
+        if rt >= self.PROBE_DURATION:
             df.set_value(i, "correct", 0)
-            display.text(self.screen, self.font, "incorrect",
-                         "center", "center", (255, 0, 0))
+            display.text(self.screen, self.font, "too slow",
+                         "center", "center", (255, 165, 0))
+        else:
+            if df["probeType"][i] == df["response"][i]:
+                df.set_value(i, "correct", 1)
+                display.text(self.screen, self.font, "correct",
+                             "center", "center", (0, 255, 0))
+            else:
+                df.set_value(i, "correct", 0)
+                display.text(self.screen, self.font, "incorrect",
+                             "center", "center", (255, 0, 0))
 
         pygame.display.flip()
 
