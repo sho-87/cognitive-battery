@@ -331,7 +331,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
                         ant_task = ant.ANT(self.pygame_screen, background,
-                                           blocks=2)
+                                           blocks=3)
                         # Run ANT
                         ant_data = ant_task.run()
                         # Save ANT data to excel
