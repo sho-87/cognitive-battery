@@ -1,439 +1,424 @@
-import sys
 import os
+import sys
 import random
 import datetime
+import pygame
 import pandas as pd
-import ant
-import mrt
-import sart
-import ravens
-import digitspan_backwards
-from PyQt4 import QtCore, QtGui
+import PyQt4.QtCore as QtCore
+import PyQt4.QtGui as QtGui
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
+from utils import display
+from designer import battery_window_qt
+from interface import about_dialog, settings_window
+from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
 
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_batterySelect(QtGui.QWidget):
-    def __init__(self):
-        QtGui.QWidget.__init__(self)
+class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
+    def __init__(self, cur_directory, first_run, res_width, res_height):
+        super(BatteryWindow, self).__init__()
 
-        #get current directory
-        self.directory = os.path.dirname(os.path.realpath(__file__))
+        # Setup the main window UI
+        self.setupUi(self)
 
-        #make data folder if it doesnt exist
-        self.dataPath = self.directory + "\data\\"
+        # Set app icon
+        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
+
+        # Get screen resolution
+        self.res_width = res_width
+        self.res_height = res_height
+
+        # Create/open settings file with no registry fallback
+        self.settings = QtCore.QSettings("settings.ini",
+                                         QtCore.QSettings.IniFormat)
+        self.settings.setFallbacksEnabled(False)
+
+        # If first run, store some default settings
+        if first_run:
+            # Main window size and position
+            self.save_settings_window(self.size(), QtCore.QPoint(100, 100))
+
+            # Settings - Task Windows
+            self.settings.beginGroup("TaskWindows")
+            self.settings.setValue('fullscreen', False)
+            self.settings.setValue('borderless', False)
+            self.settings.setValue('width', 1280)
+            self.settings.setValue('height', 1024)
+            self.settings.endGroup()
+
+        # Set initial window size/pos from saved settings
+        self.settings.beginGroup("MainWindow")
+        self.resize(self.settings.value("size").toSize())
+        self.move(self.settings.value("pos").toPoint())
+        self.settings.endGroup()
+
+        # Initialize task settings
+        self.task_fullscreen = None
+        self.task_borderless = None
+        self.task_width = None
+        self.task_height = None
+
+        # Initialize the about and settings window objects
+        self.about = None
+        self.settings_window = None
+
+        # Initialize pygame screen
+        self.pygame_screen = None
+
+        # Define URLs
+        self.LINKS = {
+            "github": "https://github.com/sho-87/cognitive-battery",
+            "license": "https://github.com/sho-87/"
+                       "cognitive-battery/blob/master/LICENSE",
+            "develop": "https://github.com/sho-87/"
+                       "cognitive-battery/tree/develop",
+            "issues": "https://github.com/sho-87/cognitive-battery/issues",
+            "new_issue": "https://github.com/sho-87/"
+                         "cognitive-battery/issues/new"
+        }
+
+        # Get current directory
+        self.directory = cur_directory
+
+        # Make data folder if it doesnt exist
+        self.dataPath = os.path.join(self.directory, "data")
         if not os.path.isdir(self.dataPath):
             os.makedirs(self.dataPath)
 
-        #get list of existing experiment names/IDs currently in use
+        # Get list of existing experiment names/IDs currently in use
         self.tempNames = []
-        for file in os.listdir(self.dataPath):
-            if file.endswith(".xls"):
-                self.tempNames.append(file.split("_")[0])
+        for fileName in os.listdir(self.dataPath):
+            if fileName.endswith(".xls"):
+                self.tempNames.append(fileName.split("_")[0])
 
         self.expNames = list(set(self.tempNames))
 
-        self.setupUi(self)
-
-    #add the UI elements for the battery load window
-    def setupUi(self, batterySelect):
-        batterySelect.setObjectName(_fromUtf8("batterySelect"))
-        batterySelect.resize(513, 567)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(batterySelect.sizePolicy().hasHeightForWidth())
-        batterySelect.setSizePolicy(sizePolicy)
-        batterySelect.setAutoFillBackground(False)
-        self.verticalLayout = QtGui.QVBoxLayout(batterySelect)
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.mainLayout = QtGui.QVBoxLayout()
-        self.mainLayout.setObjectName(_fromUtf8("mainLayout"))
-        self.sessionInfoLayout = QtGui.QVBoxLayout()
-        self.sessionInfoLayout.setObjectName(_fromUtf8("sessionInfoLayout"))
-        self.sessionInfoText = QtGui.QLabel(batterySelect)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.sessionInfoText.sizePolicy().hasHeightForWidth())
-        self.sessionInfoText.setSizePolicy(sizePolicy)
-        self.sessionInfoText.setTextFormat(QtCore.Qt.AutoText)
-        self.sessionInfoText.setObjectName(_fromUtf8("sessionInfoText"))
-        self.sessionInfoLayout.addWidget(self.sessionInfoText)
-        self.sessionInfoColumnLayout = QtGui.QHBoxLayout()
-        self.sessionInfoColumnLayout.setObjectName(_fromUtf8("sessionInfoColumnLayout"))
-        self.sessionInfoLabelLayout = QtGui.QVBoxLayout()
-        self.sessionInfoLabelLayout.setObjectName(_fromUtf8("sessionInfoLabelLayout"))
-        self.raText = QtGui.QLabel(batterySelect)
-        self.raText.setObjectName(_fromUtf8("raText"))
-        self.sessionInfoLabelLayout.addWidget(self.raText)
-        self.subNumText = QtGui.QLabel(batterySelect)
-        self.subNumText.setObjectName(_fromUtf8("subNumText"))
-        self.sessionInfoLabelLayout.addWidget(self.subNumText)
-        self.experimentIDText = QtGui.QLabel(batterySelect)
-        self.experimentIDText.setObjectName(_fromUtf8("experimentIDText"))
-        self.sessionInfoLabelLayout.addWidget(self.experimentIDText)
-        self.conditionText = QtGui.QLabel(batterySelect)
-        self.conditionText.setObjectName(_fromUtf8("conditionText"))
-        self.sessionInfoLabelLayout.addWidget(self.conditionText)
-        self.ageText = QtGui.QLabel(batterySelect)
-        self.ageText.setObjectName(_fromUtf8("ageText"))
-        self.sessionInfoLabelLayout.addWidget(self.ageText)
-        self.sexText = QtGui.QLabel(batterySelect)
-        self.sexText.setObjectName(_fromUtf8("sexText"))
-        self.sessionInfoLabelLayout.addWidget(self.sexText)
-        self.sessionInfoColumnLayout.addLayout(self.sessionInfoLabelLayout)
-        self.sessionInfoInputLayout = QtGui.QVBoxLayout()
-        self.sessionInfoInputLayout.setObjectName(_fromUtf8("sessionInfoInputLayout"))
-        self.raBox = QtGui.QLineEdit(batterySelect)
-        self.raBox.setObjectName(_fromUtf8("raBox"))
-        self.sessionInfoInputLayout.addWidget(self.raBox)
-        self.subNumBox = QtGui.QLineEdit(batterySelect)
-        self.subNumBox.setObjectName(_fromUtf8("subNumBox"))
-        self.sessionInfoInputLayout.addWidget(self.subNumBox)
-        self.experimentIDBox = QtGui.QLineEdit(batterySelect)
-        self.experimentIDBox.setObjectName(_fromUtf8("experimentIDBox"))
-        self.sessionInfoInputLayout.addWidget(self.experimentIDBox)
-        self.conditionBox = QtGui.QLineEdit(batterySelect)
-        self.conditionBox.setObjectName(_fromUtf8("conditionBox"))
-        self.sessionInfoInputLayout.addWidget(self.conditionBox)
-        self.ageBox = QtGui.QLineEdit(batterySelect)
-        self.ageBox.setObjectName(_fromUtf8("ageBox"))
-        self.sessionInfoInputLayout.addWidget(self.ageBox)
-        self.sexLayout = QtGui.QHBoxLayout()
-        self.sexLayout.setContentsMargins(-1, -1, -1, 0)
-        self.sexLayout.setObjectName(_fromUtf8("sexLayout"))
-        self.maleRadio = QtGui.QRadioButton(batterySelect)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.maleRadio.sizePolicy().hasHeightForWidth())
-        self.maleRadio.setSizePolicy(sizePolicy)
-        self.maleRadio.setObjectName(_fromUtf8("maleRadio"))
-        self.sexLayout.addWidget(self.maleRadio)
-        self.femaleRadio = QtGui.QRadioButton(batterySelect)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.femaleRadio.sizePolicy().hasHeightForWidth())
-        self.femaleRadio.setSizePolicy(sizePolicy)
-        self.femaleRadio.setObjectName(_fromUtf8("femaleRadio"))
-        self.sexLayout.addWidget(self.femaleRadio)
-        self.sessionInfoInputLayout.addLayout(self.sexLayout)
-        self.sessionInfoColumnLayout.addLayout(self.sessionInfoInputLayout)
-        self.sessionInfoLayout.addLayout(self.sessionInfoColumnLayout)
-        self.mainLayout.addLayout(self.sessionInfoLayout)
-        self.sessionLine = QtGui.QFrame(batterySelect)
-        self.sessionLine.setLineWidth(1)
-        self.sessionLine.setFrameShape(QtGui.QFrame.HLine)
-        self.sessionLine.setFrameShadow(QtGui.QFrame.Sunken)
-        self.sessionLine.setObjectName(_fromUtf8("sessionLine"))
-        self.mainLayout.addWidget(self.sessionLine)
-        self.batteryLayout = QtGui.QVBoxLayout()
-        self.batteryLayout.setObjectName(_fromUtf8("batteryLayout"))
-        self.batterySelectText = QtGui.QLabel(batterySelect)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.batterySelectText.sizePolicy().hasHeightForWidth())
-        self.batterySelectText.setSizePolicy(sizePolicy)
-        self.batterySelectText.setScaledContents(True)
-        self.batterySelectText.setObjectName(_fromUtf8("batterySelectText"))
-        self.batteryLayout.addWidget(self.batterySelectText)
-        self.taskOrderLayout = QtGui.QHBoxLayout()
-        self.taskOrderLayout.setContentsMargins(-1, -1, -1, 10)
-        self.taskOrderLayout.setObjectName(_fromUtf8("taskOrderLayout"))
-        self.reorderText = QtGui.QLabel(batterySelect)
-        font = QtGui.QFont()
-        font.setPointSize(7)
-        self.reorderText.setFont(font)
-        self.reorderText.setObjectName(_fromUtf8("reorderText"))
-        self.taskOrderLayout.addWidget(self.reorderText)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.taskOrderLayout.addItem(spacerItem)
-        self.randomOrderCheck = QtGui.QCheckBox(batterySelect)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.randomOrderCheck.sizePolicy().hasHeightForWidth())
-        self.randomOrderCheck.setSizePolicy(sizePolicy)
-        self.randomOrderCheck.setChecked(False)
-        self.randomOrderCheck.setObjectName(_fromUtf8("randomOrderCheck"))
-        self.taskOrderLayout.addWidget(self.randomOrderCheck)
-        self.batteryLayout.addLayout(self.taskOrderLayout)
-        self.selectionLayout = QtGui.QHBoxLayout()
-        self.selectionLayout.setContentsMargins(-1, -1, -1, 10)
-        self.selectionLayout.setObjectName(_fromUtf8("selectionLayout"))
-        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.selectionLayout.addItem(spacerItem1)
-        self.selectAllButton = QtGui.QPushButton(batterySelect)
-        self.selectAllButton.setObjectName(_fromUtf8("selectAllButton"))
-        self.selectionLayout.addWidget(self.selectAllButton)
-        self.deselectAllButton = QtGui.QPushButton(batterySelect)
-        self.deselectAllButton.setObjectName(_fromUtf8("deselectAllButton"))
-        self.selectionLayout.addWidget(self.deselectAllButton)
-        self.batteryLayout.addLayout(self.selectionLayout)
-        self.taskListLayout = QtGui.QHBoxLayout()
-        self.taskListLayout.setContentsMargins(-1, -1, -1, 0)
-        self.taskListLayout.setObjectName(_fromUtf8("taskListLayout"))
-        self.taskList = QtGui.QListWidget(batterySelect)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.taskList.setFont(font)
-        self.taskList.setProperty("showDropIndicator", False)
-        self.taskList.setDragEnabled(True)
-        self.taskList.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
-        self.taskList.setDefaultDropAction(QtCore.Qt.MoveAction)
-        self.taskList.setAlternatingRowColors(True)
-        self.taskList.setMovement(QtGui.QListView.Snap)
-        self.taskList.setObjectName(_fromUtf8("taskList"))
-        item = QtGui.QListWidgetItem()
-        item.setCheckState(QtCore.Qt.Checked)
-        self.taskList.addItem(item)
-        item = QtGui.QListWidgetItem()
-        item.setCheckState(QtCore.Qt.Checked)
-        self.taskList.addItem(item)
-        item = QtGui.QListWidgetItem()
-        item.setCheckState(QtCore.Qt.Checked)
-        self.taskList.addItem(item)
-        item = QtGui.QListWidgetItem()
-        item.setCheckState(QtCore.Qt.Unchecked)
-        self.taskList.addItem(item)
-        item = QtGui.QListWidgetItem()
-        item.setCheckState(QtCore.Qt.Unchecked)
-        self.taskList.addItem(item)
-        self.taskListLayout.addWidget(self.taskList)
-        self.reorderButtonLayout = QtGui.QVBoxLayout()
-        self.reorderButtonLayout.setContentsMargins(0, -1, -1, -1)
-        self.reorderButtonLayout.setSpacing(6)
-        self.reorderButtonLayout.setObjectName(_fromUtf8("reorderButtonLayout"))
-        spacerItem2 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.reorderButtonLayout.addItem(spacerItem2)
-        self.upButton = QtGui.QPushButton(batterySelect)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.upButton.sizePolicy().hasHeightForWidth())
-        self.upButton.setSizePolicy(sizePolicy)
-        self.upButton.setMaximumSize(QtCore.QSize(50, 16777215))
-        self.upButton.setObjectName(_fromUtf8("upButton"))
-        self.reorderButtonLayout.addWidget(self.upButton)
-        self.downButton = QtGui.QPushButton(batterySelect)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.downButton.sizePolicy().hasHeightForWidth())
-        self.downButton.setSizePolicy(sizePolicy)
-        self.downButton.setMaximumSize(QtCore.QSize(50, 16777215))
-        self.downButton.setObjectName(_fromUtf8("downButton"))
-        self.reorderButtonLayout.addWidget(self.downButton)
-        spacerItem3 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.reorderButtonLayout.addItem(spacerItem3)
-        self.taskListLayout.addLayout(self.reorderButtonLayout)
-        self.batteryLayout.addLayout(self.taskListLayout)
-        self.mainLayout.addLayout(self.batteryLayout)
-        self.saveLoadLayout = QtGui.QHBoxLayout()
-        self.saveLoadLayout.setObjectName(_fromUtf8("saveLoadLayout"))
-        self.startButton = QtGui.QPushButton(batterySelect)
-        self.startButton.setObjectName(_fromUtf8("startButton"))
-        self.saveLoadLayout.addWidget(self.startButton)
-        self.cancelButton = QtGui.QPushButton(batterySelect)
-        self.cancelButton.setObjectName(_fromUtf8("cancelButton"))
-        self.saveLoadLayout.addWidget(self.cancelButton)
-        self.mainLayout.addLayout(self.saveLoadLayout)
-        self.verticalLayout.addLayout(self.mainLayout)
-
-        #autocomplete for experiment name/ID
+        # Autocomplete for experiment name/ID
         self.experiments = QtCore.QString(';'.join(self.expNames)).split(";")
-        self.completer = QtGui.QCompleter(self.experiments, self.experimentIDBox)
+        self.completer = QtGui.QCompleter(self.experiments,
+                                          self.experimentIDBox)
         self.experimentIDBox.setCompleter(self.completer)
 
-        self.retranslateUi(batterySelect)
-        QtCore.QMetaObject.connectSlotsByName(batterySelect)
+        # Handle menu bar item click events
+        self.actionExit.triggered.connect(self.close)
+        self.actionSettings.triggered.connect(self.show_settings)
+        self.actionDocumentation.triggered.connect(self.show_documentation)
+        self.actionLicense.triggered.connect(self.show_license)
+        self.actionContribute.triggered.connect(self.show_contribute)
+        self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
+        self.actionReport_Bug.triggered.connect(self.show_new_issue)
+        self.actionRequest_Feature.triggered.connect(self.show_new_issue)
+        self.actionAbout.triggered.connect(self.show_about)
 
-    def retranslateUi(self, batterySelect):
-        batterySelect.setWindowTitle(_translate("batterySelect", "Cognitive Battery", None))
-        self.sessionInfoText.setText(_translate("batterySelect", "<html><head/><body><p><span style=\" font-weight:600;\">Session information:</span></p></body></html>", None))
-        self.raText.setText(_translate("batterySelect", "Research Assistant:", None))
-        self.subNumText.setText(_translate("batterySelect", "Subject #:", None))
-        self.experimentIDText.setText(_translate("batterySelect", "Experiment ID:", None))
-        self.conditionText.setText(_translate("batterySelect", "Condition:", None))
-        self.ageText.setText(_translate("batterySelect", "Age:", None))
-        self.sexText.setText(_translate("batterySelect", "Sex:", None))
-        self.maleRadio.setText(_translate("batterySelect", "Male", None))
-        self.femaleRadio.setText(_translate("batterySelect", "Female", None))
-        self.batterySelectText.setText(_translate("batterySelect", "<html><head/><body><p><span style=\" font-weight:600;\">Task selection:</span></p></body></html>", None))
-        self.reorderText.setText(_translate("batterySelect", "(use the Up/Down buttons to set adminstration order)", None))
-        self.randomOrderCheck.setText(_translate("batterySelect", "Random order", None))
-        self.selectAllButton.setText(_translate("batterySelect", "Select All", None))
-        self.deselectAllButton.setText(_translate("batterySelect", "Deselect All", None))
-        __sortingEnabled = self.taskList.isSortingEnabled()
-        self.taskList.setSortingEnabled(False)
-        item = self.taskList.item(0)
-        item.setText(_translate("batterySelect", "Attention Network Test (ANT)", None))
-        item = self.taskList.item(1)
-        item.setText(_translate("batterySelect", "Sustained Attention to Response Task (SART)", None))
-        item = self.taskList.item(2)
-        item.setText(_translate("batterySelect", "Digit Span (backwards)", None))
-        item = self.taskList.item(3)
-        item.setText(_translate("batterySelect", "Mental Rotation Task", None))
-        item = self.taskList.item(4)
-        item.setText(_translate("batterySelect", "Raven\'s Progressive Matrices", None))
-        self.taskList.setSortingEnabled(__sortingEnabled)
-        self.upButton.setText(_translate("batterySelect", "Up", None))
-        self.downButton.setText(_translate("batterySelect", "Down", None))
-        self.startButton.setText(_translate("batterySelect", "Start", None))
-        self.cancelButton.setText(_translate("batterySelect", "Cancel", None))
-
-        #bind button events
+        # Bind button events
         self.cancelButton.clicked.connect(self.close)
         self.startButton.clicked.connect(self.start)
-        self.selectAllButton.clicked.connect(self.selectAll)
-        self.deselectAllButton.clicked.connect(self.deselectAll)
-        self.upButton.clicked.connect(self.moveUp)
-        self.downButton.clicked.connect(self.moveDown)
+        self.randomOrderCheck.clicked.connect(self.random_order_selected)
+        self.selectAllButton.clicked.connect(self.select_all)
+        self.deselectAllButton.clicked.connect(self.deselect_all)
+        self.upButton.clicked.connect(self.move_up)
+        self.downButton.clicked.connect(self.move_down)
 
-    def errorDialog(self, message):
+    # Open web browser to the documentation page
+    def show_documentation(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["github"]))
+
+    # Open web browser to the license page
+    def show_license(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["license"]))
+
+    # Open web browser to the github develop branch for contribution
+    def show_contribute(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["develop"]))
+
+    # Open web browser to the github issues page
+    def show_browse_issues(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["issues"]))
+
+    # Open web browser to the github new issue post
+    def show_new_issue(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
+
+    # Create a new SettingsWindow object and display it
+    def show_settings(self):
+        # If the settings window does not exist, create one
+        if self.settings_window is None:
+            self.settings_window = settings_window.SettingsWindow(self)
+            self.settings_window.show()
+            self.settings_window.finished.connect(
+                lambda: setattr(self, 'settings_window', None))
+        # If settings window exists, bring it to the front
+        else:
+            self.settings_window.activateWindow()
+            self.settings_window.raise_()
+
+    # Create a new AboutDialog object and display it
+    def show_about(self):
+        # If the about dialog does not exist, create one
+        if self.about is None:
+            self.about = about_dialog.AboutDialog(self)
+            self.about.show()
+            self.about.finished.connect(lambda: setattr(self, 'about', None))
+        # If about dialog exists, bring it to the front
+        else:
+            self.about.activateWindow()
+            self.about.raise_()
+
+    def error_dialog(self, message):
         QtGui.QMessageBox.warning(self, 'Error', message)
 
-    def selectAll(self):
+    def random_order_selected(self):
+        if self.randomOrderCheck.isChecked():
+            self.upButton.setEnabled(False)
+            self.downButton.setEnabled(False)
+            return True
+        else:
+            self.upButton.setEnabled(True)
+            self.downButton.setEnabled(True)
+            return False
+
+    def select_all(self):
         for index in range(self.taskList.count()):
             self.taskList.item(index).setCheckState(2)
 
-    def deselectAll(self):
+    def deselect_all(self):
         for index in range(self.taskList.count()):
             self.taskList.item(index).setCheckState(0)
 
-    def moveUp(self):
-        currentRow = self.taskList.currentRow()
-        currentItem = self.taskList.takeItem(currentRow)
-        self.taskList.insertItem(currentRow - 1, currentItem)
-        self.taskList.setCurrentItem(currentItem)
+    def move_up(self):
+        current_row = self.taskList.currentRow()
+        current_item = self.taskList.takeItem(current_row)
+        self.taskList.insertItem(current_row - 1, current_item)
+        self.taskList.setCurrentItem(current_item)
 
-    def moveDown(self):
-        currentRow = self.taskList.currentRow()
-        currentItem = self.taskList.takeItem(currentRow)
-        self.taskList.insertItem(currentRow + 1, currentItem)
-        self.taskList.setCurrentItem(currentItem)
+    def move_down(self):
+        current_row = self.taskList.currentRow()
+        current_item = self.taskList.takeItem(current_row)
+        self.taskList.insertItem(current_row + 1, current_item)
+        self.taskList.setCurrentItem(current_item)
 
-    def close(self):
-        QtCore.QCoreApplication.instance().quit()
+    # Save window size/position to settings file
+    def save_settings_window(self, size, pos):
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue('size', size)
+        self.settings.setValue('pos', pos)
+        self.settings.endGroup()
+
+    # Get task window settings from file
+    def get_task_settings(self):
+        self.settings.beginGroup("TaskWindows")
+        self.task_fullscreen = self.settings.value("fullscreen").toBool()
+        self.task_borderless = self.settings.value("borderless").toBool()
+        self.task_width = self.settings.value("width").toInt()[0]
+        self.task_height = self.settings.value("height").toInt()[0]
+        self.settings.endGroup()
+
+    # Override the closeEvent method
+    def closeEvent(self, event):
+        self.save_settings_window(self.size(), self.pos())
+
+        event.accept()
+        sys.exit(0)  # This closes any open pygame windows
 
     def start(self):
-        #store input values
-        self.subNum = self.subNumBox.text()
-        self.experimentID = self.experimentIDBox.text()
-        self.condition = self.conditionBox.text()
-        self.age = self.ageBox.text()
-        self.ra = self.raBox.text()
-        self.datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        # Store input values
+        sub_num = self.subNumBox.text()
+        experiment_id = self.experimentIDBox.text()
+        condition = self.conditionBox.text()
+        age = self.ageBox.text()
+        ra = self.raBox.text()
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
         if self.maleRadio.isChecked():
-            self.sex = 'male'
-        elif self.femaleRadio.isChecked():
-            self.sex = 'female'
-
-        #check for required inputs
-        if not self.ra:
-            self.errorDialog('Please enter RA name...')
-        elif not self.subNum:
-            self.errorDialog('Please enter a subject number...')
-        elif not self.experimentID:
-            self.errorDialog('Please enter an experiment ID...')
-        elif not self.condition:
-            self.errorDialog('Please enter a condition number...')
-        elif not self.age:
-            self.errorDialog('Please enter an age...')
-        elif not self.maleRadio.isChecked() and not self.femaleRadio.isChecked():
-            self.errorDialog('Please select a sex...')
+            sex = 'male'
         else:
-            #get *selected* tasks and task order
-            self.tasks = []
-            for index in range(self.taskList.count()):
-                #state 2 is selected
-                if self.taskList.item(index).checkState() == 2:
-                    #add selected task to task list
-                    self.tasks.append(str(self.taskList.item(index).text()))
+            sex = 'female'
 
-            #check to see if a random order is desired. If so, shuffle tasks
-            if self.randomOrderCheck.isChecked():
-                random.shuffle(self.tasks)
+        # Get *selected* tasks and task order
+        selected_tasks = []
+        for index in range(self.taskList.count()):
+            # State 2 is set when item is selected
+            if self.taskList.item(index).checkState() == 2:
+                # Add selected task to task list
+                selected_tasks.append(str(self.taskList.item(index).text()))
 
-            #store subject info into a dataframe
-            self.subjectInfo = pd.DataFrame(
-                data=[(str(self.datetime), str(self.subNum), str(self.experimentID), str(self.condition), int(self.age), str(self.sex), str(self.ra), ', '.join(self.tasks))],
-                columns=['datetime', 'subNum', 'expID', 'condition', 'age', 'sex', 'RA', 'tasks']
+        # Check to see if a random order is desired
+        # If so, shuffle tasks
+        if self.random_order_selected():
+            random.shuffle(selected_tasks)
+
+        # Check for required inputs
+        if not selected_tasks:
+            self.error_dialog('No tasks selected')
+        elif not ra:
+            self.error_dialog('Please enter RA name...')
+        elif not sub_num:
+            self.error_dialog('Please enter a subject number...')
+        elif not experiment_id:
+            self.error_dialog('Please enter an experiment ID...')
+        elif not condition:
+            self.error_dialog('Please enter a condition number...')
+        elif not age:
+            self.error_dialog('Please enter an age...')
+        elif not self.maleRadio.isChecked() and not \
+                self.femaleRadio.isChecked():
+            self.error_dialog('Please select a sex...')
+        else:
+            # Store subject info into a dataframe
+            subject_info = pd.DataFrame(
+                data=[(str(current_date), str(sub_num), str(experiment_id),
+                       str(condition), int(age), str(sex), str(ra),
+                       ', '.join(selected_tasks))],
+                columns=['datetime', 'sub_num', 'expID', 'condition',
+                         'age', 'sex', 'RA', 'tasks']
             )
-            #set the output file name
-            self.datafileName = "%s_%s_%s.xls" % (self.experimentID, self.subNum, self.condition)
 
-            #check if file already exists
-            if os.path.isfile(self.dataPath + self.datafileName):
-                self.errorDialog('Data file already exists!')
+            # Set the output file name
+            data_file_name = "%s_%s_%s.xls" % (experiment_id, sub_num,
+                                               condition)
+
+            # Check if file already exists
+            output_file = os.path.join(self.dataPath, data_file_name)
+            if os.path.isfile(output_file):
+                self.error_dialog('Data file already exists')
             else:
-                #create the excel writer object and save the file
-                self.writer = pd.ExcelWriter(self.dataPath + self.datafileName)
-                self.subjectInfo.to_excel(self.writer, 'info', index=False)
-                self.writer.save()
+                # Create the excel writer object and save the file
+                writer = pd.ExcelWriter(output_file)
+                subject_info.to_excel(writer, 'info', index=False)
+                writer.save()
 
-                #run each task. return and save their output to dataframe/excel
-                for task in self.tasks:
+                # Minimize battery UI
+                self.showMinimized()
+
+                # Get most recent task window settings from file
+                self.get_task_settings()
+
+                # Center all pygame windows if not fullscreen
+                if not self.task_fullscreen:
+                    pos_x = str(self.res_width / 2 - self.task_width / 2)
+                    pos_y = str(self.res_height / 2 - self.task_height / 2)
+
+                    os.environ['SDL_VIDEO_WINDOW_POS'] = \
+                        "%s, %s" % (pos_x, pos_y)
+
+                # Initialize pygame
+                pygame.init()
+
+                # Set pygame icon image
+                image = os.path.join(self.directory, "images", "icon_sml.png")
+                icon_img = pygame.image.load(image)
+                pygame.display.set_icon(icon_img)
+
+                # Create primary task window
+                # pygame_screen is passed to each task as the display window
+                if self.task_fullscreen:
+                    self.pygame_screen = pygame.display.set_mode(
+                        (0, 0), pygame.FULLSCREEN)
+                else:
+                    if self.task_borderless:
+                        self.pygame_screen = pygame.display.set_mode(
+                            (self.task_width, self.task_height),
+                            pygame.NOFRAME)
+                    else:
+                        self.pygame_screen = pygame.display.set_mode(
+                            (self.task_width, self.task_height))
+
+                background = pygame.Surface(self.pygame_screen.get_size())
+                background = background.convert()
+
+                # Run each task
+                # Return and save their output to dataframe/excel
+                for task in selected_tasks:
                     if task == "Attention Network Test (ANT)":
-                        #set number of blocks for ANT
-                        antTask = ant.ANT(blocks = 3)
-                        #run ANT
-                        self.antData = antTask.run()
-                        #save ANT data to excel
-                        self.antData.to_excel(self.writer, 'ANT', index=False)
-                        print "- ANT complete"
+                        # Set number of blocks for ANT
+                        ant_task = ant.ANT(self.pygame_screen, background,
+                                           blocks=3)
+                        # Run ANT
+                        ant_data = ant_task.run()
+                        # Save ANT data to excel
+                        ant_data.to_excel(writer, 'ANT', index=False)
                     elif task == "Mental Rotation Task":
-                        mrtTask = mrt.MRT()
-                        #run MRT
-                        self.mrtData = mrtTask.run()
-                        #save MRT data to excel
-                        self.mrtData.to_excel(self.writer, 'MRT', index=False)
-                        print "- MRT complete"
+                        mrt_task = mrt.MRT(self.pygame_screen, background)
+                        # Run MRT
+                        mrt_data = mrt_task.run()
+                        # Save MRT data to excel
+                        mrt_data.to_excel(writer, 'MRT', index=False)
                     elif task == "Sustained Attention to Response Task (SART)":
-                        sartTask = sart.SART()
-                        #run SART
-                        self.sartData = sartTask.run()
-                        #save SART dataB to excel
-                        self.sartData.to_excel(self.writer, 'SART', index=False)
-                        print "- SART complete"
+                        sart_task = sart.SART(self.pygame_screen, background)
+                        # Run SART
+                        sart_data = sart_task.run()
+                        # Save SART data to excel
+                        sart_data.to_excel(writer, 'SART', index=False)
                     elif task == "Digit Span (backwards)":
-                        digitspanBackwardsTask = digitspan_backwards.DigitspanBackwards()
-                        #run Digit span (Backwards)
-                        self.digitspanBackwardsData = digitspanBackwardsTask.run()
-                        #save digit span (backwards) data to excel
-                        self.digitspanBackwardsData.to_excel(self.writer, 'Digit span (backwards)', index=False)
-                        print "- Digit span (backwards) complete"
+                        digitspan_backwards_task = \
+                            digitspan_backwards.DigitspanBackwards(
+                                self.pygame_screen, background)
+                        # Run Digit span (Backwards)
+                        digitspan_backwards_data = \
+                            digitspan_backwards_task.run()
+                        # Save digit span (backwards) data to excel
+                        digitspan_backwards_data.to_excel(
+                            writer, 'Digit span (backwards)', index=False)
                     elif task == "Raven's Progressive Matrices":
-                        ravensTask = ravens.Ravens(start = 9, numTrials = 12)
-                        #run Raven's Matrices
-                        self.ravensData = ravensTask.run()
-                        #save ravens data to excel
-                        self.ravensData.to_excel(self.writer, 'Ravens Matrices', index=False)
-                        print "- Raven's Progressive Matrices complete"
+                        ravens_task = ravens.Ravens(
+                            self.pygame_screen, background,
+                            start=9, numTrials=12)
+                        # Run Raven's Matrices
+                        ravens_data = ravens_task.run()
+                        # Save ravens data to excel
+                        ravens_data.to_excel(writer, 'Ravens Matrices',
+                                             index=False)
+                    elif task == "Sternberg Task":
+                        sternberg_task = sternberg.Sternberg(
+                            self.pygame_screen, background)
+                        # Run Sternberg Task
+                        sternberg_data = sternberg_task.run()
+                        # Save sternberg data to excel
+                        sternberg_data.to_excel(writer, 'Sternberg',
+                                                index=False)
 
-                    #save excel file
-                    self.writer.save()
+                    # Save excel file
+                    writer.save()
+
+                # End of experiment screen
+                pygame.display.set_caption("Cognitive Battery")
+                pygame.mouse.set_visible(1)
+
+                background.fill((255, 255, 255))
+                self.pygame_screen.blit(background, (0, 0))
+
+                font = pygame.font.SysFont("arial", 30)
+                display.text(self.pygame_screen, font, "End of Experiment",
+                             "center", "center")
+
+                pygame.display.flip()
+
+                display.wait_for_space()
+
+                # Quit pygame
+                pygame.quit()
 
                 print "--- Experiment complete"
                 self.close()
 
-if __name__ == '__main__':
+
+def main():
+    # Get current directory
+    cur_directory = os.path.dirname(os.path.realpath(__file__))
+
+    # Check if settings file exists. If not, this is a first run
+    first_run = not os.path.isfile(os.path.join(cur_directory, "settings.ini"))
+
+    # Create main app window
     app = QtGui.QApplication(sys.argv)
-    loadScreen = Ui_batterySelect()
-    loadScreen.show()
+    screen_resolution = app.desktop().screenGeometry()
+
+    battery_window = BatteryWindow(cur_directory,
+                                   first_run,
+                                   screen_resolution.width(),
+                                   screen_resolution.height())
+    battery_window.show()
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
