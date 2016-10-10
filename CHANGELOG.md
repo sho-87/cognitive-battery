@@ -1,6 +1,6 @@
 #Change Log
 
-##[1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1.0) *(unreleased)*
+##[1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1.0) *(2016-10-09)*
 
 **General**
 - Moved a number of text, image and background display functions into their own package (`utils`)
