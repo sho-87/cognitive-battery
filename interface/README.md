@@ -1,4 +1,4 @@
-#Interface Files
+# Interface Files
 
 This directory contains class definitions for the different windows and dialog 
 boxes. These are imported by the main script as modules and used to 

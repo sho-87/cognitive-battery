@@ -1,4 +1,4 @@
-#Cognitive Battery
+# Cognitive Battery
 
 <img align="left" src="images/icon.png">
 
@@ -28,7 +28,8 @@ but I will be refactoring much of the code over time to clean things up.
 This will include things like code reduction, better handling of different
 screen resolutions, and improved logic.
 
-##Requirements
+## Requirements
+
 You will need to have the following dependencies installed to run the battery,
 most of which are just Python modules:
 
@@ -55,7 +56,8 @@ most of which are just Python modules:
   [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame) and install 
   using pip (`pip install <filename>`)
 
-##Usage
+## Usage
+
 Using the battery is as simple as running the `run_battery.py` file. This 
 can either be done using the command line (navigate to the directory and type
 `python run_battery.py`), or running it from IDLE.
@@ -71,7 +73,8 @@ Alternatively, you can set a random order using the checkbox.
 The task results are saved in the `/data` directory. Each participant's data
  is saved as an Excel file, where each task is saved to a separate sheet.
 
-##Tasks
+## Tasks
+
 Currently implemented tasks:
 
 * **Attention Network Test (ANT)**
@@ -94,7 +97,8 @@ Currently implemented tasks:
   - Based on the original version by
   [Robertson et al. (1997)](http://www.sciencedirect.com/science/article/pii/S0028393297000158)
 
-##Contribution
+## Contribution
+
 **Note**: I intend to majorly streamline this process in future releases, 
 hopefully automating the importing/running/saving of tasks.
 
@@ -135,7 +139,8 @@ method
 Consider making a pull request and please include a journal reference for any
 new tasks you add.
 
-##TODO
+## TODO
+
 In no particular order...
 
 **General**
@@ -161,6 +166,6 @@ for statistics
     - Likely to be CSV, but open to suggestions
 - Add more tasks...
 
-##Changelog
+## Changelog
 
 You can view the change log/release notes [here](CHANGELOG.md)
