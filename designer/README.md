@@ -1,4 +1,4 @@
-#Designer Files
+# Designer Files
 
 The `/ui` directory contains `.ui` files used by QT Designer to create
 the various windows and dialogs of the application. Edit those in QT Designer
