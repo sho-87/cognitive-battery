@@ -2,8 +2,9 @@
 __pycache__
 *.pyc
 
-# IDEA
+# IDE
 .idea
+.vscode
 
 # Images
 /tasks/images/MRT/p[0-9]*.jpg
