@@ -7,8 +7,8 @@ __pycache__
 .vscode
 
 # Images
-/tasks/images/MRT/p[0-9]*.jpg
-/tasks/images/MRT/[0-9]*.jpg
+/tasks/images/MRT/p[0-9]*.png
+/tasks/images/MRT/[0-9]*.png
 /tasks/images/Ravens/*.png
 /tasks/images/Ravens/practice/*.png
 
