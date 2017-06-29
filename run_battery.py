@@ -2,10 +2,10 @@ import os
 import sys
 
 from PyQt5 import QtWidgets
-from interface import battery_window
+from interface import project_window
 
 
-def main():
+if __name__ == '__main__':
     # Get current directory
     cur_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -16,13 +16,10 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     screen_resolution = app.desktop().screenGeometry()
 
-    main_window = battery_window.BatteryWindow(cur_directory,
-                                               first_run,
-                                               screen_resolution.width(),
-                                               screen_resolution.height())
-    main_window.show()
+    project_manager = project_window.ProjectWindow(cur_directory,
+                                                   first_run,
+                                                   screen_resolution.width(),
+                                                   screen_resolution.height())
+    project_manager.show()
+
     sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()

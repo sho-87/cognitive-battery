@@ -56,7 +56,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.task_width = None
         self.task_height = None
 
-        # Initialize the about and settings window objects
+        # Keep reference to the about and settings window objects
         self.about = None
         self.settings_window = None
 
