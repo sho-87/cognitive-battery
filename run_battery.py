@@ -17,9 +17,9 @@ def main():
     screen_resolution = app.desktop().screenGeometry()
 
     main_window = battery_window.BatteryWindow(cur_directory,
-                                   first_run,
-                                   screen_resolution.width(),
-                                   screen_resolution.height())
+                                               first_run,
+                                               screen_resolution.width(),
+                                               screen_resolution.height())
     main_window.show()
     sys.exit(app.exec_())
 
