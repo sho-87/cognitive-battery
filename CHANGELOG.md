@@ -1,5 +1,7 @@
 # Change Log
 
+## [2.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/2.0.0) *(2017-07-xx)*
+
 ## [1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1.0) *(2016-10-09)*
 
 **General**

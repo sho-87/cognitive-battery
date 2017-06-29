@@ -11,6 +11,9 @@ class AboutDialog(QtWidgets.QDialog, about_dialog_qt.Ui_Dialog):
         # Setup the about dialog box
         self.setupUi(self)
 
+        # Set version number
+        self.versionValue.setText("2.0")
+
         # Add icon image
         project_dir = os.path.dirname(os.path.dirname(
             os.path.abspath(__file__)))  # Get parent directory
