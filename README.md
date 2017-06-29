@@ -45,10 +45,11 @@ most of which are just Python modules:
   - Included with Anaconda. Otherwise, install using pip (`pip install pandas`)
 * **Numpy**
   - Included with Anaconda. Otherwise, install using pip (`pip install numpy`)
-* **PyQT4**
+* **PyQt5**
   - Included with Anaconda. Alternatively, full release (including QT designer)
    downloadable from the
-   [PyQT4 website](https://www.riverbankcomputing.com/software/pyqt/download)
+   [PyQT website](https://www.riverbankcomputing.com/software/pyqt/download5)
+  - **Note**: Cognitive Battery version 1.x uses PyQt4. However, version 2.x onwards uses PyQt5
 * **Pygame**
   - Downloadable from the
   [Pygame website](http://www.pygame.org/download.shtml). If you installed
