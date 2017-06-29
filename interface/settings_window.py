@@ -1,13 +1,11 @@
-import PyQt4.QtCore as QtCore
-import PyQt4.QtGui as QtGui
-
+from PyQt5 import QtCore, QtGui, QtWidgets
 from designer import settings_window_qt
 
 
-class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
+class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
     def __init__(self, parent=None):
         super(SettingsWindow, self).__init__(parent)
-
+        
         # Setup the about dialog box
         self.setupUi(self)
 
@@ -25,15 +23,24 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         # Set initial settings window size from saved settings
         self.settings.beginGroup("SettingsWindow")
-        self.resize(self.settings.value("size", self.size()).toSize())
+        self.resize(self.settings.value("size", self.size()))
         self.settings.endGroup()
 
         # Get stored task window settings
         self.settings.beginGroup("TaskWindows")
-        self.task_fullscreen = self.settings.value("fullscreen").toBool()
-        self.task_borderless = self.settings.value("borderless").toBool()
-        self.task_width = self.settings.value("width").toString()
-        self.task_height = self.settings.value("height").toString()
+
+        if self.settings.value("fullscreen") == "true":
+            self.task_fullscreen = True
+        else:
+            self.task_fullscreen = False
+
+        if self.settings.value("borderless") == "true":
+            self.task_borderless = True
+        else:
+            self.task_borderless = False
+
+        self.task_width = str(self.settings.value("width"))
+        self.task_height = str(self.settings.value("height"))
         self.settings.endGroup()
 
         # Set task window values

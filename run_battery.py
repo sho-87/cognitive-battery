@@ -4,16 +4,15 @@ import random
 import datetime
 import pygame
 import pandas as pd
-import PyQt4.QtCore as QtCore
-import PyQt4.QtGui as QtGui
 
+from PyQt5 import QtCore, QtGui, QtWidgets
 from utils import display
 from designer import battery_window_qt
 from interface import about_dialog, settings_window
 from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
-class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
+class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     def __init__(self, cur_directory, first_run, res_width, res_height):
         super(BatteryWindow, self).__init__()
 
@@ -35,7 +34,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         # If first run, store some default settings
         if first_run:
             # Main window size and position
-            self.save_settings_window(self.size(), QtCore.QPoint(100, 100))
+            self.save_main_window_settings(self.size(), QtCore.QPoint(100, 100))
 
             # Settings - Task Windows
             self.settings.beginGroup("TaskWindows")
@@ -47,8 +46,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
 
         # Set initial window size/pos from saved settings
         self.settings.beginGroup("MainWindow")
-        self.resize(self.settings.value("size").toSize())
-        self.move(self.settings.value("pos").toPoint())
+        self.resize(self.settings.value("size"))
+        self.move(self.settings.value("pos"))
         self.settings.endGroup()
 
         # Initialize task settings
@@ -93,8 +92,8 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.expNames = list(set(self.tempNames))
 
         # Autocomplete for experiment name/ID
-        self.experiments = QtCore.QString(';'.join(self.expNames)).split(";")
-        self.completer = QtGui.QCompleter(self.experiments,
+        self.experiments = ';'.join(self.expNames).split(";")
+        self.completer = QtWidgets.QCompleter(self.experiments,
                                           self.experimentIDBox)
         self.experimentIDBox.setCompleter(self.completer)
 
@@ -164,7 +163,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
             self.about.raise_()
 
     def error_dialog(self, message):
-        QtGui.QMessageBox.warning(self, 'Error', message)
+        QtWidgets.QMessageBox.warning(self, 'Error', message)
 
     def random_order_selected(self):
         if self.randomOrderCheck.isChecked():
@@ -197,7 +196,7 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
         self.taskList.setCurrentItem(current_item)
 
     # Save window size/position to settings file
-    def save_settings_window(self, size, pos):
+    def save_main_window_settings(self, size, pos):
         self.settings.beginGroup("MainWindow")
         self.settings.setValue('size', size)
         self.settings.setValue('pos', pos)
@@ -206,16 +205,25 @@ class BatteryWindow(QtGui.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
     # Get task window settings from file
     def get_task_settings(self):
         self.settings.beginGroup("TaskWindows")
-        self.task_fullscreen = self.settings.value("fullscreen").toBool()
-        self.task_borderless = self.settings.value("borderless").toBool()
-        self.task_width = self.settings.value("width").toInt()[0]
-        self.task_height = self.settings.value("height").toInt()[0]
+
+        if self.settings.value("fullscreen") == "true":
+            self.task_fullscreen = True
+        else:
+            self.task_fullscreen = False
+
+        if self.settings.value("borderless") == "true":
+            self.task_borderless = True
+        else:
+            self.task_borderless = False
+        self.task_width = int(self.settings.value("width"))
+        self.task_height = int(self.settings.value("height"))
+
         self.settings.endGroup()
 
     # Override the closeEvent method
     def closeEvent(self, event):
-        self.save_settings_window(self.size(), self.pos())
-
+        self.save_main_window_settings(self.size(), self.pos())
+        
         event.accept()
         sys.exit(0)  # This closes any open pygame windows
 
@@ -409,7 +417,7 @@ def main():
     first_run = not os.path.isfile(os.path.join(cur_directory, "settings.ini"))
 
     # Create main app window
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     screen_resolution = app.desktop().screenGeometry()
 
     battery_window = BatteryWindow(cur_directory,
