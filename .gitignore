@@ -13,7 +13,7 @@ __pycache__
 /tasks/images/Ravens/practice/*.png
 
 # Data files
-/data/*_*_*.xls
+/data/*_*.xls
 
 # Settings file
 settings.ini

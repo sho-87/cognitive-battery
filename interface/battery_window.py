@@ -83,20 +83,6 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         if not os.path.isdir(self.dataPath):
             os.makedirs(self.dataPath)
 
-        # Get list of existing experiment names/IDs currently in use
-        self.tempNames = []
-        for fileName in os.listdir(self.dataPath):
-            if fileName.endswith(".xls"):
-                self.tempNames.append(fileName.split("_")[0])
-
-        self.expNames = list(set(self.tempNames))
-
-        # Autocomplete for experiment name/ID
-        self.experiments = ';'.join(self.expNames).split(";")
-        self.completer = QtWidgets.QCompleter(self.experiments,
-                                          self.experimentIDBox)
-        self.experimentIDBox.setCompleter(self.completer)
-
         # Handle menu bar item click events
         self.actionExit.triggered.connect(self.close)
         self.actionSettings.triggered.connect(self.show_settings)
@@ -231,7 +217,6 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
     def start(self):
         # Store input values
         sub_num = self.subNumBox.text()
-        experiment_id = self.experimentIDBox.text()
         condition = self.conditionBox.text()
         age = self.ageBox.text()
         ra = self.raBox.text()
@@ -262,8 +247,6 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.error_dialog('Please enter RA name...')
         elif not sub_num:
             self.error_dialog('Please enter a subject number...')
-        elif not experiment_id:
-            self.error_dialog('Please enter an experiment ID...')
         elif not condition:
             self.error_dialog('Please enter a condition number...')
         elif not age:
@@ -274,16 +257,15 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         else:
             # Store subject info into a dataframe
             subject_info = pd.DataFrame(
-                data=[(str(current_date), str(sub_num), str(experiment_id),
+                data=[(str(current_date), str(sub_num),
                        str(condition), int(age), str(sex), str(ra),
                        ', '.join(selected_tasks))],
-                columns=['datetime', 'sub_num', 'expID', 'condition',
+                columns=['datetime', 'sub_num', 'condition',
                          'age', 'sex', 'RA', 'tasks']
             )
 
             # Set the output file name
-            data_file_name = "%s_%s_%s.xls" % (experiment_id, sub_num,
-                                               condition)
+            data_file_name = "%s_%s.xls" % (sub_num, condition)
 
             # Check if file already exists
             output_file = os.path.join(self.dataPath, data_file_name)

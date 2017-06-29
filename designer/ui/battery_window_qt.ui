@@ -54,13 +54,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="experimentIDText">
-              <property name="text">
-               <string>Experiment name/ID:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QLabel" name="conditionText">
               <property name="text">
                <string>Condition:</string>
@@ -96,13 +89,6 @@
              <widget class="QLineEdit" name="subNumBox">
               <property name="statusTip">
                <string>Enter the subject number or ID</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="experimentIDBox">
-              <property name="statusTip">
-               <string>Enter the experiment name or ID</string>
               </property>
              </widget>
             </item>
@@ -200,7 +186,7 @@
              </font>
             </property>
             <property name="text">
-             <string>(use the Up/Down buttons to set adminstration order)</string>
+             <string>(use the Up/Down buttons to set the task order)</string>
             </property>
            </widget>
           </item>
@@ -503,7 +489,6 @@
     <property name="title">
      <string>Options</string>
     </property>
-    <addaction name="actionAnalysis"/>
     <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuFile"/>
