@@ -22,6 +22,10 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
         self.setWindowFlags(
             self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
 
+        # Set input validators
+        self.projectNameValue.setValidator(
+            QtGui.QRegExpValidator(QtCore.QRegExp('[A-Za-z0-9 ]+')))
+
         # Bind button events
         self.dirSelectButton.clicked.connect(self.select_file)
         self.createButton.clicked.connect(self.close)

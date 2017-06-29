@@ -48,10 +48,20 @@
        <item>
         <layout class="QVBoxLayout" name="valueLayout">
          <item>
-          <widget class="QLineEdit" name="researcherValue"/>
+          <widget class="QLineEdit" name="researcherValue">
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLineEdit" name="projectNameValue">
+           <property name="inputMask">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string/>
+           </property>
            <property name="clearButtonEnabled">
             <bool>true</bool>
            </property>
