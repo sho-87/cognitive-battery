@@ -81,7 +81,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
     def save_settings(self):
         self.settings.beginGroup("TaskWindows")
-        self.settings.setValue('fullscreen', self.task_fullscreen)
+        self.settings.setValue('fullscreen', str(self.task_fullscreen).lower())
 
         # Only save some options if fullscreen is not selected
         if not self.task_fullscreen:

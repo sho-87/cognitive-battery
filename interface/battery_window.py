@@ -38,8 +38,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
             # Settings - Task Windows
             self.settings.beginGroup("TaskWindows")
-            self.settings.setValue('fullscreen', False)
-            self.settings.setValue('borderless', False)
+            self.settings.setValue('fullscreen', "false")
+            self.settings.setValue('borderless', "false")
             self.settings.setValue('width', 1280)
             self.settings.setValue('height', 1024)
             self.settings.endGroup()
@@ -215,6 +215,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.task_borderless = True
         else:
             self.task_borderless = False
+
         self.task_width = int(self.settings.value("width"))
         self.task_height = int(self.settings.value("height"))
 
