@@ -119,7 +119,9 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.projectTree.clear()
 
         # Get all researcher names
-        for person in projects.keys():
+        all_researchers = sorted(projects.keys(), key=lambda x: x.lower())
+
+        for person in all_researchers:
             # Add researcher root node
             personItem = QtWidgets.QTreeWidgetItem([person])
             font = personItem.font(0)
@@ -128,18 +130,20 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
             self.projectTree.addTopLevelItem(personItem)
 
             # Add project name for each researcher
-            for project in projects[person].keys():
+            all_projects = sorted(projects[person].keys(), key=lambda x: x.lower())
+
+            for project in all_projects:
                 projectItem = QtWidgets.QTreeWidgetItem([project])
                 personItem.addChild(projectItem)
 
         self.projectTree.expandAll()
 
+        # Disable buttons and labels
         self.projectName.setText("")
         self.researcherValue.setText("")
         self.createdValue.setText("")
         self.dirValue.setText("")
 
-        # Disable buttons and labels
         self.researcherLabel.hide()
         self.createdLabel.hide()
         self.dirLabel.hide()
