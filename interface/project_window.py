@@ -34,6 +34,11 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         else:
             self.project_list = self.refresh_projects()
 
+        # Make info labels invisible at start
+        self.researcherLabel.hide()
+        self.createdLabel.hide()
+        self.dirLabel.hide()
+
         # Handle menu bar item click events
         self.actionNewProject.triggered.connect(self.new_project)
         self.actionExit.triggered.connect(self.close)
@@ -65,6 +70,10 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
             self.createdValue.setText(created_time)
             self.dirValue.setText(project_path)
 
+            # Enable buttons and labels
+            self.researcherLabel.show()
+            self.createdLabel.show()
+            self.dirLabel.show()
             self.openButton.setEnabled(True)
             self.deleteButton.setEnabled(True)
 
