@@ -45,17 +45,31 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
         researcher = self.researcherValue.text()
         dir_path = self.dirValue.text()
 
+        # Check all fields have been filled
         if project_name != "" and researcher != "" and dir_path != "":
-            if project_name not in list(self.project_list.keys()):
-                self.project_list[project_name] = {'created': time.time(),
-                                                   'researcher': researcher,
-                                                   'path': dir_path}
+
+            # Get list of all project names
+            saved_projects = []
+            for person in self.project_list.keys():
+                for project in self.project_list[person].keys():
+                    saved_projects.append(project)
+
+            # Save if project name is not already in use
+            if project_name not in set(saved_projects):
+
+                project_info = {'created': time.time(), 'path': dir_path}
+
+                try:
+                    self.project_list[researcher][project_name] = project_info
+                except KeyError:
+                    self.project_list[researcher] = {}
+                    self.project_list[researcher][project_name] = project_info
 
                 with open(os.path.join(self.base_dir, 'projects.txt'), 'w+') as f:
                     json.dump(self.project_list, f, indent=4)
 
                 self.close()
             else:
-               QtWidgets.QMessageBox.warning(self, 'Error', 'Project name already exists') 
+                QtWidgets.QMessageBox.warning(self, 'Error', 'Project name already exists')
         else:
             QtWidgets.QMessageBox.warning(self, 'Error', 'Please complete every field')

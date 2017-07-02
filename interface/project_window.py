@@ -2,7 +2,7 @@ import os
 import sys
 import json
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets
 from designer import project_window_qt
 from interface import battery_window, project_new_window
 
@@ -26,7 +26,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.directory = base_dir
         self.first_run = first_run
 
-        # Check if project list exists
+        # Check if project file exists
         if not os.path.isfile(os.path.join(self.directory, 'projects.txt')):
             self.project_list = {}
             self.save_projects(self.project_list)
@@ -38,12 +38,14 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.actionExit.triggered.connect(self.close)
 
         # Bind button events
-        self.startButton.clicked.connect(self.start)
-        self.closeButton.clicked.connect(self.close)
+        self.projectExpandButton.clicked.connect(self.projectTree.expandAll)
+        self.projectCollapseButton.clicked.connect(self.projectTree.collapseAll)
+        self.openButton.clicked.connect(self.start)
 
     def new_project(self):
         self.new_project_window = project_new_window.NewProjectWindow(self.directory, self.project_list)
-        self.new_project_window.show()
+        self.new_project_window.exec_()
+        self.refresh_projects()
 
     def start(self, event):
         self.main_battery = battery_window.BatteryWindow(self.directory,
@@ -54,12 +56,32 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.close()
 
     def save_projects(self, projects):
+        # Save current project list to file
         with open(os.path.join(self.directory, 'projects.txt'), 'w+') as f:
             json.dump(projects, f, indent=4)
 
     def refresh_projects(self):
-        print "refresh"
+        # Load most recent saved project list from file
         with open(os.path.join(self.directory, 'projects.txt'), 'r') as f:
             projects = json.load(f)
+
+        # Clear existing tree widget
+        self.projectTree.clear()
+
+        # Get all researcher names
+        for person in projects.keys():
+            # Add researcher root node
+            personItem = QtWidgets.QTreeWidgetItem([person])
+            font = personItem.font(0)
+            font.setBold(True)
+            personItem.setFont(0, font)
+            self.projectTree.addTopLevelItem(personItem)
+
+            # Add project name for each researcher
+            for project in projects[person].keys():
+                projectItem = QtWidgets.QTreeWidgetItem([project])
+                personItem.addChild(projectItem)
+
+        self.projectTree.expandAll()
 
         return projects
