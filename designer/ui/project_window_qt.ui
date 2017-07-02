@@ -287,7 +287,22 @@
     <addaction name="actionNewProject"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="actionLicense"/>
+    <addaction name="separator"/>
+    <addaction name="actionContribute"/>
+    <addaction name="actionBrowse_Issues"/>
+    <addaction name="actionReport_Bug"/>
+    <addaction name="actionRequest_Feature"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuProject"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNewProject">
@@ -304,6 +319,62 @@
    </property>
    <property name="statusTip">
     <string>Exit the battery</string>
+   </property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="text">
+    <string>Documentation</string>
+   </property>
+   <property name="statusTip">
+    <string>Visit the GitHub support page</string>
+   </property>
+  </action>
+  <action name="actionLicense">
+   <property name="text">
+    <string>License</string>
+   </property>
+   <property name="statusTip">
+    <string>View application license</string>
+   </property>
+  </action>
+  <action name="actionContribute">
+   <property name="text">
+    <string>Contribute</string>
+   </property>
+   <property name="statusTip">
+    <string>Contribute code on GitHub</string>
+   </property>
+  </action>
+  <action name="actionBrowse_Issues">
+   <property name="text">
+    <string>Browse Issues</string>
+   </property>
+   <property name="statusTip">
+    <string>Browse known bugs and issues</string>
+   </property>
+  </action>
+  <action name="actionReport_Bug">
+   <property name="text">
+    <string>Report Bug</string>
+   </property>
+   <property name="statusTip">
+    <string>Report a bug</string>
+   </property>
+  </action>
+  <action name="actionRequest_Feature">
+   <property name="text">
+    <string>Request Feature</string>
+   </property>
+   <property name="statusTip">
+    <string>Request a feature</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="statusTip">
+    <string>About the battery</string>
    </property>
   </action>
  </widget>

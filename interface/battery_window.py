@@ -22,6 +22,14 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         # Set app icon
         self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
 
+        self.github_icon = os.path.join('images', 'github_icon.png')
+        self.actionDocumentation.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionLicense.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionContribute.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionBrowse_Issues.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionReport_Bug.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionRequest_Feature.setIcon(QtGui.QIcon(self.github_icon))
+
         # Get screen resolution
         self.project_dir = project_dir
         self.res_width = res_width

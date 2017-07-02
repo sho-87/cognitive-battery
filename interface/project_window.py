@@ -3,9 +3,9 @@ import sys
 import json
 from datetime import datetime
 
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 from designer import project_window_qt
-from interface import battery_window, project_new_window
+from interface import about_dialog, battery_window, project_new_window
 
 
 class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
@@ -18,13 +18,34 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         # Set app icon
         self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
 
+        self.github_icon = os.path.join('images', 'github_icon.png')
+        self.actionDocumentation.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionLicense.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionContribute.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionBrowse_Issues.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionReport_Bug.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionRequest_Feature.setIcon(QtGui.QIcon(self.github_icon))
+
         # Keep reference to main battery and new project windows
         self.main_battery = None
         self.new_project_window = None
+        self.about = None
 
         self.res_width = res_width
         self.res_height = res_height
         self.base_dir = base_dir
+
+        # Define URLs
+        self.LINKS = {
+            "github": "https://github.com/sho-87/cognitive-battery",
+            "license": "https://github.com/sho-87/"
+                       "cognitive-battery/blob/master/LICENSE",
+            "develop": "https://github.com/sho-87/"
+                       "cognitive-battery/tree/develop",
+            "issues": "https://github.com/sho-87/cognitive-battery/issues",
+            "new_issue": "https://github.com/sho-87/"
+                         "cognitive-battery/issues/new"
+        }
 
         # Check if project file exists
         if not os.path.isfile(os.path.join(self.base_dir, 'projects.txt')):
@@ -41,6 +62,13 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         # Handle menu bar item click events
         self.actionNewProject.triggered.connect(self.new_project)
         self.actionExit.triggered.connect(self.close)
+        self.actionDocumentation.triggered.connect(self.show_documentation)
+        self.actionLicense.triggered.connect(self.show_license)
+        self.actionContribute.triggered.connect(self.show_contribute)
+        self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
+        self.actionReport_Bug.triggered.connect(self.show_new_issue)
+        self.actionRequest_Feature.triggered.connect(self.show_new_issue)
+        self.actionAbout.triggered.connect(self.show_about)
 
         # Bind button events
         self.projectExpandButton.clicked.connect(self.projectTree.expandAll)
@@ -55,6 +83,38 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.new_project_window = project_new_window.NewProjectWindow(self.base_dir, self.project_list)
         self.new_project_window.exec_()
         self.refresh_projects()
+
+    # Open web browser to the documentation page
+    def show_documentation(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["github"]))
+
+    # Open web browser to the license page
+    def show_license(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["license"]))
+
+    # Open web browser to the github develop branch for contribution
+    def show_contribute(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["develop"]))
+
+    # Open web browser to the github issues page
+    def show_browse_issues(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["issues"]))
+
+    # Open web browser to the github new issue post
+    def show_new_issue(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
+
+    # Create a new AboutDialog object and display it
+    def show_about(self):
+        # If the about dialog does not exist, create one
+        if self.about is None:
+            self.about = about_dialog.AboutDialog(self)
+            self.about.show()
+            self.about.finished.connect(lambda: setattr(self, 'about', None))
+        # If about dialog exists, bring it to the front
+        else:
+            self.about.activateWindow()
+            self.about.raise_()
 
     def project_click(self, item):
         if item.parent():
