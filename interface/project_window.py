@@ -71,6 +71,13 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
             self.createdValue.setText(created_time)
             self.dirValue.setText(project_path)
 
+            if os.path.isdir(project_path):
+                self.dirValue.setStyleSheet('QLabel {color: black;}')
+                self.dirInvalid.setText("")
+            else:
+                self.dirValue.setStyleSheet('QLabel {color: red;}')
+                self.dirInvalid.setText("(Error: invalid path)")
+
             # Enable buttons and labels
             self.researcherLabel.show()
             self.createdLabel.show()
@@ -138,12 +145,12 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
 
         self.projectTree.expandAll()
 
-        # Disable buttons and labels
         self.projectName.setText("")
         self.researcherValue.setText("")
         self.createdValue.setText("")
         self.dirValue.setText("")
 
+        # Disable buttons and labels
         self.researcherLabel.hide()
         self.createdLabel.hide()
         self.dirLabel.hide()
