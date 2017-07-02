@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+from datetime import datetime
 
 from PyQt5 import QtGui, QtWidgets
 from designer import project_window_qt
@@ -42,10 +43,30 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.projectCollapseButton.clicked.connect(self.projectTree.collapseAll)
         self.openButton.clicked.connect(self.start)
 
+        # Project tree click event
+        self.projectTree.itemClicked.connect(self.project_click)
+
     def new_project(self):
         self.new_project_window = project_new_window.NewProjectWindow(self.directory, self.project_list)
         self.new_project_window.exec_()
         self.refresh_projects()
+
+    def project_click(self, item):
+        if item.parent():
+            researcher = item.parent().text(0)
+            project_name = item.text(0)
+
+            created_unix = self.project_list[researcher][project_name]["created"]
+            created_time = datetime.fromtimestamp(created_unix).strftime("%d/%m/%Y @ %H:%M")
+            project_path = self.project_list[researcher][project_name]["path"]
+
+            self.projectName.setText(project_name)
+            self.researcherValue.setText(researcher)
+            self.createdValue.setText(created_time)
+            self.dirValue.setText(project_path)
+
+            self.openButton.setEnabled(True)
+            self.deleteButton.setEnabled(True)
 
     def start(self, event):
         self.main_battery = battery_window.BatteryWindow(self.directory,
