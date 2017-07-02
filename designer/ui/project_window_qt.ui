@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>701</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,7 +68,15 @@
           </attribute>
           <column>
            <property name="text">
-            <string>Project List</string>
+            <string>Bookmarks</string>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+             <underline>true</underline>
+            </font>
            </property>
           </column>
          </widget>
@@ -218,6 +226,12 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="statusTip">
            <string>Open selected project</string>
           </property>
@@ -232,7 +246,7 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Delete</string>
+           <string>Delete Bookmark</string>
           </property>
          </widget>
         </item>
@@ -247,7 +261,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>701</width>
      <height>21</height>
     </rect>
    </property>
@@ -263,7 +277,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNewProject">
    <property name="text">
-    <string>New Project</string>
+    <string>New Project Bookmark</string>
    </property>
    <property name="statusTip">
     <string>Create new project</string>

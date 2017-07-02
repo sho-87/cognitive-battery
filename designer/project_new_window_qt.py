@@ -90,7 +90,7 @@ class Ui_NewProjectWindow(object):
 
     def retranslateUi(self, NewProjectWindow):
         _translate = QtCore.QCoreApplication.translate
-        NewProjectWindow.setWindowTitle(_translate("NewProjectWindow", "New Project"))
+        NewProjectWindow.setWindowTitle(_translate("NewProjectWindow", "New Project Bookmark"))
         self.researcherLabel.setText(_translate("NewProjectWindow", "Researcher:"))
         self.projectNameLabel.setText(_translate("NewProjectWindow", "Project Name:"))
         self.dirLabel.setText(_translate("NewProjectWindow", "Select project directory:"))
