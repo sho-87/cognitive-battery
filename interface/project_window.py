@@ -9,7 +9,7 @@ from interface import battery_window, project_new_window
 
 
 class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
-    def __init__(self, base_dir, first_run, res_width, res_height):
+    def __init__(self, base_dir, res_width, res_height):
         super(ProjectWindow, self).__init__()
 
         # Setup the main window UI
@@ -24,11 +24,10 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
 
         self.res_width = res_width
         self.res_height = res_height
-        self.directory = base_dir
-        self.first_run = first_run
+        self.base_dir = base_dir
 
         # Check if project file exists
-        if not os.path.isfile(os.path.join(self.directory, 'projects.txt')):
+        if not os.path.isfile(os.path.join(self.base_dir, 'projects.txt')):
             self.project_list = {}
             self.save_projects(self.project_list)
         else:
@@ -53,7 +52,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.projectTree.itemClicked.connect(self.project_click)
 
     def new_project(self):
-        self.new_project_window = project_new_window.NewProjectWindow(self.directory, self.project_list)
+        self.new_project_window = project_new_window.NewProjectWindow(self.base_dir, self.project_list)
         self.new_project_window.exec_()
         self.refresh_projects()
 
@@ -86,12 +85,15 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
             self.deleteButton.setEnabled(True)
 
     def start(self, event):
-        self.main_battery = battery_window.BatteryWindow(self.directory,
-                                                         self.first_run,
-                                                         self.res_width,
-                                                         self.res_height)
-        self.main_battery.show()
-        self.close()
+        if not os.path.isdir(self.dirValue.text()):
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Invalid project path')
+        else:
+            self.main_battery = battery_window.BatteryWindow(self.base_dir,
+                                                             self.dirValue.text(),
+                                                             self.res_width,
+                                                             self.res_height)
+            self.main_battery.show()
+            self.close()
 
     def delete_project(self):
         # Check which project has been selected
@@ -107,19 +109,19 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         # If this was the only project, remove the researcher too
         if num_projects == 1:
             self.project_list.pop(researcher, None)
-        
+
         # Save file and refresh project list
         self.save_projects(self.project_list)
         self.refresh_projects()
 
     def save_projects(self, projects):
         # Save current project list to file
-        with open(os.path.join(self.directory, 'projects.txt'), 'w+') as f:
+        with open(os.path.join(self.base_dir, 'projects.txt'), 'w+') as f:
             json.dump(projects, f, indent=4)
 
     def refresh_projects(self):
         # Load most recent saved project list from file
-        with open(os.path.join(self.directory, 'projects.txt'), 'r') as f:
+        with open(os.path.join(self.base_dir, 'projects.txt'), 'r') as f:
             projects = json.load(f)
 
         # Clear existing tree widget
@@ -149,6 +151,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.researcherValue.setText("")
         self.createdValue.setText("")
         self.dirValue.setText("")
+        self.dirInvalid.setText("")
 
         # Disable buttons and labels
         self.researcherLabel.hide()

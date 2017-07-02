@@ -12,9 +12,5 @@ __pycache__
 /tasks/images/Ravens/*.png
 /tasks/images/Ravens/practice/*.png
 
-# Data files
-/data/*_*.xls
-
-# Settings file
-settings.ini
+# Projects list
 projects.txt

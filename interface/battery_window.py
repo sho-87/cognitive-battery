@@ -13,7 +13,7 @@ from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
 class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
-    def __init__(self, cur_directory, first_run, res_width, res_height):
+    def __init__(self, base_dir, project_dir, res_width, res_height):
         super(BatteryWindow, self).__init__()
 
         # Setup the main window UI
@@ -23,16 +23,17 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
 
         # Get screen resolution
+        self.project_dir = project_dir
         self.res_width = res_width
         self.res_height = res_height
 
-        # Create/open settings file with no registry fallback
-        self.settings = QtCore.QSettings("settings.ini",
-                                         QtCore.QSettings.IniFormat)
+        # Create/open settings file with no registry fallback  
+        self.settings_file = os.path.join(self.project_dir, "battery_settings.ini")
+        self.settings = QtCore.QSettings(self.settings_file, QtCore.QSettings.IniFormat)
         self.settings.setFallbacksEnabled(False)
 
         # If first run, store some default settings
-        if first_run:
+        if not os.path.isfile(self.settings_file):
             # Main window size and position
             self.save_main_window_settings(self.size(), QtCore.QPoint(100, 100))
 
@@ -75,11 +76,11 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                          "cognitive-battery/issues/new"
         }
 
-        # Get current directory
-        self.directory = cur_directory
+        # Get base directory for battery
+        self.base_dir = base_dir
 
         # Make data folder if it doesnt exist
-        self.dataPath = os.path.join(self.directory, "data")
+        self.dataPath = os.path.join(self.project_dir, "data")
         if not os.path.isdir(self.dataPath):
             os.makedirs(self.dataPath)
 
@@ -127,7 +128,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
     def show_settings(self):
         # If the settings window does not exist, create one
         if self.settings_window is None:
-            self.settings_window = settings_window.SettingsWindow(self)
+            self.settings_window = settings_window.SettingsWindow(self, self.settings)
             self.settings_window.show()
             self.settings_window.finished.connect(
                 lambda: setattr(self, 'settings_window', None))
@@ -295,7 +296,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 pygame.init()
 
                 # Set pygame icon image
-                image = os.path.join(self.directory, "images", "icon_sml.png")
+                image = os.path.join(self.base_dir, "images", "icon_sml.png")
                 icon_img = pygame.image.load(image)
                 pygame.display.set_icon(icon_img)
 

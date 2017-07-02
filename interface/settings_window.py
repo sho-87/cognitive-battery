@@ -3,9 +3,9 @@ from designer import settings_window_qt
 
 
 class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent, settings):
         super(SettingsWindow, self).__init__(parent)
-        
+
         # Setup the about dialog box
         self.setupUi(self)
 
@@ -17,9 +17,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
             self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
 
         # Open settings file with no registry fallback
-        self.settings = QtCore.QSettings("settings.ini",
-                                         QtCore.QSettings.IniFormat)
-        self.settings.setFallbacksEnabled(False)
+        self.settings = settings
 
         # Set initial settings window size from saved settings
         self.settings.beginGroup("SettingsWindow")
