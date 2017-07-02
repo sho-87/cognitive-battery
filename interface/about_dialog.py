@@ -15,9 +15,9 @@ class AboutDialog(QtWidgets.QDialog, about_dialog_qt.Ui_Dialog):
         self.versionValue.setText("2.0")
 
         # Add icon image
-        project_dir = os.path.dirname(os.path.dirname(
+        base_dir = os.path.dirname(os.path.dirname(
             os.path.abspath(__file__)))  # Get parent directory
-        pixmap = QtGui.QPixmap(os.path.join(project_dir, 'images', 'icon.png'))
+        pixmap = QtGui.QPixmap(os.path.join(base_dir, 'images', 'icon.png'))
         self.icon.setPixmap(pixmap)
 
         # Delete the object when dialog is closed
