@@ -47,6 +47,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.projectExpandButton.clicked.connect(self.projectTree.expandAll)
         self.projectCollapseButton.clicked.connect(self.projectTree.collapseAll)
         self.openButton.clicked.connect(self.start)
+        self.deleteButton.clicked.connect(self.delete_project)
 
         # Project tree click event
         self.projectTree.itemClicked.connect(self.project_click)
@@ -85,6 +86,25 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.main_battery.show()
         self.close()
 
+    def delete_project(self):
+        # Check which project has been selected
+        researcher = self.researcherValue.text()
+        project = self.projectName.text()
+
+        # Check number of projects for this researcher before delete
+        num_projects = len(self.project_list[researcher].keys())
+
+        # Delete selected project
+        self.project_list[researcher].pop(project, None)
+
+        # If this was the only project, remove the researcher too
+        if num_projects == 1:
+            self.project_list.pop(researcher, None)
+        
+        # Save file and refresh project list
+        self.save_projects(self.project_list)
+        self.refresh_projects()
+
     def save_projects(self, projects):
         # Save current project list to file
         with open(os.path.join(self.directory, 'projects.txt'), 'w+') as f:
@@ -113,5 +133,17 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
                 personItem.addChild(projectItem)
 
         self.projectTree.expandAll()
+
+        self.projectName.setText("")
+        self.researcherValue.setText("")
+        self.createdValue.setText("")
+        self.dirValue.setText("")
+
+        # Disable buttons and labels
+        self.researcherLabel.hide()
+        self.createdLabel.hide()
+        self.dirLabel.hide()
+        self.openButton.setEnabled(False)
+        self.deleteButton.setEnabled(False)
 
         return projects
