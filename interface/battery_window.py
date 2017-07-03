@@ -41,6 +41,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.settings.setFallbacksEnabled(False)
 
         # If first run, store some default settings
+        # FIXME this is messy when adding new tasks (see issue #16)
         if not os.path.isfile(self.settings_file):
             # Main window size and position
             self.save_main_window_settings(self.size(), QtCore.QPoint(100, 100))
@@ -204,6 +205,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
     # Get task window settings from file
     def get_settings(self):
+        # Task window settings
         self.settings.beginGroup("TaskWindows")
 
         if self.settings.value("fullscreen") == "true":
@@ -221,6 +223,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
         self.settings.endGroup()
 
+        # ANT settings
         self.settings.beginGroup("AttentionNetworkTest")
         self.ant_blocks = int(self.settings.value("numBlocks"))
         self.settings.endGroup()
