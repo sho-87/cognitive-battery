@@ -131,7 +131,7 @@ class Ui_SettingsDialog(object):
         self.verticalLayout_2.addLayout(self.settings_main_layout)
 
         self.retranslateUi(SettingsDialog)
-        self.settings_toolbox.setCurrentIndex(0)
+        self.settings_toolbox.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(SettingsDialog)
 
     def retranslateUi(self, SettingsDialog):

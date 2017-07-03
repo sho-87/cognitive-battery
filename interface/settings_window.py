@@ -64,6 +64,9 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings_ant_blocks_value.setValidator(
             QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
 
+        # Set starting toolbox item
+        self.settings_toolbox.setCurrentIndex(0)
+
         # Bind button events
         self.settings_save_button.clicked.connect(self.save_settings)
         self.settings_cancel_button.clicked.connect(self.cancel_settings)
