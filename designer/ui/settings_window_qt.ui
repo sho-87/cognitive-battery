@@ -187,7 +187,7 @@
              </rect>
             </property>
             <attribute name="label">
-             <string>Attentional Network Test</string>
+             <string>Attention Network Test</string>
             </attribute>
             <layout class="QHBoxLayout" name="horizontalLayout">
              <property name="leftMargin">

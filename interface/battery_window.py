@@ -54,7 +54,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.settings.endGroup()
 
             # Settings - Attentional Network Test
-            self.settings.beginGroup("AttentionalNetworkTest")
+            self.settings.beginGroup("AttentionNetworkTest")
             self.settings.setValue('numBlocks', 3)
             self.settings.endGroup()
 
@@ -203,7 +203,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.settings.endGroup()
 
     # Get task window settings from file
-    def get_task_settings(self):
+    def get_settings(self):
         self.settings.beginGroup("TaskWindows")
 
         if self.settings.value("fullscreen") == "true":
@@ -219,6 +219,10 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.task_width = int(self.settings.value("width"))
         self.task_height = int(self.settings.value("height"))
 
+        self.settings.endGroup()
+
+        self.settings.beginGroup("AttentionNetworkTest")
+        self.ant_blocks = int(self.settings.value("numBlocks"))
         self.settings.endGroup()
 
     # Override the closeEvent method
@@ -294,8 +298,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 # Minimize battery UI
                 self.showMinimized()
 
-                # Get most recent task window settings from file
-                self.get_task_settings()
+                # Get most recent task settings from file
+                self.get_settings()
 
                 # Center all pygame windows if not fullscreen
                 if not self.task_fullscreen:
@@ -336,7 +340,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
                         ant_task = ant.ANT(self.pygame_screen, background,
-                                           blocks=3)
+                                           blocks=self.ant_blocks)
                         # Run ANT
                         ant_data = ant_task.run()
                         # Save ANT data to excel

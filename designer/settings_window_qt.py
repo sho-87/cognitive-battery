@@ -145,7 +145,7 @@ class Ui_SettingsDialog(object):
         self.settings_task_height_value.setStatusTip(_translate("SettingsDialog", "Height of the task windows"))
         self.settings_toolbox.setItemText(self.settings_toolbox.indexOf(self.task_windows_page), _translate("SettingsDialog", "Task Windows"))
         self.settings_ant_blocks_label.setText(_translate("SettingsDialog", "Number of blocks:"))
-        self.settings_toolbox.setItemText(self.settings_toolbox.indexOf(self.ant_page), _translate("SettingsDialog", "Attentional Network Test"))
+        self.settings_toolbox.setItemText(self.settings_toolbox.indexOf(self.ant_page), _translate("SettingsDialog", "Attention Network Test"))
         self.settings_toolbox.setItemText(self.settings_toolbox.indexOf(self.sart_page), _translate("SettingsDialog", "Sustained Attention to Response Task"))
         self.settings_save_button.setStatusTip(_translate("SettingsDialog", "Save settings"))
         self.settings_save_button.setText(_translate("SettingsDialog", "Save"))

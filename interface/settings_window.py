@@ -55,7 +55,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.set_windowed_options_state(not self.task_fullscreen)
 
         # ANT settings
-        self.settings.beginGroup("AttentionalNetworkTest")
+        self.settings.beginGroup("AttentionNetworkTest")
         self.ant_blocks = str(self.settings.value("numBlocks"))
         self.settings_ant_blocks_value.setText(self.ant_blocks)
         self.settings.endGroup()
@@ -106,7 +106,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings.endGroup()
 
         # ANT settings
-        self.settings.beginGroup("AttentionalNetworkTest")
+        self.settings.beginGroup("AttentionNetworkTest")
         self.settings.setValue("numBlocks", self.settings_ant_blocks_value.text())
         self.settings.endGroup()
 
