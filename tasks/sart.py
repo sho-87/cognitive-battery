@@ -228,6 +228,6 @@ class SART(object):
 
         display.wait_for_space()
 
-        print "- SART complete"
+        print("- SART complete")
 
         return self.all_data

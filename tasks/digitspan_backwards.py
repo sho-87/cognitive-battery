@@ -223,6 +223,6 @@ class DigitspanBackwards(object):
 
         display.wait_for_space()
 
-        print "- Digit span (backwards) complete"
+        print("- Digit span (backwards) complete")
 
         return self.all_data

@@ -330,6 +330,6 @@ class Sternberg(object):
         all_data = pd.concat(self.blocks)
         all_data['trialNum'] = range(1, len(all_data) + 1)
 
-        print "- Sternberg Task complete"
+        print("- Sternberg Task complete")
 
         return all_data

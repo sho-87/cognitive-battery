@@ -409,5 +409,5 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 # Quit pygame
                 pygame.quit()
 
-                print "--- Experiment complete"
+                print("--- Experiment complete")
                 self.close()

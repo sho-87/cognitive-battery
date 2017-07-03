@@ -353,6 +353,6 @@ class ANT(object):
 
         display.wait_for_space()
 
-        print "- ANT complete"
+        print("- ANT complete")
 
         return self.all_data
