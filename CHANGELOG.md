@@ -1,5 +1,18 @@
 # Change Log
 
+## [2.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/2.0.0) *(2017-07-03)*
+
+**General**
+- Updated `PyQt` requirement to version 5. This is a breaking change as PyQt5.x will be required for current and future versions of the battery. PyQt4 is still supported in version 1.x of the battery.
+- The main battery window class has now been moved into its own module.
+
+**User Interface**
+- Added a project manager. Data and settings are saved on an individual project basis to their own separate directories.
+- Added Settings window sections for manually specifying options for specific tasks. Currently, an option has been added to adjust the block count of the Attention Network Test, but the framework is in place to allow task options to be set by the user for all tasks.
+
+**Bug Fixes**
+- Fixed `libpng` warning with task images. The warning should no longer appear with the updated images in the battery.
+
 ## [1.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/1.1.0) *(2016-10-09)*
 
 **General**

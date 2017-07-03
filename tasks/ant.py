@@ -25,7 +25,7 @@ class ANT(object):
 
         # Fill background
         self.background.fill((255, 255, 255))
-        pygame.display.set_caption("Attentional Network Test")
+        pygame.display.set_caption("Attention Network Test")
         pygame.mouse.set_visible(0)
 
         # Experiment options

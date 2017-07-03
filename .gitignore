@@ -2,17 +2,15 @@
 __pycache__
 *.pyc
 
-# IDEA
+# IDE
 .idea
+.vscode
 
 # Images
-/tasks/images/MRT/p[0-9]*.jpg
-/tasks/images/MRT/[0-9]*.jpg
+/tasks/images/MRT/p[0-9]*.png
+/tasks/images/MRT/[0-9]*.png
 /tasks/images/Ravens/*.png
 /tasks/images/Ravens/practice/*.png
 
-# Data files
-/data/*_*_*.xls
-
-# Settings file
-settings.ini
+# Projects list
+projects.txt

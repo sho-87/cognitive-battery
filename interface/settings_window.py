@@ -1,11 +1,9 @@
-import PyQt4.QtCore as QtCore
-import PyQt4.QtGui as QtGui
-
+from PyQt5 import QtCore, QtGui, QtWidgets
 from designer import settings_window_qt
 
 
-class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
-    def __init__(self, parent=None):
+class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
+    def __init__(self, parent, settings):
         super(SettingsWindow, self).__init__(parent)
 
         # Setup the about dialog box
@@ -19,21 +17,28 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
             self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
 
         # Open settings file with no registry fallback
-        self.settings = QtCore.QSettings("settings.ini",
-                                         QtCore.QSettings.IniFormat)
-        self.settings.setFallbacksEnabled(False)
+        self.settings = settings
 
         # Set initial settings window size from saved settings
         self.settings.beginGroup("SettingsWindow")
-        self.resize(self.settings.value("size", self.size()).toSize())
+        self.resize(self.settings.value("size", self.size()))
         self.settings.endGroup()
 
-        # Get stored task window settings
+        # Task window settings
         self.settings.beginGroup("TaskWindows")
-        self.task_fullscreen = self.settings.value("fullscreen").toBool()
-        self.task_borderless = self.settings.value("borderless").toBool()
-        self.task_width = self.settings.value("width").toString()
-        self.task_height = self.settings.value("height").toString()
+
+        if self.settings.value("fullscreen") == "true":
+            self.task_fullscreen = True
+        else:
+            self.task_fullscreen = False
+
+        if self.settings.value("borderless") == "true":
+            self.task_borderless = True
+        else:
+            self.task_borderless = False
+
+        self.task_width = str(self.settings.value("width"))
+        self.task_height = str(self.settings.value("height"))
         self.settings.endGroup()
 
         # Set task window values
@@ -48,6 +53,19 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         # Set state of the windowed mode options (e.g. borderless, size)
         self.set_windowed_options_state(not self.task_fullscreen)
+
+        # ANT settings
+        self.settings.beginGroup("AttentionNetworkTest")
+        self.ant_blocks = str(self.settings.value("numBlocks"))
+        self.settings_ant_blocks_value.setText(self.ant_blocks)
+        self.settings.endGroup()
+
+        # Set input validators
+        self.settings_ant_blocks_value.setValidator(
+            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
+
+        # Set starting toolbox item
+        self.settings_toolbox.setCurrentIndex(0)
 
         # Bind button events
         self.settings_save_button.clicked.connect(self.save_settings)
@@ -73,20 +91,26 @@ class SettingsWindow(QtGui.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings.endGroup()
 
     def save_settings(self):
+        # Task window settings
         self.settings.beginGroup("TaskWindows")
-        self.settings.setValue('fullscreen', self.task_fullscreen)
+        self.settings.setValue('fullscreen', str(self.task_fullscreen).lower())
 
         # Only save some options if fullscreen is not selected
         if not self.task_fullscreen:
             self.settings.setValue(
                 'borderless',
-                self.settings_task_borderless_checkbox.isChecked())
+                str(self.settings_task_borderless_checkbox.isChecked()).lower())
 
             self.settings.setValue('width',
                                    self.settings_task_width_value.text())
             self.settings.setValue('height',
                                    self.settings_task_height_value.text())
 
+        self.settings.endGroup()
+
+        # ANT settings
+        self.settings.beginGroup("AttentionNetworkTest")
+        self.settings.setValue("numBlocks", self.settings_ant_blocks_value.text())
         self.settings.endGroup()
 
         # Save settings window size information
