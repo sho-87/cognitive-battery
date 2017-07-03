@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
-    <height>744</height>
+    <width>415</width>
+    <height>351</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -44,13 +44,13 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>435</width>
-          <height>689</height>
+          <width>391</width>
+          <height>296</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <widget class="QToolBox" name="toolBox">
+          <widget class="QToolBox" name="settings_toolbox">
            <property name="font">
             <font>
              <weight>50</weight>
@@ -68,8 +68,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>417</width>
-              <height>509</height>
+              <width>373</width>
+              <height>197</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -176,43 +176,90 @@
               </spacer>
              </item>
             </layout>
-            <zorder>settings_task_fullscreen_checkbox</zorder>
-            <zorder>verticalLayoutWidget</zorder>
-            <zorder>verticalSpacer</zorder>
            </widget>
            <widget class="QWidget" name="ant_page">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>417</width>
-              <height>509</height>
+              <width>373</width>
+              <height>197</height>
              </rect>
             </property>
             <attribute name="label">
              <string>Attentional Network Test</string>
             </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_3"/>
-           </widget>
-           <widget class="QWidget" name="digit_backward_page">
-            <attribute name="label">
-             <string>Digit Span (backwards)</string>
-            </attribute>
-           </widget>
-           <widget class="QWidget" name="ravens_page">
-            <attribute name="label">
-             <string>Raven's Progressive Matrices</string>
-            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QFormLayout" name="ant_form">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="settings_ant_blocks_label">
+                 <property name="text">
+                  <string>Number of blocks:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="settings_ant_blocks_value"/>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
            <widget class="QWidget" name="sart_page">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>373</width>
+              <height>197</height>
+             </rect>
+            </property>
             <attribute name="label">
              <string>Sustained Attention to Response Task</string>
             </attribute>
-           </widget>
-           <widget class="QWidget" name="sternberg_page">
-            <attribute name="label">
-             <string>Sternberg Task</string>
-            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QFormLayout" name="sart_form">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </widget>
          </item>

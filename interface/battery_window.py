@@ -53,6 +53,11 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.settings.setValue('height', 1024)
             self.settings.endGroup()
 
+            # Settings - Attentional Network Test
+            self.settings.beginGroup("AttentionalNetworkTest")
+            self.settings.setValue('numBlocks', 3)
+            self.settings.endGroup()
+
         # Set initial window size/pos from saved settings
         self.settings.beginGroup("MainWindow")
         self.resize(self.settings.value("size"))

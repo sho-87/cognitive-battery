@@ -24,7 +24,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.resize(self.settings.value("size", self.size()))
         self.settings.endGroup()
 
-        # Get stored task window settings
+        # Task window settings
         self.settings.beginGroup("TaskWindows")
 
         if self.settings.value("fullscreen") == "true":
@@ -54,6 +54,16 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Set state of the windowed mode options (e.g. borderless, size)
         self.set_windowed_options_state(not self.task_fullscreen)
 
+        # ANT settings
+        self.settings.beginGroup("AttentionalNetworkTest")
+        self.ant_blocks = str(self.settings.value("numBlocks"))
+        self.settings_ant_blocks_value.setText(self.ant_blocks)
+        self.settings.endGroup()
+
+        # Set input validators
+        self.settings_ant_blocks_value.setValidator(
+            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
+
         # Bind button events
         self.settings_save_button.clicked.connect(self.save_settings)
         self.settings_cancel_button.clicked.connect(self.cancel_settings)
@@ -78,6 +88,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings.endGroup()
 
     def save_settings(self):
+        # Task window settings
         self.settings.beginGroup("TaskWindows")
         self.settings.setValue('fullscreen', str(self.task_fullscreen).lower())
 
@@ -92,6 +103,11 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
             self.settings.setValue('height',
                                    self.settings_task_height_value.text())
 
+        self.settings.endGroup()
+
+        # ANT settings
+        self.settings.beginGroup("AttentionalNetworkTest")
+        self.settings.setValue("numBlocks", self.settings_ant_blocks_value.text())
         self.settings.endGroup()
 
         # Save settings window size information
