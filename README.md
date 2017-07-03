@@ -63,7 +63,9 @@ Using the battery is as simple as running the `run_battery.py` file. This
 can either be done using the command line (navigate to the directory and type
 `python run_battery.py`), or running it from IDLE.
 
-On the selection screen, all sections are currently mandatory, although some
+In the project manager, add a new bookmark indicating the project name and a path to your desired save directory for that project. Adding or deleting a bookmark does not change any files on the filesystem, it's merely a reference to a directory for where data files and settings should be saved for that project. It's safe to delete a project bookmark as it will not delete any currently existing data.
+
+On the task selection screen, all sections are currently mandatory, although some
  may be irrelevant for your particular experiment. You can place arbitrary 
  values in the irrelevant fields.
 
@@ -71,8 +73,10 @@ Select the tasks you want to include by using the checkboxes. The order of
 task administration can be set using the `Up` and `Down` buttons. 
 Alternatively, you can set a random order using the checkbox.
 
-The task results are saved in the `/data` directory. Each participant's data
+The task results are saved in the `/data` directory of your project directory (specified in the project manager). Each participant's data
  is saved as an Excel file, where each task is saved to a separate sheet.
+
+If you want to reset the settings for a particular project, delete the `battery_settings.ini` file in the project's directory. A new (default) one will be created when you next load that project.
 
 ## Tasks
 
@@ -148,7 +152,6 @@ In no particular order...
 - Create an analysis tool for summarizing/aggregating participant data for
 the different battery tasks. The goal is to output summary data that is ready
 for statistics
-- Add option for manually specifying a save data location
 - Compile an executable binary version of the entire battery
     - This will make it possible run the battery without dealing with Python
      module installation
@@ -161,7 +164,6 @@ for statistics
     - Automatically import all task modules
     - Automatically handle task running/saving
     - No longer need to edit the main battery file to add your own tasks
-- Add the ability to set options for each task (e.g. number of trials)
 - Add description/details for each task (number of trials, timings etc.)
 - Save subject data to non-proprietary file format instead of Excel
     - Likely to be CSV, but open to suggestions
