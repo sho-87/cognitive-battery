@@ -85,7 +85,7 @@ class ANT(object):
             np.random.shuffle(cur_combinations)
         else:
             np.random.shuffle(combinations)
-            cur_combinations = combinations[:len(combinations)/2]
+            cur_combinations = combinations[:int(len(combinations)/2)]
 
         # Add combinations to dataframe
         cur_block = pd.DataFrame(data=cur_combinations, columns=(
