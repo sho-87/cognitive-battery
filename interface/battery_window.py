@@ -278,22 +278,21 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         else:
             # Store subject info into a dataframe
             subject_info = pd.DataFrame(
-                data=[(str(current_date), str(sub_num),
-                       str(condition), int(age), str(sex), str(ra),
+                data=[(str(current_date), str(sub_num), str(condition),
+                       int(age), str(sex), str(ra),
                        ', '.join(selected_tasks))],
                 columns=['datetime', 'sub_num', 'condition',
                          'age', 'sex', 'RA', 'tasks']
             )
 
-            # Set the output file name
-            data_file_name = "%s_%s.xls" % (sub_num, condition)
-
-            # Check if file already exists
-            output_file = os.path.join(self.dataPath, data_file_name)
-            if os.path.isfile(output_file):
-                self.error_dialog('Data file already exists')
+            # Check if subject number already exists
+            existing_subs = [x.split('_')[0] for x in os.listdir(self.dataPath)]
+            if sub_num in existing_subs:
+                self.error_dialog('Subject number already exists')
             else:
                 # Create the excel writer object and save the file
+                data_file_name = "%s_%s.xls" % (sub_num, condition)
+                output_file = os.path.join(self.dataPath, data_file_name)
                 writer = pd.ExcelWriter(output_file)
                 subject_info.to_excel(writer, 'info', index=False)
                 writer.save()
