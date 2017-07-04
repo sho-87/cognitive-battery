@@ -1,5 +1,10 @@
 # Change Log
 
+## [3.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.0.0) *(2017-07-03)*
+
+**General**
+- Migrated the code base over to Python 3.x. Version 3+ of the battery will be based on Python 3. Python 2 users can still use v2 of the battery, however, it will no longer be maintained.
+
 ## [2.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/2.0.0) *(2017-07-03)*
 
 **General**

@@ -31,7 +31,7 @@ class DigitspanBackwards(object):
         self.STIM_DURATION = 1000  # Duration of each digit
         self.INTER_NUMBER_DURATION = 100  # Time between numbers
         self.FEEDBACK_DURATION = 2000  # Duration of feedback screen
-        self.NUMBERS_USED = range(1, 10)  # Set of digits that can be used
+        self.NUMBERS_USED = list(range(1, 10))  # List of digits that can be used
         self.START_LENGTH = 3  # Length of smallest sequence
         self.END_LENGTH = 9  # Length of largest sequence
         self.NUM_REPEATS = 2  # Num of times each sequence length is repeated
@@ -45,8 +45,8 @@ class DigitspanBackwards(object):
 
         # Create main dataframe
         self.all_data = pd.DataFrame()
-        self.all_data["trial"] = range(1,
-                                       self.num_lengths * self.NUM_REPEATS + 1)
+        self.all_data["trial"] = list(range(1,
+                                       self.num_lengths * self.NUM_REPEATS + 1))
         self.all_data["length"] = self.digit_lengths
 
         # Create digit sequences
@@ -223,6 +223,6 @@ class DigitspanBackwards(object):
 
         display.wait_for_space()
 
-        print "- Digit span (backwards) complete"
+        print("- Digit span (backwards) complete")
 
         return self.all_data

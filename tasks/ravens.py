@@ -13,7 +13,7 @@ class Ravens(object):
     def __init__(self, screen, background, start=1, numTrials=12):
         # check that start position isnt too high
         if start > 36 - numTrials + 1:
-            print "Raven's Matrices: Not enough trials. Set a lower start number."
+            print("Raven's Matrices: Not enough trials. Set a lower start number.")
             exit()
 
         # Get the pygame display window
@@ -362,6 +362,6 @@ class Ravens(object):
 
             pygame.display.flip()
 
-        print "- Raven's Progressive Matrices complete"
+        print("- Raven's Progressive Matrices complete")
 
         return self.allData

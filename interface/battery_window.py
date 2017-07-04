@@ -306,11 +306,11 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
                 # Center all pygame windows if not fullscreen
                 if not self.task_fullscreen:
-                    pos_x = str(self.res_width / 2 - self.task_width / 2)
-                    pos_y = str(self.res_height / 2 - self.task_height / 2)
+                    pos_x = self.res_width // 2 - self.task_width // 2
+                    pos_y = self.res_height // 2 - self.task_height // 2
 
                     os.environ['SDL_VIDEO_WINDOW_POS'] = \
-                        "%s, %s" % (pos_x, pos_y)
+                        "%s, %s" % (str(pos_x), str(pos_y))
 
                 # Initialize pygame
                 pygame.init()
@@ -409,5 +409,5 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 # Quit pygame
                 pygame.quit()
 
-                print "--- Experiment complete"
+                print("--- Experiment complete")
                 self.close()

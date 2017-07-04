@@ -30,17 +30,19 @@ screen resolutions, and improved logic.
 
 ## Requirements
 
+Current, and future, versions of the battery use Python 3. Python 2 users can still run v2 of the battery, but will no longer be maintained. Cognitive Battery v3 may still be runnable under Python 2, however, it's not tested or supported, so use at your own risk.
+
 You will need to have the following dependencies installed to run the battery,
 most of which are just Python modules:
 
 * **Windows 7+**
   - This battery may work on OSX and Linux, but has only been tested on 
   Windows so far.
-* **Python 2.7.x**
+* **Python 3.x**
   - The easiest way to install Python is using the 
   [Anaconda](https://www.continuum.io/downloads) distribution as it also 
   includes most of the other dependencies listed below
-  - Python 3 is not currently supported
+  - Older versions of the battery (v1-2) are still runnable using Python 2.
 * **Pandas**
   - Included with Anaconda. Otherwise, install using pip (`pip install pandas`)
 * **Numpy**
@@ -51,11 +53,9 @@ most of which are just Python modules:
    [PyQT website](https://www.riverbankcomputing.com/software/pyqt/download5)
   - **Note**: Cognitive Battery version 1.x uses PyQt4. However, version 2.x onwards uses PyQt5
 * **Pygame**
-  - Downloadable from the
-  [Pygame website](http://www.pygame.org/download.shtml). If you installed
-  64bit Python, you will need to download the 64bit Pygame binaries from
-  [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame) and install 
-  using pip (`pip install <filename>`)
+  - Install using pip (`pip install pygame`)
+  - Alternatively, downloadable from the
+  [Pygame website](http://www.pygame.org/download.shtml)
 
 ## Usage
 
