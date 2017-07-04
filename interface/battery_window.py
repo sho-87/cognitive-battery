@@ -54,9 +54,14 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.settings.setValue('height', 1024)
             self.settings.endGroup()
 
-            # Settings - Attentional Network Test
+            # Settings - Attention Network Test
             self.settings.beginGroup("AttentionNetworkTest")
             self.settings.setValue('numBlocks', 3)
+            self.settings.endGroup()
+
+            # Settings - Sternberg Task
+            self.settings.beginGroup("Sternberg")
+            self.settings.setValue('numBlocks', 2)
             self.settings.endGroup()
 
         # Set initial window size/pos from saved settings
@@ -220,12 +225,16 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
         self.task_width = int(self.settings.value("width"))
         self.task_height = int(self.settings.value("height"))
-
         self.settings.endGroup()
 
         # ANT settings
         self.settings.beginGroup("AttentionNetworkTest")
         self.ant_blocks = int(self.settings.value("numBlocks"))
+        self.settings.endGroup()
+
+        # Sternberg settings
+        self.settings.beginGroup("Sternberg")
+        self.sternberg_blocks = int(self.settings.value("numBlocks"))
         self.settings.endGroup()
 
     # Override the closeEvent method
@@ -380,7 +389,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                                              index=False)
                     elif task == "Sternberg Task":
                         sternberg_task = sternberg.Sternberg(
-                            self.pygame_screen, background)
+                            self.pygame_screen, background,
+                            blocks=self.sternberg_blocks)
                         # Run Sternberg Task
                         sternberg_data = sternberg_task.run()
                         # Save sternberg data to excel
