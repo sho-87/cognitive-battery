@@ -336,7 +336,7 @@ class ANT(object):
             self.run_block(i, self.NUM_BLOCKS, "main")
 
         # Create trial number column
-        self.all_data["trial"] = range(1, len(self.all_data) + 1)
+        self.all_data["trial"] = list(range(1, len(self.all_data) + 1))
 
         # Rearrange the dataframe
         columns = ['trial', 'block', 'congruency', 'cue', 'location',
