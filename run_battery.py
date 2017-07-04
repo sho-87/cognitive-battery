@@ -1,3 +1,5 @@
+from __future__ import print_function, division
+
 import os
 import sys
 
@@ -9,7 +11,7 @@ if __name__ == '__main__':
     # Get application directory
     base_dir = os.path.dirname(os.path.realpath(__file__))
 
-    # Create main app window
+    # Create project manager window
     app = QtWidgets.QApplication(sys.argv)
     screen_resolution = app.desktop().screenGeometry()
 

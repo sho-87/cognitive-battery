@@ -29,7 +29,7 @@ class SART(object):
         pygame.mouse.set_visible(0)
 
         # Experiment options
-        self.BLANK_DURATION = 500
+        self.BLANK_DURATION = 1000
         self.STIM_DURATION = 250
         self.MASK_DURATION = 900
         self.STIMSIZES_PT = (48, 72, 94, 100, 120)  # in point
@@ -48,9 +48,9 @@ class SART(object):
             os.path.join(self.image_path, 'mask_29.png'))
 
         # Create trial sequence
-        self.number_set = range(1, 10)*25  # Numbers 1-9
+        self.number_set = list(range(1, 10)) * 25  # Numbers 1-9
         random.shuffle(self.number_set)
-        self.trial_num = range(1, len(self.number_set)+1)
+        self.trial_num = list(range(1, len(self.number_set)+1))
 
         # Create output dataframe
         self.all_data = pd.DataFrame()
@@ -228,6 +228,6 @@ class SART(object):
 
         display.wait_for_space()
 
-        print "- SART complete"
+        print("- SART complete")
 
         return self.all_data

@@ -1,5 +1,16 @@
 # Change Log
 
+## [3.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.0.0) *(2017-07-03)*
+
+**General**
+- Migrated the code base over to Python 3.x. Version 3+ of the battery will be based on Python 3. Python 2 users can still use v2 of the battery, however, it will no longer be maintained.
+
+**Tasks**
+- Added option to set the number of blocks for the Sternberg task in the Settings menu.
+
+**Bug Fixes**
+- Fixed a bug where duplicate filenames were being checked for (instead of duplicate subject numbers) when starting new sessions.
+
 ## [2.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/2.0.0) *(2017-07-03)*
 
 **General**

@@ -50,7 +50,7 @@ class Sternberg(object):
         self.FEEDBACK_DURATION = 1000
         self.ITI = 1500
 
-        self.STIM_SET = range(10)
+        self.STIM_SET = list(range(10))
         self.SET_SIZE = (2, 6)
         self.PROBE_TYPE = ("present", "absent")
 
@@ -328,8 +328,8 @@ class Sternberg(object):
 
         # Concatenate blocks and add trial numbers
         all_data = pd.concat(self.blocks)
-        all_data['trialNum'] = range(1, len(all_data) + 1)
+        all_data['trialNum'] = list(range(1, len(all_data) + 1))
 
-        print "- Sternberg Task complete"
+        print("- Sternberg Task complete")
 
         return all_data

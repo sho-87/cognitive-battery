@@ -54,9 +54,14 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.settings.setValue('height', 1024)
             self.settings.endGroup()
 
-            # Settings - Attentional Network Test
+            # Settings - Attention Network Test
             self.settings.beginGroup("AttentionNetworkTest")
             self.settings.setValue('numBlocks', 3)
+            self.settings.endGroup()
+
+            # Settings - Sternberg Task
+            self.settings.beginGroup("Sternberg")
+            self.settings.setValue('numBlocks', 2)
             self.settings.endGroup()
 
         # Set initial window size/pos from saved settings
@@ -220,12 +225,16 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
         self.task_width = int(self.settings.value("width"))
         self.task_height = int(self.settings.value("height"))
-
         self.settings.endGroup()
 
         # ANT settings
         self.settings.beginGroup("AttentionNetworkTest")
         self.ant_blocks = int(self.settings.value("numBlocks"))
+        self.settings.endGroup()
+
+        # Sternberg settings
+        self.settings.beginGroup("Sternberg")
+        self.sternberg_blocks = int(self.settings.value("numBlocks"))
         self.settings.endGroup()
 
     # Override the closeEvent method
@@ -278,22 +287,21 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         else:
             # Store subject info into a dataframe
             subject_info = pd.DataFrame(
-                data=[(str(current_date), str(sub_num),
-                       str(condition), int(age), str(sex), str(ra),
+                data=[(str(current_date), str(sub_num), str(condition),
+                       int(age), str(sex), str(ra),
                        ', '.join(selected_tasks))],
                 columns=['datetime', 'sub_num', 'condition',
                          'age', 'sex', 'RA', 'tasks']
             )
 
-            # Set the output file name
-            data_file_name = "%s_%s.xls" % (sub_num, condition)
-
-            # Check if file already exists
-            output_file = os.path.join(self.dataPath, data_file_name)
-            if os.path.isfile(output_file):
-                self.error_dialog('Data file already exists')
+            # Check if subject number already exists
+            existing_subs = [x.split('_')[0] for x in os.listdir(self.dataPath)]
+            if sub_num in existing_subs:
+                self.error_dialog('Subject number already exists')
             else:
                 # Create the excel writer object and save the file
+                data_file_name = "%s_%s.xls" % (sub_num, condition)
+                output_file = os.path.join(self.dataPath, data_file_name)
                 writer = pd.ExcelWriter(output_file)
                 subject_info.to_excel(writer, 'info', index=False)
                 writer.save()
@@ -306,11 +314,11 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
                 # Center all pygame windows if not fullscreen
                 if not self.task_fullscreen:
-                    pos_x = str(self.res_width / 2 - self.task_width / 2)
-                    pos_y = str(self.res_height / 2 - self.task_height / 2)
+                    pos_x = self.res_width // 2 - self.task_width // 2
+                    pos_y = self.res_height // 2 - self.task_height // 2
 
                     os.environ['SDL_VIDEO_WINDOW_POS'] = \
-                        "%s, %s" % (pos_x, pos_y)
+                        "%s, %s" % (str(pos_x), str(pos_y))
 
                 # Initialize pygame
                 pygame.init()
@@ -381,7 +389,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                                              index=False)
                     elif task == "Sternberg Task":
                         sternberg_task = sternberg.Sternberg(
-                            self.pygame_screen, background)
+                            self.pygame_screen, background,
+                            blocks=self.sternberg_blocks)
                         # Run Sternberg Task
                         sternberg_data = sternberg_task.run()
                         # Save sternberg data to excel
@@ -409,5 +418,5 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 # Quit pygame
                 pygame.quit()
 
-                print "--- Experiment complete"
+                print("--- Experiment complete")
                 self.close()

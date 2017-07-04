@@ -60,8 +60,17 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings_ant_blocks_value.setText(self.ant_blocks)
         self.settings.endGroup()
 
+        # Sternberg settings
+        self.settings.beginGroup("Sternberg")
+        self.sternberg_blocks = str(self.settings.value("numBlocks"))
+        self.settings_sternberg_blocks_value.setText(self.sternberg_blocks)
+        self.settings.endGroup()
+
         # Set input validators
         self.settings_ant_blocks_value.setValidator(
+            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
+
+        self.settings_sternberg_blocks_value.setValidator(
             QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
 
         # Set starting toolbox item
@@ -111,6 +120,11 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         # ANT settings
         self.settings.beginGroup("AttentionNetworkTest")
         self.settings.setValue("numBlocks", self.settings_ant_blocks_value.text())
+        self.settings.endGroup()
+
+        # Sternberg settings
+        self.settings.beginGroup("Sternberg")
+        self.settings.setValue("numBlocks", self.settings_sternberg_blocks_value.text())
         self.settings.endGroup()
 
         # Save settings window size information

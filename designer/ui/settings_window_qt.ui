@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>337</width>
-    <height>223</height>
+    <width>415</width>
+    <height>243</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -44,8 +44,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>313</width>
-          <height>168</height>
+          <width>391</width>
+          <height>188</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -61,15 +61,15 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <widget class="QWidget" name="task_windows_page">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>295</width>
-              <height>96</height>
+              <width>373</width>
+              <height>89</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -182,8 +182,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>295</width>
-              <height>96</height>
+              <width>373</width>
+              <height>89</height>
              </rect>
             </property>
             <attribute name="label">
@@ -219,6 +219,45 @@
                </item>
                <item row="0" column="1">
                 <widget class="QLineEdit" name="settings_ant_blocks_value"/>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="sternberg_page">
+            <attribute name="label">
+             <string>Sternberg Task</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QFormLayout" name="sternberg_form">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="settings_sternberg_blocks_label">
+                 <property name="text">
+                  <string>Number of blocks:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="settings_sternberg_blocks_value"/>
                </item>
               </layout>
              </item>

@@ -12,7 +12,7 @@ class AboutDialog(QtWidgets.QDialog, about_dialog_qt.Ui_Dialog):
         self.setupUi(self)
 
         # Set version number
-        self.versionValue.setText("2.0")
+        self.versionValue.setText("3.0.0")
 
         # Add icon image
         base_dir = os.path.dirname(os.path.dirname(

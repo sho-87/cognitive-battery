@@ -85,7 +85,7 @@ class ANT(object):
             np.random.shuffle(cur_combinations)
         else:
             np.random.shuffle(combinations)
-            cur_combinations = combinations[:len(combinations)/2]
+            cur_combinations = combinations[:len(combinations)//2]
 
         # Add combinations to dataframe
         cur_block = pd.DataFrame(data=cur_combinations, columns=(
@@ -336,7 +336,7 @@ class ANT(object):
             self.run_block(i, self.NUM_BLOCKS, "main")
 
         # Create trial number column
-        self.all_data["trial"] = range(1, len(self.all_data) + 1)
+        self.all_data["trial"] = list(range(1, len(self.all_data) + 1))
 
         # Rearrange the dataframe
         columns = ['trial', 'block', 'congruency', 'cue', 'location',
@@ -353,6 +353,6 @@ class ANT(object):
 
         display.wait_for_space()
 
-        print "- ANT complete"
+        print("- ANT complete")
 
         return self.all_data

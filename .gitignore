@@ -5,6 +5,7 @@ __pycache__
 # IDE
 .idea
 .vscode
+.spyproject
 
 # Images
 /tasks/images/MRT/p[0-9]*.png
