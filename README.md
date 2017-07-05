@@ -80,6 +80,8 @@ If you want to reset the settings for a particular project, delete the `battery_
 
 ## Tasks
 
+Information about the tasks can be found [here](tasks/README.md).
+
 Currently implemented tasks:
 
 * **Attention Network Test (ANT)**
