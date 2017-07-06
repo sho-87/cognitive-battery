@@ -5,7 +5,7 @@ import pygame
 
 from pygame.locals import *
 from os import listdir
-from os.path import isfile, join, dirname, realpath
+from os.path import join, dirname, realpath, splitext
 from sys import exit
 
 
@@ -40,9 +40,12 @@ class Ravens(object):
         # get images
         self.directory = dirname(realpath(__file__))
         self.imagePath = self.directory + "\images\\Ravens\\"
+
         # store all filenames in the images path to a list
         self.dirImages = [f for f in listdir(self.imagePath) if
-                          isfile(join(self.imagePath, f))]
+                          splitext(join(self.imagePath, f))[-1] == '.png']
+        
+        self.dirImages = sorted(self.dirImages)
 
         # only load the desired number/set of images
         self.images = []
