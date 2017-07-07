@@ -24,8 +24,8 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.resize(self.settings.value("size", self.size()))
         self.settings.endGroup()
 
-        # Task window settings
-        self.settings.beginGroup("TaskWindows")
+        # General settings
+        self.settings.beginGroup("GeneralSettings")
 
         if self.settings.value("fullscreen") == "true":
             self.task_fullscreen = True
@@ -39,6 +39,12 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         self.task_width = str(self.settings.value("width"))
         self.task_height = str(self.settings.value("height"))
+
+        if self.settings.value("taskBeep") == "true":
+            self.task_beep = True
+        else:
+            self.task_beep = False
+
         self.settings.endGroup()
 
         # Set task window values
@@ -50,6 +56,9 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         # Set borderless check state
         self.settings_task_borderless_checkbox.setChecked(self.task_borderless)
+
+        # Set task beep check state
+        self.settings_task_beep_checkbox.setChecked(self.task_beep)
 
         # Set state of the windowed mode options (e.g. borderless, size)
         self.set_windowed_options_state(not self.task_fullscreen)
@@ -120,11 +129,12 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
             QtWidgets.QMessageBox.warning(self, 'Ravens Progressive Matrices Error',
                                                 'Too many images for Ravens task. Start with an earlier image, or use fewer trials')
         else:
-            # Task window settings
-            self.settings.beginGroup("TaskWindows")
-            self.settings.setValue('fullscreen', str(self.task_fullscreen).lower())
+            # General settings
+            self.settings.beginGroup("GeneralSettings")
+            self.settings.setValue('fullscreen',
+                                   str(self.settings_task_fullscreen_checkbox.isChecked()).lower())
 
-            # Only save some options if fullscreen is not selected
+            ## Only save some options if fullscreen is not selected
             if not self.task_fullscreen:
                 self.settings.setValue(
                     'borderless',
@@ -135,6 +145,9 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
                 self.settings.setValue('height',
                                     self.settings_task_height_value.text())
 
+            ## Task beep setting
+            self.settings.setValue('taskBeep', 
+                                   str(self.settings_task_beep_checkbox.isChecked()).lower())
             self.settings.endGroup()
 
             # ANT settings

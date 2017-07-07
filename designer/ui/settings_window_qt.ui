@@ -61,9 +61,9 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>0</number>
            </property>
-           <widget class="QWidget" name="task_windows_page">
+           <widget class="QWidget" name="general_page">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -85,7 +85,7 @@
              </font>
             </property>
             <attribute name="label">
-             <string>Task Windows</string>
+             <string>General</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <property name="spacing">
@@ -107,7 +107,7 @@
               <number>0</number>
              </property>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout">
+              <layout class="QVBoxLayout" name="settings_general_layout">
                <property name="leftMargin">
                 <number>10</number>
                </property>
@@ -159,6 +159,13 @@
                   </widget>
                  </item>
                 </layout>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="settings_task_beep_checkbox">
+                 <property name="text">
+                  <string>Play beep after each task</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
