@@ -1,5 +1,18 @@
 # Change Log
 
+## [3.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.1.0) *(2017-07-06)*
+
+**General**
+- Added a menu item to check for latest releases of the battery (redirects to GitHub releases)
+
+**Tasks**
+- Added information about each task to [tasks/README.md](tasks/README.md).
+- Added options to adjust Raven's trial count and starting position to Settings menu.
+- Added option to play an audio beep after each task (default: True)
+
+**Bug Fixes**
+- Fixed a bug where the Raven's task was loading the images in an incorrect order.
+
 ## [3.0.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.0.0) *(2017-07-03)*
 
 **General**
