@@ -29,8 +29,10 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.actionBrowse_Issues.setIcon(QtGui.QIcon(self.github_icon))
         self.actionReport_Bug.setIcon(QtGui.QIcon(self.github_icon))
         self.actionRequest_Feature.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionCheck_for_updates.setIcon(QtGui.QIcon(self.github_icon))
 
-        # Get screen resolution
+        # Get passed values
+        self.base_dir = base_dir
         self.project_dir = project_dir
         self.res_width = res_width
         self.res_height = res_height
@@ -46,17 +48,24 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             # Main window size and position
             self.save_main_window_settings(self.size(), QtCore.QPoint(100, 100))
 
-            # Settings - Task Windows
-            self.settings.beginGroup("TaskWindows")
+            # Settings - General
+            self.settings.beginGroup("GeneralSettings")
             self.settings.setValue('fullscreen', "false")
             self.settings.setValue('borderless', "false")
             self.settings.setValue('width', 1280)
             self.settings.setValue('height', 1024)
+            self.settings.setValue('taskBeep', "true")
             self.settings.endGroup()
 
             # Settings - Attention Network Test
             self.settings.beginGroup("AttentionNetworkTest")
             self.settings.setValue('numBlocks', 3)
+            self.settings.endGroup()
+
+            # Settings - Ravens
+            self.settings.beginGroup("Ravens")
+            self.settings.setValue('startImage', 13)
+            self.settings.setValue('numTrials', 12)
             self.settings.endGroup()
 
             # Settings - Sternberg Task
@@ -92,11 +101,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                        "cognitive-battery/tree/develop",
             "issues": "https://github.com/sho-87/cognitive-battery/issues",
             "new_issue": "https://github.com/sho-87/"
-                         "cognitive-battery/issues/new"
+                         "cognitive-battery/issues/new",
+            "releases": "https://github.com/sho-87/cognitive-battery/releases"
         }
-
-        # Get base directory for battery
-        self.base_dir = base_dir
 
         # Make data folder if it doesnt exist
         self.dataPath = os.path.join(self.project_dir, "data")
@@ -112,6 +119,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
         self.actionReport_Bug.triggered.connect(self.show_new_issue)
         self.actionRequest_Feature.triggered.connect(self.show_new_issue)
+        self.actionCheck_for_updates.triggered.connect(self.show_releases)
         self.actionAbout.triggered.connect(self.show_about)
 
         # Bind button events
@@ -142,6 +150,10 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
     # Open web browser to the github new issue post
     def show_new_issue(self):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
+
+    # Open web browser to the github releases page
+    def show_releases(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["releases"]))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):
@@ -208,10 +220,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.settings.setValue('pos', pos)
         self.settings.endGroup()
 
-    # Get task window settings from file
     def get_settings(self):
-        # Task window settings
-        self.settings.beginGroup("TaskWindows")
+        # General settings
+        self.settings.beginGroup("GeneralSettings")
 
         if self.settings.value("fullscreen") == "true":
             self.task_fullscreen = True
@@ -225,11 +236,23 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
         self.task_width = int(self.settings.value("width"))
         self.task_height = int(self.settings.value("height"))
+
+        if self.settings.value("taskBeep") == "true":
+            self.task_beep = True
+        else:
+            self.task_beep = False
+
         self.settings.endGroup()
 
         # ANT settings
         self.settings.beginGroup("AttentionNetworkTest")
         self.ant_blocks = int(self.settings.value("numBlocks"))
+        self.settings.endGroup()
+
+        # Ravens settings
+        self.settings.beginGroup("Ravens")
+        self.ravens_start = int(self.settings.value("startImage"))
+        self.ravens_trials = int(self.settings.value("numTrials"))
         self.settings.endGroup()
 
         # Sternberg settings
@@ -323,6 +346,12 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 # Initialize pygame
                 pygame.init()
 
+                # Load beep sound
+                beep_sound = pygame.mixer.Sound(os.path.join(self.base_dir, 
+                                                            'tasks', 
+                                                            'media', 
+                                                            'beep_med.wav'))
+
                 # Set pygame icon image
                 image = os.path.join(self.base_dir, "images", "icon_sml.png")
                 icon_img = pygame.image.load(image)
@@ -381,7 +410,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                     elif task == "Raven's Progressive Matrices":
                         ravens_task = ravens.Ravens(
                             self.pygame_screen, background,
-                            start=9, numTrials=12)
+                            start=self.ravens_start, numTrials=self.ravens_trials)
                         # Run Raven's Matrices
                         ravens_data = ravens_task.run()
                         # Save ravens data to excel
@@ -396,6 +425,10 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         # Save sternberg data to excel
                         sternberg_data.to_excel(writer, 'Sternberg',
                                                 index=False)
+                    
+                    # Play beep after each task
+                    if self.task_beep:
+                        beep_sound.play()
 
                     # Save excel file
                     writer.save()

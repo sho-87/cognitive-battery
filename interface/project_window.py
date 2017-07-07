@@ -25,6 +25,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.actionBrowse_Issues.setIcon(QtGui.QIcon(self.github_icon))
         self.actionReport_Bug.setIcon(QtGui.QIcon(self.github_icon))
         self.actionRequest_Feature.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionCheck_for_updates.setIcon(QtGui.QIcon(self.github_icon))
 
         # Keep reference to main battery and new project windows
         self.main_battery = None
@@ -44,7 +45,8 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
                        "cognitive-battery/tree/develop",
             "issues": "https://github.com/sho-87/cognitive-battery/issues",
             "new_issue": "https://github.com/sho-87/"
-                         "cognitive-battery/issues/new"
+                         "cognitive-battery/issues/new",
+            "releases": "https://github.com/sho-87/cognitive-battery/releases"
         }
 
         # Check if project file exists
@@ -68,6 +70,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
         self.actionReport_Bug.triggered.connect(self.show_new_issue)
         self.actionRequest_Feature.triggered.connect(self.show_new_issue)
+        self.actionCheck_for_updates.triggered.connect(self.show_releases)
         self.actionAbout.triggered.connect(self.show_about)
 
         # Bind button events
@@ -103,6 +106,10 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
     # Open web browser to the github new issue post
     def show_new_issue(self):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
+
+    # Open web browser to the github releases page
+    def show_releases(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["releases"]))
 
     # Create a new AboutDialog object and display it
     def show_about(self):

@@ -166,7 +166,6 @@ for statistics
     - Automatically import all task modules
     - Automatically handle task running/saving
     - No longer need to edit the main battery file to add your own tasks
-- Add description/details for each task (number of trials, timings etc.)
 - Save subject data to non-proprietary file format instead of Excel
     - Likely to be CSV, but open to suggestions
 - Add more tasks...

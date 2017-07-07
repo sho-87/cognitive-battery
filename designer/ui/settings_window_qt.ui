@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>415</width>
-    <height>243</height>
+    <height>296</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -45,7 +45,7 @@
           <x>0</x>
           <y>0</y>
           <width>391</width>
-          <height>188</height>
+          <height>241</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -61,15 +61,15 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>0</number>
            </property>
-           <widget class="QWidget" name="task_windows_page">
+           <widget class="QWidget" name="general_page">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
               <width>373</width>
-              <height>89</height>
+              <height>115</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -85,7 +85,7 @@
              </font>
             </property>
             <attribute name="label">
-             <string>Task Windows</string>
+             <string>General</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <property name="spacing">
@@ -107,7 +107,7 @@
               <number>0</number>
              </property>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout">
+              <layout class="QVBoxLayout" name="settings_general_layout">
                <property name="leftMargin">
                 <number>10</number>
                </property>
@@ -160,6 +160,13 @@
                  </item>
                 </layout>
                </item>
+               <item>
+                <widget class="QCheckBox" name="settings_task_beep_checkbox">
+                 <property name="text">
+                  <string>Play beep after each task</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </item>
              <item>
@@ -183,7 +190,7 @@
               <x>0</x>
               <y>0</y>
               <width>373</width>
-              <height>89</height>
+              <height>115</height>
              </rect>
             </property>
             <attribute name="label">
@@ -224,7 +231,64 @@
              </item>
             </layout>
            </widget>
+           <widget class="QWidget" name="ravens_page">
+            <attribute name="label">
+             <string>Raven's Progressive Matrices</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QFormLayout" name="formLayout">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="settings_ravens_start_label">
+                 <property name="text">
+                  <string>Starting image #:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="settings_ravens_start_value"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="settings_ravens_trials_label">
+                 <property name="text">
+                  <string>Number of trials:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="settings_ravens_trials_value"/>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
            <widget class="QWidget" name="sternberg_page">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>373</width>
+              <height>115</height>
+             </rect>
+            </property>
             <attribute name="label">
              <string>Sternberg Task</string>
             </attribute>

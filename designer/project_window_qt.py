@@ -164,6 +164,8 @@ class Ui_ProjectWindow(object):
         self.actionRequest_Feature.setObjectName("actionRequest_Feature")
         self.actionAbout = QtWidgets.QAction(ProjectWindow)
         self.actionAbout.setObjectName("actionAbout")
+        self.actionCheck_for_updates = QtWidgets.QAction(ProjectWindow)
+        self.actionCheck_for_updates.setObjectName("actionCheck_for_updates")
         self.menuProject.addAction(self.actionNewProject)
         self.menuProject.addAction(self.actionExit)
         self.menuHelp.addAction(self.actionDocumentation)
@@ -174,6 +176,7 @@ class Ui_ProjectWindow(object):
         self.menuHelp.addAction(self.actionReport_Bug)
         self.menuHelp.addAction(self.actionRequest_Feature)
         self.menuHelp.addSeparator()
+        self.menuHelp.addAction(self.actionCheck_for_updates)
         self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuProject.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
@@ -216,4 +219,6 @@ class Ui_ProjectWindow(object):
         self.actionRequest_Feature.setStatusTip(_translate("ProjectWindow", "Request a feature"))
         self.actionAbout.setText(_translate("ProjectWindow", "About"))
         self.actionAbout.setStatusTip(_translate("ProjectWindow", "About the battery"))
+        self.actionCheck_for_updates.setText(_translate("ProjectWindow", "Check for updates"))
+        self.actionCheck_for_updates.setStatusTip(_translate("ProjectWindow", "Check for new releases of the battery"))
 
