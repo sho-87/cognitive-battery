@@ -59,6 +59,12 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.settings.setValue('numBlocks', 3)
             self.settings.endGroup()
 
+            # Settings - Ravens
+            self.settings.beginGroup("Ravens")
+            self.settings.setValue('startImage', 13)
+            self.settings.setValue('numTrials', 12)
+            self.settings.endGroup()
+
             # Settings - Sternberg Task
             self.settings.beginGroup("Sternberg")
             self.settings.setValue('numBlocks', 2)
@@ -232,6 +238,12 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.ant_blocks = int(self.settings.value("numBlocks"))
         self.settings.endGroup()
 
+        # Ravens settings
+        self.settings.beginGroup("Ravens")
+        self.ravens_start = int(self.settings.value("startImage"))
+        self.ravens_trials = int(self.settings.value("numTrials"))
+        self.settings.endGroup()
+
         # Sternberg settings
         self.settings.beginGroup("Sternberg")
         self.sternberg_blocks = int(self.settings.value("numBlocks"))
@@ -381,7 +393,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                     elif task == "Raven's Progressive Matrices":
                         ravens_task = ravens.Ravens(
                             self.pygame_screen, background,
-                            start=13, numTrials=12)
+                            start=self.ravens_start, numTrials=self.ravens_trials)
                         # Run Raven's Matrices
                         ravens_data = ravens_task.run()
                         # Save ravens data to excel

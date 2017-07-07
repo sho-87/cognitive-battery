@@ -4,6 +4,7 @@
 
 - 1 practice block with 24 trials (~2 minutes)
 - 96 trials per block in the main task (~7 minutes)
+- Number of blocks adjustable in Settings
 - Fixation duration: 400-1600ms
 - Cue duration: 100ms
 - Flanker/stimulus duration: 1700ms
@@ -31,7 +32,7 @@
 ## Raven's Progressive Matrices
 - Advanced Set #2
 - 1 practice question
-- 12 main questions
+- 12 main questions (adjustable in Settings)
 - 8 answer options per question
 - Each question has a maximum time limit of 1 minute
 - **Note:** The Raven's image set contains 36 questions. By default, the battery use 12 images starting from image #13 (middle 3rd of the set)
@@ -39,6 +40,7 @@
 ## Sternberg Task
 - 1 practice block with 24 trials
 - 48 trials per block in the main task
+- Number of blocks adjustable in Settings
 - Digit set: 0-9 (inclusive)
 - Short sequence length: 2 digits
 - Long sequence length: 6 digits

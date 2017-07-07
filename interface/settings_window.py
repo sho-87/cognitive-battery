@@ -60,6 +60,15 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings_ant_blocks_value.setText(self.ant_blocks)
         self.settings.endGroup()
 
+        # Ravens settings
+        self.settings.beginGroup("Ravens")
+        self.ravens_start = str(self.settings.value("startImage"))
+        self.settings_ravens_start_value.setText(self.ravens_start)
+
+        self.ravens_trials = str(self.settings.value("numTrials"))
+        self.settings_ravens_trials_value.setText(self.ravens_trials)
+        self.settings.endGroup()
+
         # Sternberg settings
         self.settings.beginGroup("Sternberg")
         self.sternberg_blocks = str(self.settings.value("numBlocks"))
@@ -68,6 +77,12 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         # Set input validators
         self.settings_ant_blocks_value.setValidator(
+            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
+
+        self.settings_ravens_start_value.setValidator(
+            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
+
+        self.settings_ravens_trials_value.setValidator(
             QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
 
         self.settings_sternberg_blocks_value.setValidator(
@@ -100,36 +115,47 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings.endGroup()
 
     def save_settings(self):
-        # Task window settings
-        self.settings.beginGroup("TaskWindows")
-        self.settings.setValue('fullscreen', str(self.task_fullscreen).lower())
+        # Check if Ravens images are in range (cant exceed 36 total)
+        if int(self.settings_ravens_start_value.text()) > (36 - int(self.settings_ravens_trials_value.text()) + 1):
+            QtWidgets.QMessageBox.warning(self, 'Ravens Progressive Matrices Error',
+                                                'Too many images for Ravens task. Start with an earlier image, or use fewer trials')
+        else:
+            # Task window settings
+            self.settings.beginGroup("TaskWindows")
+            self.settings.setValue('fullscreen', str(self.task_fullscreen).lower())
 
-        # Only save some options if fullscreen is not selected
-        if not self.task_fullscreen:
-            self.settings.setValue(
-                'borderless',
-                str(self.settings_task_borderless_checkbox.isChecked()).lower())
+            # Only save some options if fullscreen is not selected
+            if not self.task_fullscreen:
+                self.settings.setValue(
+                    'borderless',
+                    str(self.settings_task_borderless_checkbox.isChecked()).lower())
 
-            self.settings.setValue('width',
-                                   self.settings_task_width_value.text())
-            self.settings.setValue('height',
-                                   self.settings_task_height_value.text())
+                self.settings.setValue('width',
+                                    self.settings_task_width_value.text())
+                self.settings.setValue('height',
+                                    self.settings_task_height_value.text())
 
-        self.settings.endGroup()
+            self.settings.endGroup()
 
-        # ANT settings
-        self.settings.beginGroup("AttentionNetworkTest")
-        self.settings.setValue("numBlocks", self.settings_ant_blocks_value.text())
-        self.settings.endGroup()
+            # ANT settings
+            self.settings.beginGroup("AttentionNetworkTest")
+            self.settings.setValue("numBlocks", self.settings_ant_blocks_value.text())
+            self.settings.endGroup()
 
-        # Sternberg settings
-        self.settings.beginGroup("Sternberg")
-        self.settings.setValue("numBlocks", self.settings_sternberg_blocks_value.text())
-        self.settings.endGroup()
+            # Ravens settings
+            self.settings.beginGroup("Ravens")
+            self.settings.setValue("startImage", self.settings_ravens_start_value.text())
+            self.settings.setValue("numTrials", self.settings_ravens_trials_value.text())
+            self.settings.endGroup()
 
-        # Save settings window size information
-        self.save_window_information()
-        self.close()
+            # Sternberg settings
+            self.settings.beginGroup("Sternberg")
+            self.settings.setValue("numBlocks", self.settings_sternberg_blocks_value.text())
+            self.settings.endGroup()
+
+            # Save settings window size information
+            self.save_window_information()
+            self.close()
 
     def cancel_settings(self):
         # Save settings window size information

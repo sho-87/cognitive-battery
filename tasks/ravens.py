@@ -10,12 +10,7 @@ from sys import exit
 
 
 class Ravens(object):
-    def __init__(self, screen, background, start=1, numTrials=12):
-        # check that start position isnt too high
-        if start > 36 - numTrials + 1:
-            print("Raven's Matrices: Not enough trials. Set a lower start number.")
-            exit()
-
+    def __init__(self, screen, background, start=13, numTrials=12):
         # Get the pygame display window
         self.screen = screen
         self.background = background
