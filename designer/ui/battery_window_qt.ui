@@ -483,6 +483,7 @@
     <addaction name="actionReport_Bug"/>
     <addaction name="actionRequest_Feature"/>
     <addaction name="separator"/>
+    <addaction name="actionCheck_for_updates"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
@@ -577,6 +578,14 @@
    </property>
    <property name="statusTip">
     <string>Calculate aggregate data for all tasks</string>
+   </property>
+  </action>
+  <action name="actionCheck_for_updates">
+   <property name="text">
+    <string>Check for updates</string>
+   </property>
+   <property name="statusTip">
+    <string>Check for new releases of the battery</string>
    </property>
   </action>
  </widget>

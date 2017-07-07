@@ -243,6 +243,8 @@ class Ui_CognitiveBattery(object):
         self.actionAnalysis = QtWidgets.QAction(CognitiveBattery)
         self.actionAnalysis.setEnabled(False)
         self.actionAnalysis.setObjectName("actionAnalysis")
+        self.actionCheck_for_updates = QtWidgets.QAction(CognitiveBattery)
+        self.actionCheck_for_updates.setObjectName("actionCheck_for_updates")
         self.menuFile.addAction(self.actionExit)
         self.menuHelp.addAction(self.actionDocumentation)
         self.menuHelp.addAction(self.actionLicense)
@@ -252,6 +254,7 @@ class Ui_CognitiveBattery(object):
         self.menuHelp.addAction(self.actionReport_Bug)
         self.menuHelp.addAction(self.actionRequest_Feature)
         self.menuHelp.addSeparator()
+        self.menuHelp.addAction(self.actionCheck_for_updates)
         self.menuHelp.addAction(self.actionAbout)
         self.menuOptions.addAction(self.actionSettings)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -330,4 +333,6 @@ class Ui_CognitiveBattery(object):
         self.actionAbout.setStatusTip(_translate("CognitiveBattery", "About the battery"))
         self.actionAnalysis.setText(_translate("CognitiveBattery", "Analysis"))
         self.actionAnalysis.setStatusTip(_translate("CognitiveBattery", "Calculate aggregate data for all tasks"))
+        self.actionCheck_for_updates.setText(_translate("CognitiveBattery", "Check for updates"))
+        self.actionCheck_for_updates.setStatusTip(_translate("CognitiveBattery", "Check for new releases of the battery"))
 

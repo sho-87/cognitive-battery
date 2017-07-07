@@ -29,6 +29,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.actionBrowse_Issues.setIcon(QtGui.QIcon(self.github_icon))
         self.actionReport_Bug.setIcon(QtGui.QIcon(self.github_icon))
         self.actionRequest_Feature.setIcon(QtGui.QIcon(self.github_icon))
+        self.actionCheck_for_updates.setIcon(QtGui.QIcon(self.github_icon))
 
         # Get screen resolution
         self.project_dir = project_dir
@@ -98,7 +99,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                        "cognitive-battery/tree/develop",
             "issues": "https://github.com/sho-87/cognitive-battery/issues",
             "new_issue": "https://github.com/sho-87/"
-                         "cognitive-battery/issues/new"
+                         "cognitive-battery/issues/new",
+            "releases": "https://github.com/sho-87/cognitive-battery/releases"
         }
 
         # Get base directory for battery
@@ -118,6 +120,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
         self.actionReport_Bug.triggered.connect(self.show_new_issue)
         self.actionRequest_Feature.triggered.connect(self.show_new_issue)
+        self.actionCheck_for_updates.triggered.connect(self.show_releases)
         self.actionAbout.triggered.connect(self.show_about)
 
         # Bind button events
@@ -148,6 +151,10 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
     # Open web browser to the github new issue post
     def show_new_issue(self):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
+
+    # Open web browser to the github releases page
+    def show_releases(self):
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["releases"]))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):

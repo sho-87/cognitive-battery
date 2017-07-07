@@ -299,6 +299,7 @@
     <addaction name="actionReport_Bug"/>
     <addaction name="actionRequest_Feature"/>
     <addaction name="separator"/>
+    <addaction name="actionCheck_for_updates"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuProject"/>
@@ -375,6 +376,14 @@
    </property>
    <property name="statusTip">
     <string>About the battery</string>
+   </property>
+  </action>
+  <action name="actionCheck_for_updates">
+   <property name="text">
+    <string>Check for updates</string>
+   </property>
+   <property name="statusTip">
+    <string>Check for new releases of the battery</string>
    </property>
   </action>
  </widget>
