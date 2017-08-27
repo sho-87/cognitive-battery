@@ -23,6 +23,8 @@
 - Digit duration: 1000ms
 - Time between digits: 100ms
 
+## Eriksen Flanker Task
+
 ## Mental Rotation Task (MRT)
 - 3 practice questions
 - 2 main blocks (with a break inbetween)

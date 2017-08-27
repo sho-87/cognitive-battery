@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from utils import display
 from designer import battery_window_qt
 from interface import about_dialog, settings_window
-from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
+from tasks import ant, flanker, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
 class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
@@ -263,7 +263,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
     # Override the closeEvent method
     def closeEvent(self, event):
         self.save_main_window_settings(self.size(), self.pos())
-        
+
         event.accept()
         sys.exit(0)  # This closes any open pygame windows
 
@@ -347,10 +347,10 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 pygame.init()
 
                 # Load beep sound
-                beep_sound = pygame.mixer.Sound(os.path.join(self.base_dir, 
-                                                            'tasks', 
-                                                            'media', 
-                                                            'beep_med.wav'))
+                beep_sound = pygame.mixer.Sound(os.path.join(self.base_dir,
+                                                             'tasks',
+                                                             'media',
+                                                             'beep_med.wav'))
 
                 # Set pygame icon image
                 image = os.path.join(self.base_dir, "images", "icon_sml.png")
@@ -385,18 +385,6 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         ant_data = ant_task.run()
                         # Save ANT data to excel
                         ant_data.to_excel(writer, 'ANT', index=False)
-                    elif task == "Mental Rotation Task":
-                        mrt_task = mrt.MRT(self.pygame_screen, background)
-                        # Run MRT
-                        mrt_data = mrt_task.run()
-                        # Save MRT data to excel
-                        mrt_data.to_excel(writer, 'MRT', index=False)
-                    elif task == "Sustained Attention to Response Task (SART)":
-                        sart_task = sart.SART(self.pygame_screen, background)
-                        # Run SART
-                        sart_data = sart_task.run()
-                        # Save SART data to excel
-                        sart_data.to_excel(writer, 'SART', index=False)
                     elif task == "Digit Span (backwards)":
                         digitspan_backwards_task = \
                             digitspan_backwards.DigitspanBackwards(
@@ -407,6 +395,18 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         # Save digit span (backwards) data to excel
                         digitspan_backwards_data.to_excel(
                             writer, 'Digit span (backwards)', index=False)
+                    elif task == "Eriksen Flanker Task":
+                        flanker_task = flanker.Flanker(self.pygame_screen, background)
+                        # Run Eriksen Flanker
+                        flanker_data = flanker_task.run()
+                        # Save flanker data to excel
+                        flanker_data.to_excel(writer, 'Eriksen Flanker', index=False)
+                    elif task == "Mental Rotation Task":
+                        mrt_task = mrt.MRT(self.pygame_screen, background)
+                        # Run MRT
+                        mrt_data = mrt_task.run()
+                        # Save MRT data to excel
+                        mrt_data.to_excel(writer, 'MRT', index=False)
                     elif task == "Raven's Progressive Matrices":
                         ravens_task = ravens.Ravens(
                             self.pygame_screen, background,
@@ -425,7 +425,13 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         # Save sternberg data to excel
                         sternberg_data.to_excel(writer, 'Sternberg',
                                                 index=False)
-                    
+                    elif task == "Sustained Attention to Response Task (SART)":
+                        sart_task = sart.SART(self.pygame_screen, background)
+                        # Run SART
+                        sart_data = sart_task.run()
+                        # Save SART data to excel
+                        sart_data.to_excel(writer, 'SART', index=False)
+
                     # Play beep after each task
                     if self.task_beep:
                         beep_sound.play()
