@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>415</width>
-    <height>296</height>
+    <height>320</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -45,7 +45,7 @@
           <x>0</x>
           <y>0</y>
           <width>391</width>
-          <height>241</height>
+          <height>265</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -69,7 +69,7 @@
               <x>0</x>
               <y>0</y>
               <width>373</width>
-              <height>115</height>
+              <height>112</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -190,7 +190,7 @@
               <x>0</x>
               <y>0</y>
               <width>373</width>
-              <height>115</height>
+              <height>112</height>
              </rect>
             </property>
             <attribute name="label">
@@ -231,7 +231,44 @@
              </item>
             </layout>
            </widget>
+           <widget class="QWidget" name="flanker_page">
+            <attribute name="label">
+             <string>Eriksen Flanker Task</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QFormLayout" name="flanker_form">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+              </layout>
+             </item>
+            </layout>
+           </widget>
            <widget class="QWidget" name="ravens_page">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>373</width>
+              <height>112</height>
+             </rect>
+            </property>
             <attribute name="label">
              <string>Raven's Progressive Matrices</string>
             </attribute>
@@ -286,7 +323,7 @@
               <x>0</x>
               <y>0</y>
               <width>373</width>
-              <height>115</height>
+              <height>112</height>
              </rect>
             </property>
             <attribute name="label">
