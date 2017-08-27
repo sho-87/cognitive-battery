@@ -1,5 +1,10 @@
 # Change Log
 
+## [3.2.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.2.0) *(2017-08-xx)*
+
+**Tasks**
+- Added Eriksen Flanker task
+
 ## [3.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.1.0) *(2017-07-06)*
 
 **General**

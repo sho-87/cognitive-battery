@@ -91,6 +91,8 @@ Currently implemented tasks:
   - Based on the version used by
   [Berman et al. (2008)](http://pss.sagepub.com/content/19/12/1207) and
   [Bourrier (2015)](https://open.library.ubc.ca/cIRcle/collections/ubctheses/24/items/1.0166677)
+* **Eriksen Flanker Task**
+  - Based on the version by xxx
 * **Mental Rotation Task**
   - Based on the redrawn version by
   [Peters et al. (1995)](http://www.ncbi.nlm.nih.gov/pubmed/7546667)
