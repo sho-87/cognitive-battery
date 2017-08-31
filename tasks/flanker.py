@@ -1,4 +1,3 @@
-import os
 import sys
 import time
 import pandas as pd
@@ -11,13 +10,14 @@ from utils import display
 
 
 class Flanker(object):
-    def __init__(self, screen, background, blocks=3):
+    def __init__(self, screen, background, blocks=1, compatibility=False):
         # Get the pygame display window
         self.screen = screen
         self.background = background
 
         # Sets font and font size
         self.font = pygame.font.SysFont("arial", 30)
+        self.font_stim = pygame.font.SysFont("arial", 90)
 
         # Get screen info
         self.screen_x = self.screen.get_width()
@@ -30,103 +30,58 @@ class Flanker(object):
 
         # Experiment options
         self.NUM_BLOCKS = blocks
-        self.FIXATION_DURATION_RANGE = (400, 1600)  # Range of fixation times
-        self.CUE_DURATION = 100
-        self.PRE_STIM_FIXATION_DURATION = 400
-        self.TARGET_OFFSET = 31  # Stimulus vertical offset
-        self.FLANKER_DURATION = 1700
-        self.FEEDBACK_DURATION = 1000
-        self.ITI_MAX = 3500
+        self.COMPATIBILITY = compatibility  # compatibility condition
+        self.FIXATION_DURATION = 1000
+        self.FLANKER_DURATION = 200
+        self.MAX_RESPONSE_TIME = 1000
+        self.FEEDBACK_DURATION = 1500
+        self.ITI = 1500
 
-        # Specify factor levels, and task timings as used by Fan et al. (2002).
-        self.CONGRUENCY_LEVELS = ("congruent", "incongruent", 'neutral')
-        self.CUE_LEVELS = ("nocue", "center", "spatial", 'double')
-        self.LOCATION_LEVELS = ('top', 'bottom')
-        self.DIRECTION_LEVELS = ('left', 'right')
+        # Specify factor levels
+        self.CONGRUENCY_LEVELS = ("congruent", "incongruent")
+        self.DIRECTION_LEVELS = ("left", "right")
 
         # Create level combinations
-        # Level combinations give us 48 trials.
+        # Level combinations give us 4 trials.
         self.combinations = list(
-            product(self.CONGRUENCY_LEVELS, self.CUE_LEVELS,
-                    self.LOCATION_LEVELS, self.DIRECTION_LEVELS))
-
-        # Get images
-        self.base_dir = os.path.dirname(os.path.realpath(__file__))
-        self.image_path = os.path.join(self.base_dir, "images", "ANT")
-
-        self.img_left_congruent = pygame.image.load(
-            os.path.join(self.image_path, 'left_congruent.png'))
-        self.img_left_incongruent = pygame.image.load(
-            os.path.join(self.image_path, 'left_incongruent.png'))
-        self.img_right_congruent = pygame.image.load(
-            os.path.join(self.image_path, 'right_congruent.png'))
-        self.img_right_incongruent = pygame.image.load(
-            os.path.join(self.image_path, 'right_incongruent.png'))
-        self.img_left_neutral = pygame.image.load(
-            os.path.join(self.image_path, 'left_neutral.png'))
-        self.img_right_neutral = pygame.image.load(
-            os.path.join(self.image_path, 'right_neutral.png'))
-
-        self.img_fixation = pygame.image.load(
-            os.path.join(self.image_path, 'fixation.png'))
-        self.img_cue = pygame.image.load(
-            os.path.join(self.image_path, 'cue.png'))
-
-        # Get image dimensions
-        self.flanker_h = self.img_left_incongruent.get_rect().height
-        self.fixation_h = self.img_fixation.get_rect().height
+            product(self.CONGRUENCY_LEVELS, self.DIRECTION_LEVELS))
 
         # Create output dataframe
         self.all_data = pd.DataFrame()
 
     def create_block(self, block_num, combinations, trial_type):
         if trial_type == "main":
-            cur_combinations = combinations * 2
-            np.random.shuffle(cur_combinations)
+            cur_combinations = combinations * 30  # 120 total trials
         else:
-            np.random.shuffle(combinations)
-            cur_combinations = combinations[:len(combinations)//2]
+            cur_combinations = combinations * 5  # 20 practice trials
 
-        # Add combinations to dataframe
-        cur_block = pd.DataFrame(data=cur_combinations, columns=(
-            'congruency', 'cue', 'location', 'direction'))
+        # Add shuffled combinations to dataframe
+        np.random.shuffle(cur_combinations)
+        cur_block = pd.DataFrame(data=cur_combinations,
+                                 columns=('congruency', 'direction'))
 
         # Add timing info to dataframe
         cur_block["block"] = block_num + 1
-        cur_block["fixationTime"] = [x for x in np.random.randint(
-            self.FIXATION_DURATION_RANGE[0], self.FIXATION_DURATION_RANGE[1],
-            len(cur_combinations))]
 
         return cur_block
 
-    def display_flanker(self, flanker_type, location, direction):
+    def display_flanker(self, flanker_type, direction):
         # Left flanker
         if direction == "left":
             if flanker_type == "congruent":
-                stimulus = self.img_left_congruent
-            elif flanker_type == "incongruent":
-                stimulus = self.img_left_incongruent
+                stimulus = "< < < < <"
             else:
-                stimulus = self.img_left_neutral
+                stimulus = "> > < > >"
         # Right flanker
         else:
             if flanker_type == "congruent":
-                stimulus = self.img_right_congruent
-            elif flanker_type == "incongruent":
-                stimulus = self.img_right_incongruent
+                stimulus = "> > > > >"
             else:
-                stimulus = self.img_right_neutral
+                stimulus = "< < > < <"
 
-        # Offset the flanker stimulus to above/below fixation
-        if location == "top":
-            display.image(
-                self.screen, stimulus, "center",
-                self.screen_y/2 - self.flanker_h - self.TARGET_OFFSET)
-        elif location == "bottom":
-            display.image(self.screen, stimulus, "center",
-                          self.screen_y/2 + self.TARGET_OFFSET)
+        display.text(self.screen, self.font_stim, stimulus, "center", "center")
 
-    def display_trial(self, trial_num, data, trial_type):
+    def display_trial(self, trial_num, data):
         # Check for a quit press after stimulus was shown
         for event in pygame.event.get():
             if event.type == KEYDOWN and event.key == K_F12:
@@ -134,73 +89,22 @@ class Flanker(object):
 
         # Display fixation
         self.screen.blit(self.background, (0, 0))
-        display.image(self.screen, self.img_fixation, "center", "center")
+        display.text(self.screen, self.font, "+", "center", "center")
         pygame.display.flip()
 
-        display.wait(data["fixationTime"][trial_num])
+        display.wait(self.FIXATION_DURATION)
 
-        # Display cue
+        # Display flanker stimulus
         self.screen.blit(self.background, (0, 0))
-
-        cue_type = data["cue"][trial_num]
-
-        if cue_type == "nocue":
-            # Display fixation in the center
-            display.image(self.screen, self.img_fixation, "center", "center")
-        elif cue_type == "center":
-            # Display cue in the center
-            display.image(self.screen, self.img_cue, "center", "center")
-        elif cue_type == "double":
-            # Display fixation in the center
-            display.image(self.screen, self.img_fixation, "center", "center")
-
-            # Display cue above and below fixation
-            display.image(
-                self.screen, self.img_cue, "center",
-                self.screen_y/2 - self.fixation_h - self.TARGET_OFFSET)
-            display.image(self.screen, self.img_cue,
-                          "center", self.screen_y/2 + self.TARGET_OFFSET)
-        elif cue_type == "spatial":
-            cue_location = data["location"][trial_num]
-
-            # Display fixation in the center
-            display.image(self.screen, self.img_fixation, "center", "center")
-
-            # Display cue at target location
-            if cue_location == "top":
-                display.image(
-                    self.screen, self.img_cue, "center",
-                    self.screen_y/2 - self.fixation_h - self.TARGET_OFFSET)
-            elif cue_location == "bottom":
-                display.image(self.screen, self.img_cue, "center",
-                              self.screen_y/2 + self.TARGET_OFFSET)
-
-        pygame.display.flip()
-
-        # Display cue for certain duration
-        display.wait(self.CUE_DURATION)
-
-        # Prestim interval with fixation
-        self.screen.blit(self.background, (0, 0))
-        display.image(self.screen, self.img_fixation, "center", "center")
-        pygame.display.flip()
-
-        display.wait(self.PRE_STIM_FIXATION_DURATION)
-
-        # Display flanker target
-        self.screen.blit(self.background, (0, 0))
-        display.image(self.screen, self.img_fixation, "center", "center")
-
         self.display_flanker(data["congruency"][trial_num],
-                             data["location"][trial_num],
                              data["direction"][trial_num])
         pygame.display.flip()
 
-        start_time = int(round(time.time() * 1000))
-
         # Clear the event queue before checking for responses
+        start_time = int(round(time.time() * 1000))
         pygame.event.clear()
         response = "NA"
+        too_slow = False
         wait_response = True
         while wait_response:
             for event in pygame.event.get():
@@ -215,9 +119,14 @@ class Flanker(object):
 
             end_time = int(round(time.time() * 1000))
 
-            # If time limit has been reached, consider it a missed trial
             if end_time - start_time >= self.FLANKER_DURATION:
+                self.screen.blit(self.background, (0, 0))
+                pygame.display.flip()
+
+            if end_time - start_time >= self.MAX_RESPONSE_TIME:
+                # If time limit has been reached, consider it a missed trial
                 wait_response = False
+                too_slow = True
 
         # Store reaction time and response
         rt = int(round(time.time() * 1000)) - start_time
@@ -227,35 +136,34 @@ class Flanker(object):
         correct = 1 if response == data["direction"][trial_num] else 0
         data.set_value(trial_num, 'correct', correct)
 
-        # Display feedback if practice trials
-        if trial_type == "practice":
-            self.screen.blit(self.background, (0, 0))
+        # Display feedback
+        self.screen.blit(self.background, (0, 0))
+        if too_slow:
+            display.text(self.screen, self.font, "too slow",
+                         "center", "center", (0, 0, 0))
+        else:
             if correct == 1:
-                display.text(self.screen, self.font, "correct",
+                display.text(self.screen, self.font, "right",
                              "center", "center", (0, 255, 0))
             else:
-                display.text(self.screen, self.font, "incorrect",
+                display.text(self.screen, self.font, "wrong",
                              "center", "center", (255, 0, 0))
-            pygame.display.flip()
-
-            display.wait(self.FEEDBACK_DURATION)
-
-        # Display fixation during ITI
-        self.screen.blit(self.background, (0, 0))
-        display.image(self.screen, self.img_fixation, "center", "center")
         pygame.display.flip()
 
-        iti = self.ITI_MAX - rt - data["fixationTime"][trial_num]
-        data.set_value(trial_num, 'ITI', iti)
+        display.wait(self.FEEDBACK_DURATION)
 
-        display.wait(iti)
+        # Display fixation
+        self.screen.blit(self.background, (0, 0))
+        display.text(self.screen, self.font, "+", "center", "center")
+        pygame.display.flip()
+        display.wait(self.ITI)
 
     def run_block(self, block_num, total_blocks, block_type):
         cur_block = self.create_block(
             block_num, self.combinations, block_type)
 
         for i in range(cur_block.shape[0]):
-            self.display_trial(i, cur_block, block_type)
+            self.display_trial(i, cur_block)
 
         if block_type == "main":
             # Add block data to all_data
@@ -283,13 +191,12 @@ class Flanker(object):
                      "Keep your eyes on the fixation cross at the "
                      "start of each trial:",
                      100, self.screen_y/2 - 200)
-        display.image(self.screen, self.img_fixation,
-                      "center", self.screen_y/2 - 150)
+        display.text(self.screen, self.font, "+", "center", self.screen_y/2 - 150)
         display.text(self.screen, self.font,
                      "A set of arrows will appear somewhere on the screen:",
                      100, self.screen_y/2 - 100)
-        display.image(self.screen, self.img_left_incongruent,
-                      "center", self.screen_y/2 - 50)
+        display.text(self.screen, self.font_stim,
+                     "> > < > >", "center", self.screen_y/2 - 50)
         display.text(self.screen, self.font,
                      "Use the Left / Right arrow keys to indicate "
                      "the direction of the CENTER arrow.",
@@ -321,10 +228,7 @@ class Flanker(object):
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
                      "We will now begin the main trials...",
-                     100, self.screen_y/2 - 50)
-        display.text(self.screen, self.font,
-                     "You will not receive feedback after each trial.",
-                     100, self.screen_y/2 + 50)
+                     100, self.screen_y/2)
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 200)
         pygame.display.flip()
@@ -339,8 +243,7 @@ class Flanker(object):
         self.all_data["trial"] = list(range(1, len(self.all_data) + 1))
 
         # Rearrange the dataframe
-        columns = ['trial', 'block', 'congruency', 'cue', 'location',
-                   'fixationTime', 'ITI', 'direction',
+        columns = ['trial', 'block', 'congruency', 'direction',
                    'response', 'correct', 'RT']
         self.all_data = self.all_data[columns]
 
