@@ -33,7 +33,7 @@ class Flanker(object):
         self.COMPATIBILITY = compatibility  # compatibility condition
         self.FIXATION_DURATION = 1000
         self.FLANKER_DURATION = 200
-        self.MAX_RESPONSE_TIME = 1000
+        self.MAX_RESPONSE_TIME = 1500
         self.FEEDBACK_DURATION = 1500
         self.ITI = 1500
 
