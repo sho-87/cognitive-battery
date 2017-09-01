@@ -1,6 +1,9 @@
 # Change Log
 
-## [3.2.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.2.0) *(2017-08-xx)*
+## [3.2.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.2.0) *(2017-09-xx)*
+
+**General**
+- Added tooltips to the Settings window items to clarify the purpose of each option
 
 **Tasks**
 - Added Eriksen Flanker task
