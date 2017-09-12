@@ -10,21 +10,29 @@ from utils import display
 
 
 class Flanker(object):
-    def __init__(self, screen, background, blocks=1, compatibility=False):
+    def __init__(self, screen, background, blocks=1, dark_mode=True, compatibility=False):
         # Get the pygame display window
         self.screen = screen
         self.background = background
 
         # Sets font and font size
         self.font = pygame.font.SysFont("arial", 30)
-        self.font_stim = pygame.font.SysFont("arial", 90)
+        self.font_stim = pygame.font.SysFont("arial", 100)
+
+        # Set colours
+        if dark_mode:
+            self.colour_bg = (0, 0, 0)
+            self.colour_font = (255, 255, 255)
+        else:
+            self.colour_bg = (255, 255, 255)
+            self.colour_font = (0, 0, 0)
 
         # Get screen info
         self.screen_x = self.screen.get_width()
         self.screen_y = self.screen.get_height()
 
         # Fill background
-        self.background.fill((255, 255, 255))
+        self.background.fill(self.colour_bg)
         pygame.display.set_caption("Eriksen Flanker Task")
         pygame.mouse.set_visible(0)
 
@@ -79,7 +87,7 @@ class Flanker(object):
             else:
                 stimulus = "< < > < <"
 
-        display.text(self.screen, self.font_stim, stimulus, "center", "center")
+        display.text(self.screen, self.font_stim, stimulus, "center", "center", self.colour_font)
 
     def display_trial(self, trial_num, data):
         # Check for a quit press after stimulus was shown
@@ -89,7 +97,7 @@ class Flanker(object):
 
         # Display fixation
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font, "+", "center", "center")
+        display.text(self.screen, self.font, "+", "center", "center", self.colour_font)
         pygame.display.flip()
 
         display.wait(self.FIXATION_DURATION)
@@ -140,7 +148,7 @@ class Flanker(object):
         self.screen.blit(self.background, (0, 0))
         if too_slow:
             display.text(self.screen, self.font, "too slow",
-                         "center", "center", (0, 0, 0))
+                         "center", "center", self.colour_font)
         else:
             if correct == 1:
                 display.text(self.screen, self.font, "right",
@@ -154,7 +162,7 @@ class Flanker(object):
 
         # Display fixation
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font, "+", "center", "center")
+        display.text(self.screen, self.font, "+", "center", "center", self.colour_font)
         pygame.display.flip()
         display.wait(self.ITI)
 
@@ -175,9 +183,9 @@ class Flanker(object):
             display.text(self.screen, self.font,
                          "End of current block. "
                          "Start next block when you're ready...",
-                         100, "center")
+                         100, "center", self.colour_font)
             display.text_space(self.screen, self.font,
-                               "center", (self.screen_y/2) + 100)
+                               "center", (self.screen_y/2) + 100, self.colour_font)
             pygame.display.flip()
 
             display.wait_for_space()
@@ -186,26 +194,26 @@ class Flanker(object):
         # Instructions
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "Eriksen Flanker Task",
-                     "center", self.screen_y/2 - 300)
+                     "center", self.screen_y/2 - 300, self.colour_font)
         display.text(self.screen, self.font,
                      "Keep your eyes on the fixation cross at the "
                      "start of each trial:",
-                     100, self.screen_y/2 - 200)
-        display.text(self.screen, self.font, "+", "center", self.screen_y/2 - 150)
+                     100, self.screen_y/2 - 200, self.colour_font)
+        display.text(self.screen, self.font, "+", "center", self.screen_y/2 - 150, self.colour_font)
         display.text(self.screen, self.font,
                      "A set of arrows will appear somewhere on the screen:",
-                     100, self.screen_y/2 - 100)
+                     100, self.screen_y/2 - 100, self.colour_font)
         display.text(self.screen, self.font_stim,
-                     "> > < > >", "center", self.screen_y/2 - 50)
+                     "> > < > >", "center", self.screen_y/2 - 50, self.colour_font)
         display.text(self.screen, self.font,
                      "Use the Left / Right arrow keys to indicate "
                      "the direction of the CENTER arrow.",
-                     100, self.screen_y/2 + 50)
+                     100, self.screen_y/2 + 50, self.colour_font)
         display.text(self.screen, self.font,
                      "In example above, you should press the Left arrow.",
-                     100, self.screen_y/2 + 100)
+                     100, self.screen_y/2 + 100, self.colour_font)
         display.text_space(self.screen, self.font,
-                           "center", (self.screen_y/2) + 300)
+                           "center", (self.screen_y/2) + 300, self.colour_font)
         pygame.display.flip()
 
         display.wait_for_space()
@@ -214,9 +222,9 @@ class Flanker(object):
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
                      "We'll begin with a some practice trials...",
-                     "center", "center")
+                     "center", "center", self.colour_font)
         display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100)
+                           "center", self.screen_y/2 + 100, self.colour_font)
         pygame.display.flip()
 
         display.wait_for_space()
@@ -228,9 +236,9 @@ class Flanker(object):
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
                      "We will now begin the main trials...",
-                     100, self.screen_y/2)
+                     100, self.screen_y/2, self.colour_font)
         display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 200)
+                           "center", self.screen_y/2 + 200, self.colour_font)
         pygame.display.flip()
 
         display.wait_for_space()
@@ -249,9 +257,9 @@ class Flanker(object):
 
         # End screen
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font, "End of task", "center", "center")
+        display.text(self.screen, self.font, "End of task", "center", "center", self.colour_font)
         display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100)
+                           "center", self.screen_y/2 + 100, self.colour_font)
         pygame.display.flip()
 
         display.wait_for_space()
