@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
-    <height>347</height>
+    <width>416</width>
+    <height>364</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -44,8 +44,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>391</width>
-          <height>292</height>
+          <width>392</width>
+          <height>309</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -68,8 +68,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>139</height>
+              <width>374</width>
+              <height>199</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -189,8 +189,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>139</height>
+              <width>374</width>
+              <height>199</height>
              </rect>
             </property>
             <attribute name="label">
@@ -236,8 +236,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>139</height>
+              <width>374</width>
+              <height>156</height>
              </rect>
             </property>
             <attribute name="label">
@@ -265,21 +265,89 @@
                 <number>10</number>
                </property>
                <item row="0" column="0">
-                <widget class="QCheckBox" name="settings_flanker_compatibility">
+                <widget class="QCheckBox" name="settings_flanker_dark">
+                 <property name="toolTip">
+                  <string>Use dark colour scheme. White text on black background</string>
+                 </property>
                  <property name="text">
-                  <string>Compatibility condition</string>
+                  <string>Dark mode</string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QLabel" name="settings_flanker_block_label">
+                <widget class="QLabel" name="settings_flanker_compat_label">
                  <property name="text">
-                  <string>Number of blocks:</string>
+                  <string>Number of compatible blocks:</string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="settings_flanker_block_value"/>
+                <widget class="QLineEdit" name="settings_flanker_compat_value">
+                 <property name="toolTip">
+                  <string>Compatible block: respond in direction of center arrow</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="settings_flanker_incompat_label">
+                 <property name="text">
+                  <string>Number of incompatible blocks:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="settings_flanker_incompat_value">
+                 <property name="toolTip">
+                  <string>Incompatible block: respond in opposite direction to center arrow</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="settings_flanker_order_label">
+                 <property name="text">
+                  <string>Block order:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <layout class="QVBoxLayout" name="settings_flanker_order_group">
+                 <item>
+                  <widget class="QRadioButton" name="settings_flanker_order_incompat">
+                   <property name="toolTip">
+                    <string>Display compatible blocks first</string>
+                   </property>
+                   <property name="text">
+                    <string>Compatible first</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="settings_flanker_order_compat">
+                   <property name="toolTip">
+                    <string>Display incompatible blocks first</string>
+                   </property>
+                   <property name="text">
+                    <string>Incompatible first</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="settings_flanker_order_choose">
+                   <property name="toolTip">
+                    <string>Choose block order when task starts</string>
+                   </property>
+                   <property name="text">
+                    <string>Choose</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </item>
@@ -290,8 +358,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>139</height>
+              <width>374</width>
+              <height>199</height>
              </rect>
             </property>
             <attribute name="label">
@@ -347,8 +415,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>139</height>
+              <width>374</width>
+              <height>199</height>
              </rect>
             </property>
             <attribute name="label">
