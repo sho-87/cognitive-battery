@@ -45,6 +45,12 @@ class Flanker(object):
         self.FEEDBACK_DURATION = 1500
         self.ITI = 1500
 
+        # Set stimuli
+        self.flanker_stim = {"left": {"congruent": "< < < < <",
+                                      "incongruent": "> > < > >"},
+                             "right": {"congruent": "> > > > >",
+                                       "incongruent": "< < > < <"}}
+
         # Specify factor levels
         self.CONGRUENCY_LEVELS = ("congruent", "incongruent")
         self.DIRECTION_LEVELS = ("left", "right")
@@ -74,19 +80,7 @@ class Flanker(object):
         return cur_block
 
     def display_flanker(self, flanker_type, direction):
-        # Left flanker
-        if direction == "left":
-            if flanker_type == "congruent":
-                stimulus = "< < < < <"
-            else:
-                stimulus = "> > < > >"
-        # Right flanker
-        else:
-            if flanker_type == "congruent":
-                stimulus = "> > > > >"
-            else:
-                stimulus = "< < > < <"
-
+        stimulus = self.flanker_stim[direction][flanker_type]
         display.text(self.screen, self.font_stim, stimulus, "center", "center", self.colour_font)
 
     def display_trial(self, trial_num, data):
@@ -151,10 +145,10 @@ class Flanker(object):
                          "center", "center", self.colour_font)
         else:
             if correct == 1:
-                display.text(self.screen, self.font, "right",
+                display.text(self.screen, self.font, "correct",
                              "center", "center", (0, 255, 0))
             else:
-                display.text(self.screen, self.font, "wrong",
+                display.text(self.screen, self.font, "incorrect",
                              "center", "center", (255, 0, 0))
         pygame.display.flip()
 
@@ -203,8 +197,8 @@ class Flanker(object):
         display.text(self.screen, self.font,
                      "A set of arrows will appear somewhere on the screen:",
                      100, self.screen_y/2 - 100, self.colour_font)
-        display.text(self.screen, self.font_stim,
-                     "> > < > >", "center", self.screen_y/2 - 50, self.colour_font)
+        display.text(self.screen, self.font_stim, self.flanker_stim["left"]["incongruent"],
+                     "center", self.screen_y/2 - 50, self.colour_font)
         display.text(self.screen, self.font,
                      "Use the Left / Right arrow keys to indicate "
                      "the direction of the CENTER arrow.",
