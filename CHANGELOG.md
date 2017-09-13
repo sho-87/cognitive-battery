@@ -5,6 +5,7 @@
 **General**
 - Added tooltips to the Settings window items to clarify the purpose of each option.
 - App-wide values moved to separate module (e.g. URLs)
+- Fixed a few typos.
 
 **Tasks**
 - Added Eriksen Flanker task.
