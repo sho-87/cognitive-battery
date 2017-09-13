@@ -42,36 +42,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.settings = QtCore.QSettings(self.settings_file, QtCore.QSettings.IniFormat)
         self.settings.setFallbacksEnabled(False)
 
-        # If first run, store some default settings
-        # FIXME this is messy when adding new tasks (see issue #16)
-        if not os.path.isfile(self.settings_file):
-            # Main window size and position
-            self.save_main_window_settings(self.size(), QtCore.QPoint(100, 100))
-
-            # Settings - General
-            self.settings.beginGroup("GeneralSettings")
-            self.settings.setValue('fullscreen', "false")
-            self.settings.setValue('borderless', "false")
-            self.settings.setValue('width', 1280)
-            self.settings.setValue('height', 1024)
-            self.settings.setValue('taskBeep', "true")
-            self.settings.endGroup()
-
-            # Settings - Attention Network Test
-            self.settings.beginGroup("AttentionNetworkTest")
-            self.settings.setValue('numBlocks', 3)
-            self.settings.endGroup()
-
-            # Settings - Ravens
-            self.settings.beginGroup("Ravens")
-            self.settings.setValue('startImage', 13)
-            self.settings.setValue('numTrials', 12)
-            self.settings.endGroup()
-
-            # Settings - Sternberg Task
-            self.settings.beginGroup("Sternberg")
-            self.settings.setValue('numBlocks', 2)
-            self.settings.endGroup()
+        # Read and save default settings
+        self.set_default_settings()
 
         # Set initial window size/pos from saved settings
         self.settings.beginGroup("MainWindow")
@@ -130,6 +102,53 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.deselectAllButton.clicked.connect(self.deselect_all)
         self.upButton.clicked.connect(self.move_up)
         self.downButton.clicked.connect(self.move_down)
+
+    # Set default settings values
+    def set_default_settings(self):
+        """
+        Read and save settings values if it exists. Else, write a default value
+
+        This prevents overwriting of existing settings if new task settings are added.
+        """
+
+        # Settings - Main Window
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue("size", self.settings.value("size", self.size()))
+        self.settings.setValue("pos", self.settings.value("pos", QtCore.QPoint(100, 100)))
+        self.settings.endGroup()
+
+        # Settings - General
+        self.settings.beginGroup("GeneralSettings")
+        self.settings.setValue("fullscreen", self.settings.value("fullscreen", "false"))
+        self.settings.setValue("borderless", self.settings.value("borderless", "false"))
+        self.settings.setValue("width", self.settings.value("width", 1280))
+        self.settings.setValue("height", self.settings.value("height", 1024))
+        self.settings.setValue("taskBeep", self.settings.value("taskBeep", "true"))
+        self.settings.endGroup()
+
+        # Settings - Attention Network Test
+        self.settings.beginGroup("AttentionNetworkTest")
+        self.settings.setValue("numBlocks", self.settings.value("numBlocks", 3))
+        self.settings.endGroup()
+
+        # Settings - Flanker
+        self.settings.beginGroup("Flanker")
+        self.settings.setValue("darkMode", self.settings.value("darkMode", "false"))
+        self.settings.setValue("blocksCompat", self.settings.value("blocksCompat", 1))
+        self.settings.setValue("blocksIncompat", self.settings.value("blocksIncompat", 0))
+        self.settings.setValue("blockOrder", self.settings.value("blockOrder", "compatible"))
+        self.settings.endGroup()
+
+        # Settings - Ravens
+        self.settings.beginGroup("Ravens")
+        self.settings.setValue("startImage", self.settings.value("startImage", 13))
+        self.settings.setValue("numTrials", self.settings.value("numTrials", 12))
+        self.settings.endGroup()
+
+        # Settings - Sternberg Task
+        self.settings.beginGroup("Sternberg")
+        self.settings.setValue("numBlocks", self.settings.value("numBlocks", 2))
+        self.settings.endGroup()
 
     # Open web browser to the documentation page
     def show_documentation(self):
@@ -213,13 +232,6 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.taskList.insertItem(current_row + 1, current_item)
         self.taskList.setCurrentItem(current_item)
 
-    # Save window size/position to settings file
-    def save_main_window_settings(self, size, pos):
-        self.settings.beginGroup("MainWindow")
-        self.settings.setValue('size', size)
-        self.settings.setValue('pos', pos)
-        self.settings.endGroup()
-
     def get_settings(self):
         # General settings
         self.settings.beginGroup("GeneralSettings")
@@ -262,7 +274,11 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
     # Override the closeEvent method
     def closeEvent(self, event):
-        self.save_main_window_settings(self.size(), self.pos())
+        # Save window size and position
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue('size', self.size())
+        self.settings.setValue('pos', self.pos())
+        self.settings.endGroup()
 
         event.accept()
         sys.exit(0)  # This closes any open pygame windows

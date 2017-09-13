@@ -180,7 +180,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
             # Flanker settings
             self.settings.beginGroup("Flanker")
-            self.settings.setValue('darkMode', str(self.settings_flanker_dark.isChecked()).lower())
+            self.settings.setValue("darkMode", str(self.settings_flanker_dark.isChecked()).lower())
             self.settings.setValue("blocksCompat", self.settings_flanker_compat_value.text())
             self.settings.setValue("blocksIncompat", self.settings_flanker_incompat_value.text())
 
