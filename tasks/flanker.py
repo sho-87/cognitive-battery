@@ -66,7 +66,7 @@ class Flanker(object):
         # Add shuffled combinations to dataframe
         np.random.shuffle(cur_combinations)
         cur_block = pd.DataFrame(data=cur_combinations,
-                                 columns=('congruency', 'direction'))
+                                 columns=("congruency", "direction"))
 
         # Add timing info to dataframe
         cur_block["block"] = block_num + 1
@@ -138,11 +138,11 @@ class Flanker(object):
 
         # Store reaction time and response
         rt = int(round(time.time() * 1000)) - start_time
-        data.set_value(trial_num, 'RT', rt)
-        data.set_value(trial_num, 'response', response)
+        data.set_value(trial_num, "RT", rt)
+        data.set_value(trial_num, "response", response)
 
         correct = 1 if response == data["direction"][trial_num] else 0
-        data.set_value(trial_num, 'correct', correct)
+        data.set_value(trial_num, "correct", correct)
 
         # Display feedback
         self.screen.blit(self.background, (0, 0))
@@ -251,8 +251,8 @@ class Flanker(object):
         self.all_data["trial"] = list(range(1, len(self.all_data) + 1))
 
         # Rearrange the dataframe
-        columns = ['trial', 'block', 'congruency', 'direction',
-                   'response', 'correct', 'RT']
+        columns = ["trial", "block", "congruency", "direction",
+                   "response", "correct", "RT"]
         self.all_data = self.all_data[columns]
 
         # End screen

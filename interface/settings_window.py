@@ -111,7 +111,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings.endGroup()
 
         # Set input validators
-        self.regex_numbers = QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+'))
+        self.regex_numbers = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]+"))
         self.settings_ant_blocks_value.setValidator(self.regex_numbers)
         self.settings_flanker_compat_value.setValidator(self.regex_numbers)
         self.settings_flanker_incompat_value.setValidator(self.regex_numbers)
@@ -142,34 +142,34 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
     def save_window_information(self):
         self.settings.beginGroup("SettingsWindow")
-        self.settings.setValue('size', self.size())
+        self.settings.setValue("size", self.size())
         self.settings.endGroup()
 
     def save_settings(self):
         # Check if Ravens images are in range (cant exceed 36 total)
         if int(self.settings_ravens_start_value.text()) > (36 - int(self.settings_ravens_trials_value.text()) + 1):
-            QtWidgets.QMessageBox.warning(self, 'Ravens Progressive Matrices Error',
-                                                'Too many images for Ravens task. '
-                                                'Start with an earlier image, or use fewer trials')
+            QtWidgets.QMessageBox.warning(self, "Ravens Progressive Matrices Error",
+                                                "Too many images for Ravens task. "
+                                                "Start with an earlier image, or use fewer trials")
         else:
             # General settings
             self.settings.beginGroup("GeneralSettings")
-            self.settings.setValue('fullscreen',
+            self.settings.setValue("fullscreen",
                                    str(self.settings_task_fullscreen_checkbox.isChecked()).lower())
 
             # Only save some options if fullscreen is not selected
             if not self.task_fullscreen:
                 self.settings.setValue(
-                    'borderless',
+                    "borderless",
                     str(self.settings_task_borderless_checkbox.isChecked()).lower())
 
-                self.settings.setValue('width',
+                self.settings.setValue("width",
                                        self.settings_task_width_value.text())
-                self.settings.setValue('height',
+                self.settings.setValue("height",
                                        self.settings_task_height_value.text())
 
             # Task beep setting
-            self.settings.setValue('taskBeep', 
+            self.settings.setValue("taskBeep",
                                    str(self.settings_task_beep_checkbox.isChecked()).lower())
             self.settings.endGroup()
 

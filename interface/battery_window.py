@@ -20,9 +20,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.setupUi(self)
 
         # Set app icon
-        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
+        self.setWindowIcon(QtGui.QIcon(os.path.join("images", "icon_sml.png")))
 
-        self.github_icon = os.path.join('images', 'github_icon.png')
+        self.github_icon = os.path.join("images", "github_icon.png")
         self.actionDocumentation.setIcon(QtGui.QIcon(self.github_icon))
         self.actionLicense.setIcon(QtGui.QIcon(self.github_icon))
         self.actionContribute.setIcon(QtGui.QIcon(self.github_icon))
@@ -171,7 +171,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.settings_window = settings_window.SettingsWindow(self, self.settings)
             self.settings_window.show()
             self.settings_window.finished.connect(
-                lambda: setattr(self, 'settings_window', None))
+                lambda: setattr(self, "settings_window", None))
         # If settings window exists, bring it to the front
         else:
             self.settings_window.activateWindow()
@@ -183,14 +183,14 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         if self.about is None:
             self.about = about_dialog.AboutDialog(self)
             self.about.show()
-            self.about.finished.connect(lambda: setattr(self, 'about', None))
+            self.about.finished.connect(lambda: setattr(self, "about", None))
         # If about dialog exists, bring it to the front
         else:
             self.about.activateWindow()
             self.about.raise_()
 
     def error_dialog(self, message):
-        QtWidgets.QMessageBox.warning(self, 'Error', message)
+        QtWidgets.QMessageBox.warning(self, "Error", message)
 
     def random_order_selected(self):
         if self.randomOrderCheck.isChecked():
@@ -266,8 +266,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
     def closeEvent(self, event):
         # Save window size and position
         self.settings.beginGroup("MainWindow")
-        self.settings.setValue('size', self.size())
-        self.settings.setValue('pos', self.pos())
+        self.settings.setValue("size", self.size())
+        self.settings.setValue("pos", self.pos())
         self.settings.endGroup()
 
         event.accept()
@@ -282,9 +282,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
         if self.maleRadio.isChecked():
-            sex = 'male'
+            sex = "male"
         else:
-            sex = 'female'
+            sex = "female"
 
         # Get *selected* tasks and task order
         selected_tasks = []
@@ -301,38 +301,38 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
         # Check for required inputs
         if not selected_tasks:
-            self.error_dialog('No tasks selected')
+            self.error_dialog("No tasks selected")
         elif not ra:
-            self.error_dialog('Please enter RA name...')
+            self.error_dialog("Please enter RA name...")
         elif not sub_num:
-            self.error_dialog('Please enter a subject number...')
+            self.error_dialog("Please enter a subject number...")
         elif not condition:
-            self.error_dialog('Please enter a condition number...')
+            self.error_dialog("Please enter a condition number...")
         elif not age:
-            self.error_dialog('Please enter an age...')
+            self.error_dialog("Please enter an age...")
         elif not self.maleRadio.isChecked() and not \
                 self.femaleRadio.isChecked():
-            self.error_dialog('Please select a sex...')
+            self.error_dialog("Please select a sex...")
         else:
             # Store subject info into a dataframe
             subject_info = pd.DataFrame(
                 data=[(str(current_date), str(sub_num), str(condition),
                        int(age), str(sex), str(ra),
-                       ', '.join(selected_tasks))],
-                columns=['datetime', 'sub_num', 'condition',
-                         'age', 'sex', 'RA', 'tasks']
+                       ", ".join(selected_tasks))],
+                columns=["datetime", "sub_num", "condition",
+                         "age", "sex", "RA", "tasks"]
             )
 
             # Check if subject number already exists
-            existing_subs = [x.split('_')[0] for x in os.listdir(self.dataPath)]
+            existing_subs = [x.split("_")[0] for x in os.listdir(self.dataPath)]
             if sub_num in existing_subs:
-                self.error_dialog('Subject number already exists')
+                self.error_dialog("Subject number already exists")
             else:
                 # Create the excel writer object and save the file
                 data_file_name = "%s_%s.xls" % (sub_num, condition)
                 output_file = os.path.join(self.dataPath, data_file_name)
                 writer = pd.ExcelWriter(output_file)
-                subject_info.to_excel(writer, 'info', index=False)
+                subject_info.to_excel(writer, "info", index=False)
                 writer.save()
 
                 # Minimize battery UI
@@ -346,7 +346,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                     pos_x = self.res_width // 2 - self.task_width // 2
                     pos_y = self.res_height // 2 - self.task_height // 2
 
-                    os.environ['SDL_VIDEO_WINDOW_POS'] = \
+                    os.environ["SDL_VIDEO_WINDOW_POS"] = \
                         "%s, %s" % (str(pos_x), str(pos_y))
 
                 # Initialize pygame
@@ -354,9 +354,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
                 # Load beep sound
                 beep_sound = pygame.mixer.Sound(os.path.join(self.base_dir,
-                                                             'tasks',
-                                                             'media',
-                                                             'beep_med.wav'))
+                                                             "tasks",
+                                                             "media",
+                                                             "beep_med.wav"))
 
                 # Set pygame icon image
                 image = os.path.join(self.base_dir, "images", "icon_sml.png")
@@ -390,7 +390,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         # Run ANT
                         ant_data = ant_task.run()
                         # Save ANT data to excel
-                        ant_data.to_excel(writer, 'ANT', index=False)
+                        ant_data.to_excel(writer, "ANT", index=False)
                     elif task == "Digit Span (backwards)":
                         digitspan_backwards_task = \
                             digitspan_backwards.DigitspanBackwards(
@@ -400,19 +400,19 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                             digitspan_backwards_task.run()
                         # Save digit span (backwards) data to excel
                         digitspan_backwards_data.to_excel(
-                            writer, 'Digit span (backwards)', index=False)
+                            writer, "Digit span (backwards)", index=False)
                     elif task == "Eriksen Flanker Task":
                         flanker_task = flanker.Flanker(self.pygame_screen, background)
                         # Run Eriksen Flanker
                         flanker_data = flanker_task.run()
                         # Save flanker data to excel
-                        flanker_data.to_excel(writer, 'Eriksen Flanker', index=False)
+                        flanker_data.to_excel(writer, "Eriksen Flanker", index=False)
                     elif task == "Mental Rotation Task":
                         mrt_task = mrt.MRT(self.pygame_screen, background)
                         # Run MRT
                         mrt_data = mrt_task.run()
                         # Save MRT data to excel
-                        mrt_data.to_excel(writer, 'MRT', index=False)
+                        mrt_data.to_excel(writer, "MRT", index=False)
                     elif task == "Raven's Progressive Matrices":
                         ravens_task = ravens.Ravens(
                             self.pygame_screen, background,
@@ -420,7 +420,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         # Run Raven's Matrices
                         ravens_data = ravens_task.run()
                         # Save ravens data to excel
-                        ravens_data.to_excel(writer, 'Ravens Matrices',
+                        ravens_data.to_excel(writer, "Ravens Matrices",
                                              index=False)
                     elif task == "Sternberg Task":
                         sternberg_task = sternberg.Sternberg(
@@ -429,14 +429,14 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         # Run Sternberg Task
                         sternberg_data = sternberg_task.run()
                         # Save sternberg data to excel
-                        sternberg_data.to_excel(writer, 'Sternberg',
+                        sternberg_data.to_excel(writer, "Sternberg",
                                                 index=False)
                     elif task == "Sustained Attention to Response Task (SART)":
                         sart_task = sart.SART(self.pygame_screen, background)
                         # Run SART
                         sart_data = sart_task.run()
                         # Save SART data to excel
-                        sart_data.to_excel(writer, 'SART', index=False)
+                        sart_data.to_excel(writer, "SART", index=False)
 
                     # Play beep after each task
                     if self.task_beep:

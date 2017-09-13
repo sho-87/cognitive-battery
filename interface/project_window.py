@@ -16,9 +16,9 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.setupUi(self)
 
         # Set app icon
-        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
+        self.setWindowIcon(QtGui.QIcon(os.path.join("images", "icon_sml.png")))
 
-        self.github_icon = os.path.join('images', 'github_icon.png')
+        self.github_icon = os.path.join("images", "github_icon.png")
         self.actionDocumentation.setIcon(QtGui.QIcon(self.github_icon))
         self.actionLicense.setIcon(QtGui.QIcon(self.github_icon))
         self.actionContribute.setIcon(QtGui.QIcon(self.github_icon))
@@ -40,7 +40,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.links = values.get_links()
 
         # Check if project file exists
-        if not os.path.isfile(os.path.join(self.base_dir, 'projects.txt')):
+        if not os.path.isfile(os.path.join(self.base_dir, "projects.txt")):
             self.project_list = {}
             self.save_projects(self.project_list)
         else:
@@ -107,7 +107,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         if self.about is None:
             self.about = about_dialog.AboutDialog(self)
             self.about.show()
-            self.about.finished.connect(lambda: setattr(self, 'about', None))
+            self.about.finished.connect(lambda: setattr(self, "about", None))
         # If about dialog exists, bring it to the front
         else:
             self.about.activateWindow()
@@ -128,10 +128,10 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
             self.dirValue.setText(project_path)
 
             if os.path.isdir(project_path):
-                self.dirValue.setStyleSheet('QLabel {color: black;}')
+                self.dirValue.setStyleSheet("QLabel {color: black;}")
                 self.dirInvalid.setText("")
             else:
-                self.dirValue.setStyleSheet('QLabel {color: red;}')
+                self.dirValue.setStyleSheet("QLabel {color: red;}")
                 self.dirInvalid.setText("(Error: invalid path)")
 
             # Enable buttons and labels
@@ -143,7 +143,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
 
     def start(self, event):
         if not os.path.isdir(self.dirValue.text()):
-            QtWidgets.QMessageBox.warning(self, 'Error', 'Invalid project path')
+            QtWidgets.QMessageBox.warning(self, "Error", "Invalid project path")
         else:
             self.main_battery = battery_window.BatteryWindow(self.base_dir,
                                                              self.dirValue.text(),
@@ -173,12 +173,12 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
 
     def save_projects(self, projects):
         # Save current project list to file
-        with open(os.path.join(self.base_dir, 'projects.txt'), 'w+') as f:
+        with open(os.path.join(self.base_dir, "projects.txt"), "w+") as f:
             json.dump(projects, f, indent=4)
 
     def refresh_projects(self):
         # Load most recent saved project list from file
-        with open(os.path.join(self.base_dir, 'projects.txt'), 'r') as f:
+        with open(os.path.join(self.base_dir, "projects.txt"), "r") as f:
             projects = json.load(f)
 
         # Clear existing tree widget

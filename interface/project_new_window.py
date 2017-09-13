@@ -1,5 +1,4 @@
 import os
-import sys
 import json
 import time
 
@@ -15,7 +14,7 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
         self.setupUi(self)
 
         # Set app icon
-        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
+        self.setWindowIcon(QtGui.QIcon(os.path.join("images", "icon_sml.png")))
 
         # Delete the object when dialog is closed
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
@@ -29,7 +28,7 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
 
         # Set input validators
         self.projectNameValue.setValidator(
-            QtGui.QRegExpValidator(QtCore.QRegExp('[A-Za-z0-9 ]+')))
+            QtGui.QRegExpValidator(QtCore.QRegExp("[A-Za-z0-9 ]+")))
 
         # Bind button events
         self.dirSelectButton.clicked.connect(self.select_file)
@@ -37,7 +36,7 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
         self.cancelButton.clicked.connect(self.close)
 
     def select_file(self):
-        self.file_dialog = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select directory for the project')
+        self.file_dialog = QtWidgets.QFileDialog.getExistingDirectory(self, "Select directory for the project")
         self.dirValue.setText(self.file_dialog)
 
     def create_project(self):
@@ -57,7 +56,7 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
             # Save if project name is not already in use
             if project_name not in set(saved_projects):
 
-                project_info = {'created': time.time(), 'path': dir_path}
+                project_info = {"created": time.time(), "path": dir_path}
 
                 try:
                     self.project_list[researcher][project_name] = project_info
@@ -65,11 +64,11 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
                     self.project_list[researcher] = {}
                     self.project_list[researcher][project_name] = project_info
 
-                with open(os.path.join(self.base_dir, 'projects.txt'), 'w+') as f:
+                with open(os.path.join(self.base_dir, "projects.txt"), "w+") as f:
                     json.dump(self.project_list, f, indent=4)
 
                 self.close()
             else:
-                QtWidgets.QMessageBox.warning(self, 'Error', 'Project name already exists')
+                QtWidgets.QMessageBox.warning(self, "Error", "Project name already exists")
         else:
-            QtWidgets.QMessageBox.warning(self, 'Error', 'Please complete every field')
+            QtWidgets.QMessageBox.warning(self, "Error", "Please complete every field")
