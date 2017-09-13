@@ -6,7 +6,7 @@ import pygame
 import pandas as pd
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from utils import display
+from utils import display, values
 from designer import battery_window_qt
 from interface import about_dialog, settings_window
 from tasks import ant, flanker, mrt, sart, ravens, digitspan_backwards, sternberg
@@ -65,17 +65,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.pygame_screen = None
 
         # Define URLs
-        self.LINKS = {
-            "github": "https://github.com/sho-87/cognitive-battery",
-            "license": "https://github.com/sho-87/"
-                       "cognitive-battery/blob/master/LICENSE",
-            "develop": "https://github.com/sho-87/"
-                       "cognitive-battery/tree/develop",
-            "issues": "https://github.com/sho-87/cognitive-battery/issues",
-            "new_issue": "https://github.com/sho-87/"
-                         "cognitive-battery/issues/new",
-            "releases": "https://github.com/sho-87/cognitive-battery/releases"
-        }
+        self.links = values.get_links()
 
         # Make data folder if it doesnt exist
         self.dataPath = os.path.join(self.project_dir, "data")
@@ -152,27 +142,27 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
     # Open web browser to the documentation page
     def show_documentation(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["github"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["github"]))
 
     # Open web browser to the license page
     def show_license(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["license"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["license"]))
 
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["develop"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["develop"]))
 
     # Open web browser to the github issues page
     def show_browse_issues(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["issues"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["issues"]))
 
     # Open web browser to the github new issue post
     def show_new_issue(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["new_issue"]))
 
     # Open web browser to the github releases page
     def show_releases(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["releases"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["releases"]))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):
