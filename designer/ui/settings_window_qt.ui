@@ -61,7 +61,7 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="general_page">
             <property name="geometry">
@@ -69,7 +69,7 @@
               <x>0</x>
               <y>0</y>
               <width>374</width>
-              <height>199</height>
+              <height>156</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -190,7 +190,7 @@
               <x>0</x>
               <y>0</y>
               <width>374</width>
-              <height>199</height>
+              <height>156</height>
              </rect>
             </property>
             <attribute name="label">
@@ -312,7 +312,7 @@
                <item row="3" column="1">
                 <layout class="QVBoxLayout" name="settings_flanker_order_group">
                  <item>
-                  <widget class="QRadioButton" name="settings_flanker_order_incompat">
+                  <widget class="QRadioButton" name="settings_flanker_order_compat">
                    <property name="toolTip">
                     <string>Display compatible blocks first</string>
                    </property>
@@ -328,7 +328,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="settings_flanker_order_compat">
+                  <widget class="QRadioButton" name="settings_flanker_order_incompat">
                    <property name="toolTip">
                     <string>Display incompatible blocks first</string>
                    </property>
@@ -359,7 +359,7 @@
               <x>0</x>
               <y>0</y>
               <width>374</width>
-              <height>199</height>
+              <height>156</height>
              </rect>
             </property>
             <attribute name="label">
@@ -416,7 +416,7 @@
               <x>0</x>
               <y>0</y>
               <width>374</width>
-              <height>199</height>
+              <height>156</height>
              </rect>
             </property>
             <attribute name="label">

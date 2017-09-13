@@ -69,6 +69,32 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings_ant_blocks_value.setText(self.ant_blocks)
         self.settings.endGroup()
 
+        # Flanker settings
+        self.settings.beginGroup("Flanker")
+        if self.settings.value("darkMode") == "true":
+            self.flanker_dark = True
+        else:
+            self.flanker_dark = False
+
+        self.settings_flanker_dark.setChecked(self.flanker_dark)
+
+        self.flanker_compatible_blocks = str(self.settings.value("blocksCompat"))
+        self.settings_flanker_compat_value.setText(self.flanker_compatible_blocks)
+
+        self.flanker_incompatible_blocks = str(self.settings.value("blocksIncompat"))
+        self.settings_flanker_incompat_value.setText(self.flanker_incompatible_blocks)
+
+        self.flanker_order = str(self.settings.value("blockOrder"))
+
+        if self.flanker_order == "compatible":
+            self.settings_flanker_order_compat.setChecked(True)
+        elif self.flanker_order == "incompatible":
+            self.settings_flanker_order_incompat.setChecked(True)
+        elif self.flanker_order == "choose":
+            self.settings_flanker_order_choose.setChecked(True)
+
+        self.settings.endGroup()
+
         # Ravens settings
         self.settings.beginGroup("Ravens")
         self.ravens_start = str(self.settings.value("startImage"))
@@ -127,25 +153,26 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Check if Ravens images are in range (cant exceed 36 total)
         if int(self.settings_ravens_start_value.text()) > (36 - int(self.settings_ravens_trials_value.text()) + 1):
             QtWidgets.QMessageBox.warning(self, 'Ravens Progressive Matrices Error',
-                                                'Too many images for Ravens task. Start with an earlier image, or use fewer trials')
+                                                'Too many images for Ravens task. '
+                                                'Start with an earlier image, or use fewer trials')
         else:
             # General settings
             self.settings.beginGroup("GeneralSettings")
             self.settings.setValue('fullscreen',
                                    str(self.settings_task_fullscreen_checkbox.isChecked()).lower())
 
-            ## Only save some options if fullscreen is not selected
+            # Only save some options if fullscreen is not selected
             if not self.task_fullscreen:
                 self.settings.setValue(
                     'borderless',
                     str(self.settings_task_borderless_checkbox.isChecked()).lower())
 
                 self.settings.setValue('width',
-                                    self.settings_task_width_value.text())
+                                       self.settings_task_width_value.text())
                 self.settings.setValue('height',
-                                    self.settings_task_height_value.text())
+                                       self.settings_task_height_value.text())
 
-            ## Task beep setting
+            # Task beep setting
             self.settings.setValue('taskBeep', 
                                    str(self.settings_task_beep_checkbox.isChecked()).lower())
             self.settings.endGroup()
@@ -153,6 +180,21 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
             # ANT settings
             self.settings.beginGroup("AttentionNetworkTest")
             self.settings.setValue("numBlocks", self.settings_ant_blocks_value.text())
+            self.settings.endGroup()
+
+            # Flanker settings
+            self.settings.beginGroup("Flanker")
+            self.settings.setValue('darkMode', str(self.settings_flanker_dark.isChecked()).lower())
+            self.settings.setValue("blocksCompat", self.settings_flanker_compat_value.text())
+            self.settings.setValue("blocksIncompat", self.settings_flanker_incompat_value.text())
+
+            if self.settings_flanker_order_compat.isChecked():
+                self.settings.setValue("blockOrder", "compatible")
+            elif self.settings_flanker_order_incompat.isChecked():
+                self.settings.setValue("blockOrder", "incompatible")
+            elif self.settings_flanker_order_choose.isChecked():
+                self.settings.setValue("blockOrder", "choose")
+
             self.settings.endGroup()
 
             # Ravens settings
