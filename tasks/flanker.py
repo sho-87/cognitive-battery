@@ -66,7 +66,7 @@ class Flanker(object):
 
     def create_block(self, block_num, combinations, trial_type, compatibility):
         if trial_type == "main":
-            cur_combinations = combinations * 1  # 30 - 120 total trials
+            cur_combinations = combinations * 4  # 30 - 120 total trials
         else:
             cur_combinations = combinations * 1  # 5 - 20 practice trials
 
@@ -105,11 +105,13 @@ class Flanker(object):
         pygame.display.flip()
 
         # Clear the event queue before checking for responses
-        start_time = int(round(time.time() * 1000))
         pygame.event.clear()
         response = "NA"
         too_slow = False
         wait_response = True
+        post_flanker_blank_shown = False
+
+        start_time = int(round(time.time() * 1000))
         while wait_response:
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_LEFT:
@@ -124,8 +126,10 @@ class Flanker(object):
             end_time = int(round(time.time() * 1000))
 
             if end_time - start_time >= self.FLANKER_DURATION:
-                self.screen.blit(self.background, (0, 0))
-                pygame.display.flip()
+                if not post_flanker_blank_shown:
+                    self.screen.blit(self.background, (0, 0))
+                    pygame.display.flip()
+                    post_flanker_blank_shown = True
 
             if end_time - start_time >= self.MAX_RESPONSE_TIME:
                 # If time limit has been reached, consider it a missed trial
