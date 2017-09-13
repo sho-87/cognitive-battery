@@ -401,22 +401,18 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 for task in selected_tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
-                        ant_task = ant.ANT(self.pygame_screen, background,
-                                           blocks=self.ant_blocks)
+                        ant_task = ant.ANT(self.pygame_screen, background, blocks=self.ant_blocks)
                         # Run ANT
                         ant_data = ant_task.run()
                         # Save ANT data to excel
                         ant_data.to_excel(writer, "ANT", index=False)
                     elif task == "Digit Span (backwards)":
-                        digitspan_backwards_task = \
-                            digitspan_backwards.DigitspanBackwards(
-                                self.pygame_screen, background)
+                        digitspan_backwards_task = digitspan_backwards.DigitspanBackwards(self.pygame_screen,
+                                                                                          background)
                         # Run Digit span (Backwards)
-                        digitspan_backwards_data = \
-                            digitspan_backwards_task.run()
+                        digitspan_backwards_data = digitspan_backwards_task.run()
                         # Save digit span (backwards) data to excel
-                        digitspan_backwards_data.to_excel(
-                            writer, "Digit span (backwards)", index=False)
+                        digitspan_backwards_data.to_excel(writer, "Digit span (backwards)", index=False)
                     elif task == "Eriksen Flanker Task":
                         flanker_task = flanker.Flanker(self.pygame_screen, background, self.flanker_dark_mode,
                                                        self.flanker_sets_practice, self.flanker_sets_main,
@@ -433,23 +429,19 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         # Save MRT data to excel
                         mrt_data.to_excel(writer, "MRT", index=False)
                     elif task == "Raven's Progressive Matrices":
-                        ravens_task = ravens.Ravens(
-                            self.pygame_screen, background,
-                            start=self.ravens_start, numTrials=self.ravens_trials)
+                        ravens_task = ravens.Ravens(self.pygame_screen, background,
+                                                    start=self.ravens_start, numTrials=self.ravens_trials)
                         # Run Raven's Matrices
                         ravens_data = ravens_task.run()
                         # Save ravens data to excel
-                        ravens_data.to_excel(writer, "Ravens Matrices",
-                                             index=False)
+                        ravens_data.to_excel(writer, "Ravens Matrices", index=False)
                     elif task == "Sternberg Task":
-                        sternberg_task = sternberg.Sternberg(
-                            self.pygame_screen, background,
-                            blocks=self.sternberg_blocks)
+                        sternberg_task = sternberg.Sternberg(self.pygame_screen, background,
+                                                             blocks=self.sternberg_blocks)
                         # Run Sternberg Task
                         sternberg_data = sternberg_task.run()
                         # Save sternberg data to excel
-                        sternberg_data.to_excel(writer, "Sternberg",
-                                                index=False)
+                        sternberg_data.to_excel(writer, "Sternberg", index=False)
                     elif task == "Sustained Attention to Response Task (SART)":
                         sart_task = sart.SART(self.pygame_screen, background)
                         # Run SART
