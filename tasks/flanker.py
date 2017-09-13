@@ -10,7 +10,8 @@ from utils import display
 
 
 class Flanker(object):
-    def __init__(self, screen, background, blocks=1, dark_mode=True, compatibility=False):
+    def __init__(self, screen, background, dark_mode=False,
+                 blocks_compat=1, blocks_incompat=0, block_order="compatible"):
         # Get the pygame display window
         self.screen = screen
         self.background = background
@@ -37,8 +38,7 @@ class Flanker(object):
         pygame.mouse.set_visible(0)
 
         # Experiment options
-        self.NUM_BLOCKS = blocks
-        self.COMPATIBILITY = compatibility  # compatibility condition
+        self.NUM_BLOCKS = 1
         self.FIXATION_DURATION = 1000
         self.FLANKER_DURATION = 200
         self.MAX_RESPONSE_TIME = 1500

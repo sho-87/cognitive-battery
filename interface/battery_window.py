@@ -251,6 +251,18 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.ant_blocks = int(self.settings.value("numBlocks"))
         self.settings.endGroup()
 
+        # Flanker settings
+        self.settings.beginGroup("Flanker")
+        if self.settings.value("darkMode") == "true":
+            self.flanker_dark_mode = True
+        else:
+            self.flanker_dark_mode = False
+
+        self.flanker_blocks_compat = int(self.settings.value("blocksCompat"))
+        self.flanker_blocks_incompat = int(self.settings.value("blocksIncompat"))
+        self.flanker_block_order = str(self.settings.value("blockOrder"))
+        self.settings.endGroup()
+
         # Ravens settings
         self.settings.beginGroup("Ravens")
         self.ravens_start = int(self.settings.value("startImage"))
@@ -402,7 +414,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                         digitspan_backwards_data.to_excel(
                             writer, "Digit span (backwards)", index=False)
                     elif task == "Eriksen Flanker Task":
-                        flanker_task = flanker.Flanker(self.pygame_screen, background)
+                        flanker_task = flanker.Flanker(self.pygame_screen, background, self.flanker_dark_mode,
+                                                       self.flanker_blocks_compat, self.flanker_blocks_incompat,
+                                                       self.flanker_block_order)
                         # Run Eriksen Flanker
                         flanker_data = flanker_task.run()
                         # Save flanker data to excel
