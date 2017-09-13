@@ -11,6 +11,7 @@ from utils import display
 
 class Flanker(object):
     def __init__(self, screen, background, dark_mode=False,
+                 sets_practice=3, sets_main=25,
                  blocks_compat=1, blocks_incompat=0, block_order="compatible"):
         # Get the pygame display window
         self.screen = screen
@@ -38,6 +39,8 @@ class Flanker(object):
         pygame.mouse.set_visible(0)
 
         # Experiment options
+        self.SETS_PRACTICE = sets_practice
+        self.SETS_MAIN = sets_main
         self.BLOCK_ORDER = block_order
         self.BLOCKS_COMPAT = blocks_compat
         self.BLOCKS_INCOMPAT = blocks_incompat
@@ -66,9 +69,9 @@ class Flanker(object):
 
     def create_block(self, block_num, combinations, trial_type, compatibility):
         if trial_type == "main":
-            cur_combinations = combinations * 4  # 30 - 120 total trials
+            cur_combinations = combinations * self.SETS_MAIN
         else:
-            cur_combinations = combinations * 1  # 5 - 20 practice trials
+            cur_combinations = combinations * self.SETS_PRACTICE
 
         # Add shuffled combinations to dataframe
         np.random.shuffle(cur_combinations)

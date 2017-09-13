@@ -124,6 +124,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         # Settings - Flanker
         self.settings.beginGroup("Flanker")
         self.settings.setValue("darkMode", self.settings.value("darkMode", "false"))
+        self.settings.setValue("setsPractice", self.settings.value("setsPractice", 3))
+        self.settings.setValue("setsMain", self.settings.value("setsMain", 25))
         self.settings.setValue("blocksCompat", self.settings.value("blocksCompat", 1))
         self.settings.setValue("blocksIncompat", self.settings.value("blocksIncompat", 0))
         self.settings.setValue("blockOrder", self.settings.value("blockOrder", "compatible"))
@@ -258,6 +260,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         else:
             self.flanker_dark_mode = False
 
+        self.flanker_sets_practice = int(self.settings.value("setsPractice"))
+        self.flanker_sets_main = int(self.settings.value("setsMain"))
         self.flanker_blocks_compat = int(self.settings.value("blocksCompat"))
         self.flanker_blocks_incompat = int(self.settings.value("blocksIncompat"))
         self.flanker_block_order = str(self.settings.value("blockOrder"))
@@ -415,6 +419,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                             writer, "Digit span (backwards)", index=False)
                     elif task == "Eriksen Flanker Task":
                         flanker_task = flanker.Flanker(self.pygame_screen, background, self.flanker_dark_mode,
+                                                       self.flanker_sets_practice, self.flanker_sets_main,
                                                        self.flanker_blocks_compat, self.flanker_blocks_incompat,
                                                        self.flanker_block_order)
                         # Run Eriksen Flanker

@@ -78,6 +78,12 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
         self.settings_flanker_dark.setChecked(self.flanker_dark)
 
+        self.flanker_sets_practice = str(self.settings.value("setsPractice"))
+        self.settings_flanker_practice_sets_value.setText(self.flanker_sets_practice)
+
+        self.flanker_sets_main = str(self.settings.value("setsMain"))
+        self.settings_flanker_main_sets_value.setText(self.flanker_sets_main)
+
         self.flanker_compatible_blocks = str(self.settings.value("blocksCompat"))
         self.settings_flanker_compat_value.setText(self.flanker_compatible_blocks)
 
@@ -113,6 +119,8 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         # Set input validators
         self.regex_numbers = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]+"))
         self.settings_ant_blocks_value.setValidator(self.regex_numbers)
+        self.settings_flanker_practice_sets_value.setValidator(self.regex_numbers)
+        self.settings_flanker_main_sets_value.setValidator(self.regex_numbers)
         self.settings_flanker_compat_value.setValidator(self.regex_numbers)
         self.settings_flanker_incompat_value.setValidator(self.regex_numbers)
         self.settings_ravens_start_value.setValidator(self.regex_numbers)
@@ -181,6 +189,8 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
             # Flanker settings
             self.settings.beginGroup("Flanker")
             self.settings.setValue("darkMode", str(self.settings_flanker_dark.isChecked()).lower())
+            self.settings.setValue("setsPractice", self.settings_flanker_practice_sets_value.text())
+            self.settings.setValue("setsMain", self.settings_flanker_main_sets_value.text())
             self.settings.setValue("blocksCompat", self.settings_flanker_compat_value.text())
             self.settings.setValue("blocksIncompat", self.settings_flanker_incompat_value.text())
 
