@@ -38,6 +38,7 @@ class Flanker(object):
         pygame.mouse.set_visible(0)
 
         # Experiment options
+        self.BLOCK_ORDER = block_order
         self.NUM_BLOCKS = 1
         self.FIXATION_DURATION = 1000
         self.FLANKER_DURATION = 200
@@ -57,17 +58,16 @@ class Flanker(object):
 
         # Create level combinations
         # Level combinations give us 4 trials.
-        self.combinations = list(
-            product(self.CONGRUENCY_LEVELS, self.DIRECTION_LEVELS))
+        self.combinations = list(product(self.CONGRUENCY_LEVELS, self.DIRECTION_LEVELS))
 
         # Create output dataframe
         self.all_data = pd.DataFrame()
 
     def create_block(self, block_num, combinations, trial_type):
         if trial_type == "main":
-            cur_combinations = combinations * 30  # 120 total trials
+            cur_combinations = combinations * 1  # 30 - 120 total trials
         else:
-            cur_combinations = combinations * 5  # 20 practice trials
+            cur_combinations = combinations * 1  # 5 - 20 practice trials
 
         # Add shuffled combinations to dataframe
         np.random.shuffle(cur_combinations)
@@ -161,8 +161,7 @@ class Flanker(object):
         display.wait(self.ITI)
 
     def run_block(self, block_num, total_blocks, block_type):
-        cur_block = self.create_block(
-            block_num, self.combinations, block_type)
+        cur_block = self.create_block(block_num, self.combinations, block_type)
 
         for i in range(cur_block.shape[0]):
             self.display_trial(i, cur_block)
@@ -185,6 +184,30 @@ class Flanker(object):
             display.wait_for_space()
 
     def run(self):
+        if self.BLOCK_ORDER == "choose":
+            self.screen.blit(self.background, (0, 0))
+            display.text(self.screen, self.font, "Choose block order:",
+                         100, self.screen_y/2 - 300, self.colour_font)
+            display.text(self.screen, self.font,
+                         "1 - Compatible first",
+                         100, self.screen_y/2 - 200, self.colour_font)
+            display.text(self.screen, self.font,
+                         "2 - Incompatible first",
+                         100, self.screen_y/2 - 150, self.colour_font)
+            pygame.display.flip()
+
+            wait_response = True
+            while wait_response:
+                for event in pygame.event.get():
+                    if event.type == KEYDOWN and event.key == K_1:
+                        self.BLOCK_ORDER = "compatible"
+                        wait_response = False
+                    elif event.type == KEYDOWN and event.key == K_2:
+                        self.BLOCK_ORDER = "incompatible"
+                        wait_response = False
+                    elif event.type == KEYDOWN and event.key == K_F12:
+                        sys.exit(0)
+
         # Instructions
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "Eriksen Flanker Task",
