@@ -111,17 +111,13 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings.endGroup()
 
         # Set input validators
-        self.settings_ant_blocks_value.setValidator(
-            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
-
-        self.settings_ravens_start_value.setValidator(
-            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
-
-        self.settings_ravens_trials_value.setValidator(
-            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
-
-        self.settings_sternberg_blocks_value.setValidator(
-            QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+')))
+        self.regex_numbers = QtGui.QRegExpValidator(QtCore.QRegExp('[0-9]+'))
+        self.settings_ant_blocks_value.setValidator(self.regex_numbers)
+        self.settings_flanker_compat_value.setValidator(self.regex_numbers)
+        self.settings_flanker_incompat_value.setValidator(self.regex_numbers)
+        self.settings_ravens_start_value.setValidator(self.regex_numbers)
+        self.settings_ravens_trials_value.setValidator(self.regex_numbers)
+        self.settings_sternberg_blocks_value.setValidator(self.regex_numbers)
 
         # Set starting toolbox item
         self.settings_toolbox.setCurrentIndex(0)
