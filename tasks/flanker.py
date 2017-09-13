@@ -51,10 +51,10 @@ class Flanker(object):
         self.ITI = 1500
 
         # Set stimuli
-        self.flanker_stim = {"left": {"congruent": "< < < < <",
-                                      "incongruent": "> > < > >"},
-                             "right": {"congruent": "> > > > >",
-                                       "incongruent": "< < > < <"}}
+        self.flanker_stim = {"left": {"congruent": "<<<<<",
+                                      "incongruent": ">><>>"},
+                             "right": {"congruent": ">>>>>",
+                                       "incongruent": "<<><<"}}
 
         # Specify factor levels
         self.CONGRUENCY_LEVELS = ("congruent", "incongruent")
@@ -249,7 +249,7 @@ class Flanker(object):
                      "A set of arrows will appear:",
                      100, self.screen_y/2 - 100, self.colour_font)
         display.text(self.screen, self.font_stim, self.flanker_stim["left"]["incongruent"],
-                     "center", self.screen_y/2 - 50, self.colour_font)
+                     "center", self.screen_y/2 - 60, self.colour_font)
 
         if self.block_type_list[0] == "compatible":
             display.text(self.screen, self.font,
@@ -257,7 +257,7 @@ class Flanker(object):
                          "the direction of the CENTER arrow.",
                          100, self.screen_y/2 + 70, self.colour_font)
             display.text(self.screen, self.font,
-                         "In example above, you should press the Left arrow.",
+                         "In example above, you should press the LEFT arrow.",
                          100, self.screen_y/2 + 120, self.colour_font)
         elif self.block_type_list[0] == "incompatible":
             display.text(self.screen, self.font,
@@ -265,24 +265,26 @@ class Flanker(object):
                          "the OPPOSITE direction of the CENTER arrow.",
                          100, self.screen_y/2 + 70, self.colour_font)
             display.text(self.screen, self.font,
-                         "In example above, you should press the Right arrow.",
+                         "In example above, you should press the RIGHT arrow.",
                          100, self.screen_y/2 + 120, self.colour_font)
+
+        display.text(self.screen, self.font,
+                     "Respond as quickly, and as accurately, as you can",
+                     100, self.screen_y/2 + 200, self.colour_font)
 
         display.text_space(self.screen, self.font,
                            "center", (self.screen_y/2) + 300, self.colour_font)
         pygame.display.flip()
-
         display.wait_for_space()
 
         # Instructions Practice
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
-                     "We'll begin with a some practice trials...",
+                     "We'll begin with some practice trials...",
                      "center", "center", self.colour_font)
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 100, self.colour_font)
         pygame.display.flip()
-
         display.wait_for_space()
 
         # Practice trials
@@ -296,7 +298,6 @@ class Flanker(object):
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 200, self.colour_font)
         pygame.display.flip()
-
         display.wait_for_space()
 
         # Main task second half
@@ -309,15 +310,57 @@ class Flanker(object):
 
         # Second half (if more than one compatibility type)
         if self.block_type_list[0] != self.block_type_list[-1]:
-            # Practice instructions
             self.screen.blit(self.background, (0, 0))
             display.text(self.screen, self.font,
-                         "Second half instructions",
+                         "End of first half. Please inform the experimenter.",
                          100, self.screen_y/2, self.colour_font)
+
             display.text_space(self.screen, self.font,
                                "center", self.screen_y/2 + 200, self.colour_font)
             pygame.display.flip()
+            display.wait_for_space()
 
+            # Practice instructions
+            self.screen.blit(self.background, (0, 0))
+            display.text(self.screen, self.font,
+                         "For the second half, the task will be slightly different:",
+                         100, self.screen_y/2 - 300, self.colour_font)
+
+            display.text(self.screen, self.font_stim, self.flanker_stim["left"]["incongruent"],
+                         "center", self.screen_y/2 - 250, self.colour_font)
+
+            if self.block_type_list[-1] == "compatible":
+                display.text(self.screen, self.font,
+                             "This time, indicate the direction of the CENTER arrow",
+                             100, self.screen_y/2 - 100, self.colour_font)
+                display.text(self.screen, self.font,
+                             "So in the example above, you would press LEFT",
+                             100, self.screen_y/2, self.colour_font)
+            elif self.block_type_list[-1] == "incompatible":
+                display.text(self.screen, self.font,
+                             "This time, indicate the OPPOSITE direction of the CENTER arrow",
+                             100, self.screen_y/2 - 100, self.colour_font)
+                display.text(self.screen, self.font,
+                             "So in the example above, you would press RIGHT",
+                             100, self.screen_y/2, self.colour_font)
+
+            display.text(self.screen, self.font,
+                         "Respond as quickly, and as accurately, as you can",
+                         100, self.screen_y/2 + 100, self.colour_font)
+
+            display.text_space(self.screen, self.font,
+                               "center", self.screen_y/2 + 250, self.colour_font)
+            pygame.display.flip()
+            display.wait_for_space()
+
+            # Instructions Practice
+            self.screen.blit(self.background, (0, 0))
+            display.text(self.screen, self.font,
+                         "We'll begin with some practice trials...",
+                         "center", "center", self.colour_font)
+            display.text_space(self.screen, self.font,
+                               "center", self.screen_y/2 + 100, self.colour_font)
+            pygame.display.flip()
             display.wait_for_space()
 
             # Practice trials
