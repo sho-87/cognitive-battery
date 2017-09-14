@@ -6,10 +6,10 @@ import pygame
 import pandas as pd
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from utils import display
+from utils import display, values
 from designer import battery_window_qt
 from interface import about_dialog, settings_window
-from tasks import ant, mrt, sart, ravens, digitspan_backwards, sternberg
+from tasks import ant, flanker, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
 class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery):
@@ -20,9 +20,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.setupUi(self)
 
         # Set app icon
-        self.setWindowIcon(QtGui.QIcon(os.path.join('images', 'icon_sml.png')))
+        self.setWindowIcon(QtGui.QIcon(os.path.join("images", "icon_sml.png")))
 
-        self.github_icon = os.path.join('images', 'github_icon.png')
+        self.github_icon = os.path.join("images", "github_icon.png")
         self.actionDocumentation.setIcon(QtGui.QIcon(self.github_icon))
         self.actionLicense.setIcon(QtGui.QIcon(self.github_icon))
         self.actionContribute.setIcon(QtGui.QIcon(self.github_icon))
@@ -42,36 +42,8 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.settings = QtCore.QSettings(self.settings_file, QtCore.QSettings.IniFormat)
         self.settings.setFallbacksEnabled(False)
 
-        # If first run, store some default settings
-        # FIXME this is messy when adding new tasks (see issue #16)
-        if not os.path.isfile(self.settings_file):
-            # Main window size and position
-            self.save_main_window_settings(self.size(), QtCore.QPoint(100, 100))
-
-            # Settings - General
-            self.settings.beginGroup("GeneralSettings")
-            self.settings.setValue('fullscreen', "false")
-            self.settings.setValue('borderless', "false")
-            self.settings.setValue('width', 1280)
-            self.settings.setValue('height', 1024)
-            self.settings.setValue('taskBeep', "true")
-            self.settings.endGroup()
-
-            # Settings - Attention Network Test
-            self.settings.beginGroup("AttentionNetworkTest")
-            self.settings.setValue('numBlocks', 3)
-            self.settings.endGroup()
-
-            # Settings - Ravens
-            self.settings.beginGroup("Ravens")
-            self.settings.setValue('startImage', 13)
-            self.settings.setValue('numTrials', 12)
-            self.settings.endGroup()
-
-            # Settings - Sternberg Task
-            self.settings.beginGroup("Sternberg")
-            self.settings.setValue('numBlocks', 2)
-            self.settings.endGroup()
+        # Read and save default settings
+        self.set_default_settings()
 
         # Set initial window size/pos from saved settings
         self.settings.beginGroup("MainWindow")
@@ -93,17 +65,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.pygame_screen = None
 
         # Define URLs
-        self.LINKS = {
-            "github": "https://github.com/sho-87/cognitive-battery",
-            "license": "https://github.com/sho-87/"
-                       "cognitive-battery/blob/master/LICENSE",
-            "develop": "https://github.com/sho-87/"
-                       "cognitive-battery/tree/develop",
-            "issues": "https://github.com/sho-87/cognitive-battery/issues",
-            "new_issue": "https://github.com/sho-87/"
-                         "cognitive-battery/issues/new",
-            "releases": "https://github.com/sho-87/cognitive-battery/releases"
-        }
+        self.links = values.get_links()
 
         # Make data folder if it doesnt exist
         self.dataPath = os.path.join(self.project_dir, "data")
@@ -131,29 +93,78 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.upButton.clicked.connect(self.move_up)
         self.downButton.clicked.connect(self.move_down)
 
+    # Set default settings values
+    def set_default_settings(self):
+        """
+        Read and save settings values if it exists. Else, write a default value
+
+        This prevents overwriting of existing settings if new task settings are added.
+        """
+
+        # Settings - Main Window
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue("size", self.settings.value("size", self.size()))
+        self.settings.setValue("pos", self.settings.value("pos", QtCore.QPoint(100, 100)))
+        self.settings.endGroup()
+
+        # Settings - General
+        self.settings.beginGroup("GeneralSettings")
+        self.settings.setValue("fullscreen", self.settings.value("fullscreen", "false"))
+        self.settings.setValue("borderless", self.settings.value("borderless", "false"))
+        self.settings.setValue("width", self.settings.value("width", 1280))
+        self.settings.setValue("height", self.settings.value("height", 1024))
+        self.settings.setValue("taskBeep", self.settings.value("taskBeep", "true"))
+        self.settings.endGroup()
+
+        # Settings - Attention Network Test
+        self.settings.beginGroup("AttentionNetworkTest")
+        self.settings.setValue("numBlocks", self.settings.value("numBlocks", 3))
+        self.settings.endGroup()
+
+        # Settings - Flanker
+        self.settings.beginGroup("Flanker")
+        self.settings.setValue("darkMode", self.settings.value("darkMode", "false"))
+        self.settings.setValue("setsPractice", self.settings.value("setsPractice", 3))
+        self.settings.setValue("setsMain", self.settings.value("setsMain", 25))
+        self.settings.setValue("blocksCompat", self.settings.value("blocksCompat", 1))
+        self.settings.setValue("blocksIncompat", self.settings.value("blocksIncompat", 0))
+        self.settings.setValue("blockOrder", self.settings.value("blockOrder", "compatible"))
+        self.settings.endGroup()
+
+        # Settings - Ravens
+        self.settings.beginGroup("Ravens")
+        self.settings.setValue("startImage", self.settings.value("startImage", 13))
+        self.settings.setValue("numTrials", self.settings.value("numTrials", 12))
+        self.settings.endGroup()
+
+        # Settings - Sternberg Task
+        self.settings.beginGroup("Sternberg")
+        self.settings.setValue("numBlocks", self.settings.value("numBlocks", 2))
+        self.settings.endGroup()
+
     # Open web browser to the documentation page
     def show_documentation(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["github"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["github"]))
 
     # Open web browser to the license page
     def show_license(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["license"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["license"]))
 
     # Open web browser to the github develop branch for contribution
     def show_contribute(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["develop"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["develop"]))
 
     # Open web browser to the github issues page
     def show_browse_issues(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["issues"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["issues"]))
 
     # Open web browser to the github new issue post
     def show_new_issue(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["new_issue"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["new_issue"]))
 
     # Open web browser to the github releases page
     def show_releases(self):
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.LINKS["releases"]))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(self.links["releases"]))
 
     # Create a new SettingsWindow object and display it
     def show_settings(self):
@@ -162,7 +173,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
             self.settings_window = settings_window.SettingsWindow(self, self.settings)
             self.settings_window.show()
             self.settings_window.finished.connect(
-                lambda: setattr(self, 'settings_window', None))
+                lambda: setattr(self, "settings_window", None))
         # If settings window exists, bring it to the front
         else:
             self.settings_window.activateWindow()
@@ -174,14 +185,14 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         if self.about is None:
             self.about = about_dialog.AboutDialog(self)
             self.about.show()
-            self.about.finished.connect(lambda: setattr(self, 'about', None))
+            self.about.finished.connect(lambda: setattr(self, "about", None))
         # If about dialog exists, bring it to the front
         else:
             self.about.activateWindow()
             self.about.raise_()
 
     def error_dialog(self, message):
-        QtWidgets.QMessageBox.warning(self, 'Error', message)
+        QtWidgets.QMessageBox.warning(self, "Error", message)
 
     def random_order_selected(self):
         if self.randomOrderCheck.isChecked():
@@ -213,13 +224,6 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.taskList.insertItem(current_row + 1, current_item)
         self.taskList.setCurrentItem(current_item)
 
-    # Save window size/position to settings file
-    def save_main_window_settings(self, size, pos):
-        self.settings.beginGroup("MainWindow")
-        self.settings.setValue('size', size)
-        self.settings.setValue('pos', pos)
-        self.settings.endGroup()
-
     def get_settings(self):
         # General settings
         self.settings.beginGroup("GeneralSettings")
@@ -249,6 +253,20 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.ant_blocks = int(self.settings.value("numBlocks"))
         self.settings.endGroup()
 
+        # Flanker settings
+        self.settings.beginGroup("Flanker")
+        if self.settings.value("darkMode") == "true":
+            self.flanker_dark_mode = True
+        else:
+            self.flanker_dark_mode = False
+
+        self.flanker_sets_practice = int(self.settings.value("setsPractice"))
+        self.flanker_sets_main = int(self.settings.value("setsMain"))
+        self.flanker_blocks_compat = int(self.settings.value("blocksCompat"))
+        self.flanker_blocks_incompat = int(self.settings.value("blocksIncompat"))
+        self.flanker_block_order = str(self.settings.value("blockOrder"))
+        self.settings.endGroup()
+
         # Ravens settings
         self.settings.beginGroup("Ravens")
         self.ravens_start = int(self.settings.value("startImage"))
@@ -262,8 +280,12 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
     # Override the closeEvent method
     def closeEvent(self, event):
-        self.save_main_window_settings(self.size(), self.pos())
-        
+        # Save window size and position
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue("size", self.size())
+        self.settings.setValue("pos", self.pos())
+        self.settings.endGroup()
+
         event.accept()
         sys.exit(0)  # This closes any open pygame windows
 
@@ -276,9 +298,9 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
         if self.maleRadio.isChecked():
-            sex = 'male'
+            sex = "male"
         else:
-            sex = 'female'
+            sex = "female"
 
         # Get *selected* tasks and task order
         selected_tasks = []
@@ -295,38 +317,38 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
         # Check for required inputs
         if not selected_tasks:
-            self.error_dialog('No tasks selected')
+            self.error_dialog("No tasks selected")
         elif not ra:
-            self.error_dialog('Please enter RA name...')
+            self.error_dialog("Please enter RA name...")
         elif not sub_num:
-            self.error_dialog('Please enter a subject number...')
+            self.error_dialog("Please enter a subject number...")
         elif not condition:
-            self.error_dialog('Please enter a condition number...')
+            self.error_dialog("Please enter a condition number...")
         elif not age:
-            self.error_dialog('Please enter an age...')
+            self.error_dialog("Please enter an age...")
         elif not self.maleRadio.isChecked() and not \
                 self.femaleRadio.isChecked():
-            self.error_dialog('Please select a sex...')
+            self.error_dialog("Please select a sex...")
         else:
             # Store subject info into a dataframe
             subject_info = pd.DataFrame(
                 data=[(str(current_date), str(sub_num), str(condition),
                        int(age), str(sex), str(ra),
-                       ', '.join(selected_tasks))],
-                columns=['datetime', 'sub_num', 'condition',
-                         'age', 'sex', 'RA', 'tasks']
+                       ", ".join(selected_tasks))],
+                columns=["datetime", "sub_num", "condition",
+                         "age", "sex", "RA", "tasks"]
             )
 
             # Check if subject number already exists
-            existing_subs = [x.split('_')[0] for x in os.listdir(self.dataPath)]
+            existing_subs = [x.split("_")[0] for x in os.listdir(self.dataPath)]
             if sub_num in existing_subs:
-                self.error_dialog('Subject number already exists')
+                self.error_dialog("Subject number already exists")
             else:
                 # Create the excel writer object and save the file
                 data_file_name = "%s_%s.xls" % (sub_num, condition)
                 output_file = os.path.join(self.dataPath, data_file_name)
                 writer = pd.ExcelWriter(output_file)
-                subject_info.to_excel(writer, 'info', index=False)
+                subject_info.to_excel(writer, "info", index=False)
                 writer.save()
 
                 # Minimize battery UI
@@ -340,17 +362,17 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                     pos_x = self.res_width // 2 - self.task_width // 2
                     pos_y = self.res_height // 2 - self.task_height // 2
 
-                    os.environ['SDL_VIDEO_WINDOW_POS'] = \
+                    os.environ["SDL_VIDEO_WINDOW_POS"] = \
                         "%s, %s" % (str(pos_x), str(pos_y))
 
                 # Initialize pygame
                 pygame.init()
 
                 # Load beep sound
-                beep_sound = pygame.mixer.Sound(os.path.join(self.base_dir, 
-                                                            'tasks', 
-                                                            'media', 
-                                                            'beep_med.wav'))
+                beep_sound = pygame.mixer.Sound(os.path.join(self.base_dir,
+                                                             "tasks",
+                                                             "media",
+                                                             "beep_med.wav"))
 
                 # Set pygame icon image
                 image = os.path.join(self.base_dir, "images", "icon_sml.png")
@@ -379,53 +401,54 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
                 for task in selected_tasks:
                     if task == "Attention Network Test (ANT)":
                         # Set number of blocks for ANT
-                        ant_task = ant.ANT(self.pygame_screen, background,
-                                           blocks=self.ant_blocks)
+                        ant_task = ant.ANT(self.pygame_screen, background, blocks=self.ant_blocks)
                         # Run ANT
                         ant_data = ant_task.run()
                         # Save ANT data to excel
-                        ant_data.to_excel(writer, 'ANT', index=False)
+                        ant_data.to_excel(writer, "ANT", index=False)
+                    elif task == "Digit Span (backwards)":
+                        digitspan_backwards_task = digitspan_backwards.DigitspanBackwards(self.pygame_screen,
+                                                                                          background)
+                        # Run Digit span (Backwards)
+                        digitspan_backwards_data = digitspan_backwards_task.run()
+                        # Save digit span (backwards) data to excel
+                        digitspan_backwards_data.to_excel(writer, "Digit span (backwards)", index=False)
+                    elif task == "Eriksen Flanker Task":
+                        flanker_task = flanker.Flanker(self.pygame_screen, background, self.flanker_dark_mode,
+                                                       self.flanker_sets_practice, self.flanker_sets_main,
+                                                       self.flanker_blocks_compat, self.flanker_blocks_incompat,
+                                                       self.flanker_block_order)
+                        # Run Eriksen Flanker
+                        flanker_data = flanker_task.run()
+                        # Save flanker data to excel
+                        flanker_data.to_excel(writer, "Eriksen Flanker", index=False)
                     elif task == "Mental Rotation Task":
                         mrt_task = mrt.MRT(self.pygame_screen, background)
                         # Run MRT
                         mrt_data = mrt_task.run()
                         # Save MRT data to excel
-                        mrt_data.to_excel(writer, 'MRT', index=False)
+                        mrt_data.to_excel(writer, "MRT", index=False)
+                    elif task == "Raven's Progressive Matrices":
+                        ravens_task = ravens.Ravens(self.pygame_screen, background,
+                                                    start=self.ravens_start, numTrials=self.ravens_trials)
+                        # Run Raven's Matrices
+                        ravens_data = ravens_task.run()
+                        # Save ravens data to excel
+                        ravens_data.to_excel(writer, "Ravens Matrices", index=False)
+                    elif task == "Sternberg Task":
+                        sternberg_task = sternberg.Sternberg(self.pygame_screen, background,
+                                                             blocks=self.sternberg_blocks)
+                        # Run Sternberg Task
+                        sternberg_data = sternberg_task.run()
+                        # Save sternberg data to excel
+                        sternberg_data.to_excel(writer, "Sternberg", index=False)
                     elif task == "Sustained Attention to Response Task (SART)":
                         sart_task = sart.SART(self.pygame_screen, background)
                         # Run SART
                         sart_data = sart_task.run()
                         # Save SART data to excel
-                        sart_data.to_excel(writer, 'SART', index=False)
-                    elif task == "Digit Span (backwards)":
-                        digitspan_backwards_task = \
-                            digitspan_backwards.DigitspanBackwards(
-                                self.pygame_screen, background)
-                        # Run Digit span (Backwards)
-                        digitspan_backwards_data = \
-                            digitspan_backwards_task.run()
-                        # Save digit span (backwards) data to excel
-                        digitspan_backwards_data.to_excel(
-                            writer, 'Digit span (backwards)', index=False)
-                    elif task == "Raven's Progressive Matrices":
-                        ravens_task = ravens.Ravens(
-                            self.pygame_screen, background,
-                            start=self.ravens_start, numTrials=self.ravens_trials)
-                        # Run Raven's Matrices
-                        ravens_data = ravens_task.run()
-                        # Save ravens data to excel
-                        ravens_data.to_excel(writer, 'Ravens Matrices',
-                                             index=False)
-                    elif task == "Sternberg Task":
-                        sternberg_task = sternberg.Sternberg(
-                            self.pygame_screen, background,
-                            blocks=self.sternberg_blocks)
-                        # Run Sternberg Task
-                        sternberg_data = sternberg_task.run()
-                        # Save sternberg data to excel
-                        sternberg_data.to_excel(writer, 'Sternberg',
-                                                index=False)
-                    
+                        sart_data.to_excel(writer, "SART", index=False)
+
                     # Play beep after each task
                     if self.task_beep:
                         beep_sound.play()

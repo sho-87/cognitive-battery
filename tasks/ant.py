@@ -306,7 +306,7 @@ class ANT(object):
         # Instructions Practice
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font,
-                     "We'll begin with a some practice trials...",
+                     "We'll begin with some practice trials...",
                      "center", "center")
         display.text_space(self.screen, self.font,
                            "center", self.screen_y/2 + 100)
