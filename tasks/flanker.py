@@ -254,18 +254,18 @@ class Flanker(object):
         if self.block_type_list[0] == "compatible":
             display.text(self.screen, self.font,
                          "Use the Left / Right arrow keys to indicate "
-                         "the direction of the CENTER arrow.",
+                         "the pointing direction of the CENTER arrow.",
                          100, self.screen_y/2 + 70, self.colour_font)
             display.text(self.screen, self.font,
-                         "In example above, you should press the LEFT arrow.",
+                         "In example above, you should press the LEFT key.",
                          100, self.screen_y/2 + 120, self.colour_font)
         elif self.block_type_list[0] == "incompatible":
             display.text(self.screen, self.font,
                          "Use the Left / Right arrow keys to indicate "
-                         "the OPPOSITE direction of the CENTER arrow.",
+                         "the OPPOSITE pointing direction of the CENTER arrow.",
                          100, self.screen_y/2 + 70, self.colour_font)
             display.text(self.screen, self.font,
-                         "In example above, you should press the RIGHT arrow.",
+                         "In example above, you should press the RIGHT key.",
                          100, self.screen_y/2 + 120, self.colour_font)
 
         display.text(self.screen, self.font,
@@ -331,14 +331,14 @@ class Flanker(object):
 
             if self.block_type_list[-1] == "compatible":
                 display.text(self.screen, self.font,
-                             "This time, indicate the direction of the CENTER arrow",
+                             "This time, indicate the pointing direction of the CENTER arrow",
                              100, self.screen_y/2 - 100, self.colour_font)
                 display.text(self.screen, self.font,
                              "So in the example above, you would press LEFT",
                              100, self.screen_y/2, self.colour_font)
             elif self.block_type_list[-1] == "incompatible":
                 display.text(self.screen, self.font,
-                             "This time, indicate the OPPOSITE direction of the CENTER arrow",
+                             "This time, indicate the OPPOSITE pointing direction of the CENTER arrow",
                              100, self.screen_y/2 - 100, self.colour_font)
                 display.text(self.screen, self.font,
                              "So in the example above, you would press RIGHT",
