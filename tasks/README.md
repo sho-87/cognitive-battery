@@ -23,6 +23,16 @@
 - Digit duration: 1000ms
 - Time between digits: 100ms
 
+## Eriksen Flanker Task
+- A single set contains each trial type combination (left/congruent, left/incongruent, right/congruent, right/incongruent)
+- 3 practice sets by default, adjustable in settings
+- 25 sets in the main blocks, adjustable in settings (~10 minutes)
+- Contains options for adding compatible (respond in direction of arrow) and incompatible (respond in opposite direction of arrow) blocks
+- 1 compatible block by default
+- Flanker stimululs duration: 200ms
+- Maximum response time (before timeout): 1500ms
+- Inter-trial interval: 1500ms
+
 ## Mental Rotation Task (MRT)
 - 3 practice questions
 - 2 main blocks (with a break inbetween)

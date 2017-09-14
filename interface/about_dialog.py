@@ -2,6 +2,7 @@ import os
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from designer import about_dialog_qt
+from utils import values
 
 
 class AboutDialog(QtWidgets.QDialog, about_dialog_qt.Ui_Dialog):
@@ -12,12 +13,12 @@ class AboutDialog(QtWidgets.QDialog, about_dialog_qt.Ui_Dialog):
         self.setupUi(self)
 
         # Set version number
-        self.versionValue.setText("3.1.0")
+        self.versionValue.setText(values.get_version())
 
         # Add icon image
         base_dir = os.path.dirname(os.path.dirname(
             os.path.abspath(__file__)))  # Get parent directory
-        pixmap = QtGui.QPixmap(os.path.join(base_dir, 'images', 'icon.png'))
+        pixmap = QtGui.QPixmap(os.path.join(base_dir, "images", "icon.png"))
         self.icon.setPixmap(pixmap)
 
         # Delete the object when dialog is closed

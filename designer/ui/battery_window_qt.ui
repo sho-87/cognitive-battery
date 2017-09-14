@@ -312,6 +312,14 @@
             </item>
             <item>
              <property name="text">
+              <string>Eriksen Flanker Task</string>
+             </property>
+             <property name="checkState">
+              <enum>Unchecked</enum>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>Mental Rotation Task</string>
              </property>
              <property name="checkState">

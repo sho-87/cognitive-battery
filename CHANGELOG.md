@@ -1,5 +1,20 @@
 # Change Log
 
+## [3.2.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.2.0) *(2017-09-14)*
+
+**General**
+- Added tooltips to the Settings window items to clarify the purpose of each option.
+- App-wide values moved to separate module (e.g. URLs).
+- Streamlined the setting of default values for task options.
+- Added placeholder scripts for aggregating task data.
+- Fixed a few typos.
+
+**Tasks**
+- Added Eriksen Flanker task.
+
+**Bug Fixes**
+- Fixed a bug where settings for new tasks are not read/saved if `settings.ini` already exists.
+
 ## [3.1.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.1.0) *(2017-07-06)*
 
 **General**

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
-    <height>296</height>
+    <width>409</width>
+    <height>414</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -44,8 +44,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>391</width>
-          <height>241</height>
+          <width>385</width>
+          <height>359</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -68,8 +68,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>115</height>
+              <width>367</width>
+              <height>206</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -87,7 +87,7 @@
             <attribute name="label">
              <string>General</string>
             </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_7">
+            <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,0">
              <property name="spacing">
               <number>6</number>
              </property>
@@ -116,6 +116,9 @@
                </property>
                <item>
                 <widget class="QCheckBox" name="settings_task_fullscreen_checkbox">
+                 <property name="toolTip">
+                  <string>Show tasks in fullscreen mode</string>
+                 </property>
                  <property name="text">
                   <string>Fullscreen</string>
                  </property>
@@ -123,6 +126,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="settings_task_borderless_checkbox">
+                 <property name="toolTip">
+                  <string>Show tasks in a borderless window</string>
+                 </property>
                  <property name="text">
                   <string>Borderless</string>
                  </property>
@@ -162,6 +168,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="settings_task_beep_checkbox">
+                 <property name="toolTip">
+                  <string>Play audible beep at the completion of each task</string>
+                 </property>
                  <property name="text">
                   <string>Play beep after each task</string>
                  </property>
@@ -189,8 +198,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>115</height>
+              <width>367</width>
+              <height>206</height>
              </rect>
             </property>
             <attribute name="label">
@@ -225,13 +234,175 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="settings_ant_blocks_value"/>
+                <widget class="QLineEdit" name="settings_ant_blocks_value">
+                 <property name="toolTip">
+                  <string>Total number of blocks used in the task</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="flanker_page">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>367</width>
+              <height>206</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>Eriksen Flanker Task</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QFormLayout" name="flanker_form">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="settings_flanker_dark">
+                 <property name="toolTip">
+                  <string>Use dark colour scheme. White text on black background</string>
+                 </property>
+                 <property name="text">
+                  <string>Dark mode</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="settings_flanker_compat_label">
+                 <property name="text">
+                  <string>Number of compatible blocks:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="settings_flanker_compat_value">
+                 <property name="toolTip">
+                  <string>Compatible block: respond in direction of center arrow</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="settings_flanker_incompat_label">
+                 <property name="text">
+                  <string>Number of incompatible blocks:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="settings_flanker_incompat_value">
+                 <property name="toolTip">
+                  <string>Incompatible block: respond in opposite direction to center arrow</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="settings_flanker_order_label">
+                 <property name="text">
+                  <string>Block order:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <layout class="QVBoxLayout" name="settings_flanker_order_group">
+                 <item>
+                  <widget class="QRadioButton" name="settings_flanker_order_compat">
+                   <property name="toolTip">
+                    <string>Display compatible blocks first</string>
+                   </property>
+                   <property name="text">
+                    <string>Compatible first</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="settings_flanker_order_incompat">
+                   <property name="toolTip">
+                    <string>Display incompatible blocks first</string>
+                   </property>
+                   <property name="text">
+                    <string>Incompatible first</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="settings_flanker_order_choose">
+                   <property name="toolTip">
+                    <string>Choose block order when task starts</string>
+                   </property>
+                   <property name="text">
+                    <string>Choose</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="settings_flanker_practice_sets_label">
+                 <property name="text">
+                  <string>Number of sets per practice block:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="settings_flanker_main_sets_label">
+                 <property name="text">
+                  <string>Number of sets per main block:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="settings_flanker_practice_sets_value">
+                 <property name="toolTip">
+                  <string>Number of set repeats per practice block. 1 set = 4 trials (all combinations)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="settings_flanker_main_sets_value">
+                 <property name="toolTip">
+                  <string>Number of set repeats per main block. 1 set = 4 trials (all combinations)</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
             </layout>
            </widget>
            <widget class="QWidget" name="ravens_page">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>367</width>
+              <height>206</height>
+             </rect>
+            </property>
             <attribute name="label">
              <string>Raven's Progressive Matrices</string>
             </attribute>
@@ -264,7 +435,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="settings_ravens_start_value"/>
+                <widget class="QLineEdit" name="settings_ravens_start_value">
+                 <property name="toolTip">
+                  <string>First image of the Raven's image set to be shown</string>
+                 </property>
+                </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="settings_ravens_trials_label">
@@ -274,7 +449,11 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="settings_ravens_trials_value"/>
+                <widget class="QLineEdit" name="settings_ravens_trials_value">
+                 <property name="toolTip">
+                  <string>Number of total images to show, starting from the start image #</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -285,8 +464,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>373</width>
-              <height>115</height>
+              <width>367</width>
+              <height>206</height>
              </rect>
             </property>
             <attribute name="label">
@@ -321,7 +500,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="settings_sternberg_blocks_value"/>
+                <widget class="QLineEdit" name="settings_sternberg_blocks_value">
+                 <property name="toolTip">
+                  <string>Total number of blocks used in the task</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
