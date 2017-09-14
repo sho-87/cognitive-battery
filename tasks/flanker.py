@@ -51,10 +51,10 @@ class Flanker(object):
         self.ITI = 1500
 
         # Set stimuli
-        self.flanker_stim = {"left": {"congruent": "<<<<<",
-                                      "incongruent": ">><>>"},
-                             "right": {"congruent": ">>>>>",
-                                       "incongruent": "<<><<"}}
+        self.flanker_stim = {"left": {"congruent": "< < < < <",
+                                      "incongruent": "> > < > >"},
+                             "right": {"congruent": "> > > > >",
+                                       "incongruent": "< < > < <"}}
 
         # Specify factor levels
         self.CONGRUENCY_LEVELS = ("congruent", "incongruent")
