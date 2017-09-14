@@ -61,7 +61,7 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="general_page">
             <property name="geometry">
@@ -116,6 +116,9 @@
                </property>
                <item>
                 <widget class="QCheckBox" name="settings_task_fullscreen_checkbox">
+                 <property name="toolTip">
+                  <string>Show tasks in fullscreen mode</string>
+                 </property>
                  <property name="text">
                   <string>Fullscreen</string>
                  </property>
@@ -123,6 +126,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="settings_task_borderless_checkbox">
+                 <property name="toolTip">
+                  <string>Show tasks in a borderless window</string>
+                 </property>
                  <property name="text">
                   <string>Borderless</string>
                  </property>
@@ -162,6 +168,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="settings_task_beep_checkbox">
+                 <property name="toolTip">
+                  <string>Play audible beep at the completion of each task</string>
+                 </property>
                  <property name="text">
                   <string>Play beep after each task</string>
                  </property>
@@ -225,7 +234,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="settings_ant_blocks_value"/>
+                <widget class="QLineEdit" name="settings_ant_blocks_value">
+                 <property name="toolTip">
+                  <string>Total number of blocks used in the task</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -422,7 +435,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="settings_ravens_start_value"/>
+                <widget class="QLineEdit" name="settings_ravens_start_value">
+                 <property name="toolTip">
+                  <string>First image of the Raven's image set to be shown</string>
+                 </property>
+                </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="settings_ravens_trials_label">
@@ -432,7 +449,11 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="settings_ravens_trials_value"/>
+                <widget class="QLineEdit" name="settings_ravens_trials_value">
+                 <property name="toolTip">
+                  <string>Number of total images to show, starting from the start image #</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -479,7 +500,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="settings_sternberg_blocks_value"/>
+                <widget class="QLineEdit" name="settings_sternberg_blocks_value">
+                 <property name="toolTip">
+                  <string>Total number of blocks used in the task</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
