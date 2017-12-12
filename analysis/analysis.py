@@ -184,3 +184,53 @@ def aggregate_sternberg(data, sub_num, response_type="full"):
             set_2_rtcov, set_6_rtcov,
             set_2_correct, set_6_correct,
             intercept, slope, slope_norm]
+
+
+def aggregate_flanker(data, sub_num, response_type="full"):
+
+    columns = [sub_num]
+    
+    # split compatibility conditions
+    for comp_type in sorted(list(data["compatibility"].unique()), reverse=False):
+        df_cur = data[data["compatibility"] == comp_type]
+        
+        # Calculate times following errors and correct responses
+        follow_error_rt = df_cur.loc[df_cur.correct.shift() == 0, "RT"].mean()
+        follow_correct_rt = df_cur.loc[df_cur.correct.shift() == 1, "RT"].mean()
+
+        if response_type == "correct":
+            df = df_cur[df_cur["correct"] == 1]
+        elif response_type == "incorrect":
+            df = df_cur[df_cur["correct"] == 0]
+        elif response_type == "full":
+            df = df_cur
+        
+        grouped_congruency = df.groupby(["congruency"])
+        
+        congruent_rt = grouped_congruency.mean().get_value("congruent", "RT")
+        incongruent_rt = grouped_congruency.mean().get_value("incongruent", "RT")
+    
+        congruent_rtsd = grouped_congruency.std().get_value("congruent", "RT")
+        incongruent_rtsd = grouped_congruency.std().get_value("incongruent", "RT")
+    
+        congruent_rtcov = congruent_rtsd / congruent_rt
+        incongruent_rtcov = incongruent_rtsd / incongruent_rt
+    
+        congruent_correct = grouped_congruency.sum().get_value("congruent", "correct")
+        incongruent_correct = grouped_congruency.sum().get_value("incongruent", "correct")
+    
+        # OLS regression
+        conflict_df = df[(df["congruency"] == "congruent") | (df["congruency"] == "incongruent")]
+        formula_conflict = "RT ~ C(congruency, Treatment(reference='congruent'))"
+        ols_results = smf.ols(formula_conflict, conflict_df).fit()
+        conflict_intercept, conflict_slope = ols_results.params
+        conflict_slope_norm = conflict_slope / congruent_rt
+
+        columns += [follow_error_rt, follow_correct_rt,
+                    congruent_rt, incongruent_rt,
+                    congruent_rtsd, incongruent_rtsd,
+                    congruent_rtcov, incongruent_rtcov,
+                    congruent_correct, incongruent_correct,
+                    conflict_intercept, conflict_slope, conflict_slope_norm]
+
+    return columns

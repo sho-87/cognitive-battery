@@ -28,8 +28,28 @@ df_ant = pd.DataFrame(columns=["sub_num",
     "ant_nocue_correct", "ant_center_correct", "ant_spatial_correct", "ant_double_correct",
     "ant_conflict_intercept", "ant_conflict_slope", "ant_conflict_slope_norm",
     "ant_alerting_intercept", "ant_alerting_slope", "ant_alerting_slope_norm",
-    "ant_orienting_intercept", "ant_orienting_slope", "ant_orienting_slope_norm"
-    ])
+    "ant_orienting_intercept", "ant_orienting_slope", "ant_orienting_slope_norm"])
+
+df_flanker_compat = pd.DataFrame(columns=["sub_num",
+            "flanker_compat_follow_error_rt", "flanker_compat_follow_correct_rt",
+            "flanker_compat_congruent_rt", "flanker_compat_incongruent_rt",
+            "flanker_compat_congruent_rtsd", "flanker_compat_incongruent_rtsd",
+            "flanker_compat_congruent_rtcov", "flanker_compat_incongruent_rtcov",
+            "flanker_compat_congruent_correct", "flanker_compat_incongruent_correct",
+            "flanker_compat_conflict_intercept", "flanker_compat_conflict_slope", "flanker_compat_conflict_slope_norm"])
+
+df_flanker_incompat = pd.DataFrame(columns=["sub_num",
+            "flanker_incompat_follow_error_rt", "flanker_incompat_follow_correct_rt",
+            "flanker_incompat_congruent_rt", "flanker_incompat_incongruent_rt",
+            "flanker_incompat_congruent_rtsd", "flanker_incompat_incongruent_rtsd",
+            "flanker_incompat_congruent_rtcov", "flanker_incompat_incongruent_rtcov",
+            "flanker_incompat_congruent_correct", "flanker_incompat_incongruent_correct",
+            "flanker_incompat_conflict_intercept", "flanker_incompat_conflict_slope", "flanker_incompat_conflict_slope_norm"])
+
+df_flanker_both = df_flanker_compat.merge(df_flanker_incompat, on="sub_num")
+cols = list(df_flanker_both.columns.values)
+cols.pop(cols.index("sub_num")) #  Remove sub_num from list
+df_flanker_both = df_flanker_both[["sub_num"] + cols]
 
 df_digit = pd.DataFrame(columns=["sub_num", "digit_correct_count",
                                  "digit_correct_prop", "digit_num_items"])
@@ -78,6 +98,15 @@ for f in os.listdir(dir_data):
                 df_ant.loc[df_ant.shape[0]] = analysis.aggregate_ant(data, sub_num, "full")
             elif task == "Digit span (backwards)":
                 df_digit.loc[df_digit.shape[0]] = analysis.aggregate_digit_span(data, sub_num)
+            elif task == "Eriksen Flanker":
+                compat_conditions = data["compatibility"].unique()
+                # full / correct / incorrect
+                if len(compat_conditions) == 1 and compat_conditions == "compatible":
+                    df_flanker_compat.loc[df_flanker_compat.shape[0]] = analysis.aggregate_flanker(data, sub_num, "full")
+                elif len(compat_conditions) == 1 and compat_conditions == "incompatible":
+                    df_flanker_incompat.loc[df_flanker_incompat.shape[0]] = analysis.aggregate_flanker(data, sub_num, "full")
+                else:
+                    df_flanker_both.loc[df_flanker_both.shape[0]] = analysis.aggregate_flanker(data, sub_num, "full")
             elif task == "MRT":
                 df_mrt.loc[df_mrt.shape[0]] = analysis.aggregate_mrt(data, sub_num)
             elif task == "Ravens Matrices":
@@ -90,13 +119,14 @@ for f in os.listdir(dir_data):
 
 # Merge task data
 ## Only merge tasks that were used
-tasks = [df_ant, df_digit, df_mrt, df_ravens, df_sart, df_sternberg]
+tasks = [df_ant, df_digit, df_flanker_compat, df_flanker_incompat, df_flanker_both,
+         df_mrt, df_ravens, df_sart, df_sternberg]
 
 all_data = df_info
 for task in tasks:
     if task.shape[0] != 0:
-        all_data = all_data.merge(task, on="sub_num")
+        all_data = all_data.merge(task, on="sub_num", how="left")
 
 # Save output csv
 all_data = all_data.sort_values("sub_num").reset_index(drop=True)
-all_data.to_csv(os.path.join(dir_output, "summary_data.csv"), index=False, sep=",")
+all_data.to_csv(os.path.join(dir_output, "battery_data.csv"), index=False, sep=",")
