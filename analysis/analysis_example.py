@@ -81,9 +81,9 @@ for f in os.listdir(dir_data):
     if f.endswith(".xls"):
         print("Summarizing {}".format(f))
 
-        sub = pd.read_excel(os.path.join(dir_data, f), None)
+        sub = pd.read_excel(os.path.join(dir_data, f), None, converters={"sub_num":str})
 
-        sub_num = int(sub["info"]["sub_num"])
+        sub_num = sub["info"].loc[0,"sub_num"]
         datetime = sub["info"].loc[0,"datetime"]
         condition = int(sub["info"]["condition"])
         age = int(sub["info"]["age"])
