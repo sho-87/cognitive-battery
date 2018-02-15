@@ -8,7 +8,7 @@ import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
 from utils import display, values
 from designer import battery_window_qt
-from interface import about_dialog, settings_window
+from interface import about_dialog, update_dialog, settings_window
 from tasks import ant, flanker, mrt, sart, ravens, digitspan_backwards, sternberg
 
 
@@ -29,7 +29,6 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.actionBrowse_Issues.setIcon(QtGui.QIcon(self.github_icon))
         self.actionReport_Bug.setIcon(QtGui.QIcon(self.github_icon))
         self.actionRequest_Feature.setIcon(QtGui.QIcon(self.github_icon))
-        self.actionCheck_for_updates.setIcon(QtGui.QIcon(self.github_icon))
 
         # Get passed values
         self.base_dir = base_dir
@@ -59,6 +58,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
 
         # Keep reference to the about and settings window objects
         self.about = None
+        self.update = None
         self.settings_window = None
 
         # Initialize pygame screen
@@ -81,7 +81,7 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
         self.actionReport_Bug.triggered.connect(self.show_new_issue)
         self.actionRequest_Feature.triggered.connect(self.show_new_issue)
-        self.actionCheck_for_updates.triggered.connect(self.show_releases)
+        self.actionCheck_for_updates.triggered.connect(self.show_update)
         self.actionAbout.triggered.connect(self.show_about)
 
         # Bind button events
@@ -190,6 +190,18 @@ class BatteryWindow(QtWidgets.QMainWindow, battery_window_qt.Ui_CognitiveBattery
         else:
             self.about.activateWindow()
             self.about.raise_()
+            
+    # Create a new UpdateDialog object and display it
+    def show_update(self):
+        # If the update dialog does not exist, create one
+        if self.update is None:
+            self.update = update_dialog.UpdateDialog(self)
+            self.update.show()
+            self.update.finished.connect(lambda: setattr(self, "update", None))
+        # If update dialog exists, bring it to the front
+        else:
+            self.update.activateWindow()
+            self.update.raise_()
 
     def error_dialog(self, message):
         QtWidgets.QMessageBox.warning(self, "Error", message)

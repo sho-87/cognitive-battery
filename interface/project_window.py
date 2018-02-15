@@ -4,7 +4,7 @@ from datetime import datetime
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from designer import project_window_qt
-from interface import about_dialog, battery_window, project_new_window
+from interface import about_dialog, battery_window, project_new_window, update_dialog
 from utils import values
 
 
@@ -25,12 +25,12 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.actionBrowse_Issues.setIcon(QtGui.QIcon(self.github_icon))
         self.actionReport_Bug.setIcon(QtGui.QIcon(self.github_icon))
         self.actionRequest_Feature.setIcon(QtGui.QIcon(self.github_icon))
-        self.actionCheck_for_updates.setIcon(QtGui.QIcon(self.github_icon))
 
         # Keep reference to main battery and new project windows
         self.main_battery = None
         self.new_project_window = None
         self.about = None
+        self.update = None
 
         self.res_width = res_width
         self.res_height = res_height
@@ -60,7 +60,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.actionBrowse_Issues.triggered.connect(self.show_browse_issues)
         self.actionReport_Bug.triggered.connect(self.show_new_issue)
         self.actionRequest_Feature.triggered.connect(self.show_new_issue)
-        self.actionCheck_for_updates.triggered.connect(self.show_releases)
+        self.actionCheck_for_updates.triggered.connect(self.show_update)
         self.actionAbout.triggered.connect(self.show_about)
 
         # Bind button events
@@ -112,6 +112,18 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         else:
             self.about.activateWindow()
             self.about.raise_()
+            
+    # Create a new UpdateDialog object and display it
+    def show_update(self):
+        # If the update dialog does not exist, create one
+        if self.update is None:
+            self.update = update_dialog.UpdateDialog(self)
+            self.update.show()
+            self.update.finished.connect(lambda: setattr(self, "update", None))
+        # If update dialog exists, bring it to the front
+        else:
+            self.update.activateWindow()
+            self.update.raise_()
 
     def project_click(self, item):
         if item.parent():

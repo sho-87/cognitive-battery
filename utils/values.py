@@ -12,7 +12,8 @@ def get_links():
         "issues": "https://github.com/sho-87/cognitive-battery/issues",
         "new_issue": "https://github.com/sho-87/"
                      "cognitive-battery/issues/new",
-        "releases": "https://github.com/sho-87/cognitive-battery/releases"
+        "releases": "https://github.com/sho-87/cognitive-battery/releases",
+        "rss": "https://github.com/sho-87/cognitive-battery/tags.atom"
     }
 
     return links
