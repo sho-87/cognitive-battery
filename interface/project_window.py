@@ -73,7 +73,9 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         self.projectTree.itemClicked.connect(self.project_click)
 
     def new_project(self):
-        self.new_project_window = project_new_window.NewProjectWindow(self.base_dir, self.project_list)
+        self.new_project_window = project_new_window.NewProjectWindow(
+            self.base_dir, self.project_list
+        )
         self.new_project_window.exec_()
         self.refresh_projects()
 
@@ -112,7 +114,7 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         else:
             self.about.activateWindow()
             self.about.raise_()
-            
+
     # Create a new UpdateDialog object and display it
     def show_update(self):
         # If the update dialog does not exist, create one
@@ -131,7 +133,9 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
             project_name = item.text(0)
 
             created_unix = self.project_list[researcher][project_name]["created"]
-            created_time = datetime.fromtimestamp(created_unix).strftime("%d/%m/%Y @ %H:%M")
+            created_time = datetime.fromtimestamp(created_unix).strftime(
+                "%d/%m/%Y @ %H:%M"
+            )
             project_path = self.project_list[researcher][project_name]["path"]
 
             self.projectName.setText(project_name)
@@ -157,10 +161,9 @@ class ProjectWindow(QtWidgets.QMainWindow, project_window_qt.Ui_ProjectWindow):
         if not os.path.isdir(self.dirValue.text()):
             QtWidgets.QMessageBox.warning(self, "Error", "Invalid project path")
         else:
-            self.main_battery = battery_window.BatteryWindow(self.base_dir,
-                                                             self.dirValue.text(),
-                                                             self.res_width,
-                                                             self.res_height)
+            self.main_battery = battery_window.BatteryWindow(
+                self.base_dir, self.dirValue.text(), self.res_width, self.res_height
+            )
             self.main_battery.show()
             self.close()
 

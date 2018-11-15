@@ -13,8 +13,7 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
         # Remove the help / whats this button from title bar
-        self.setWindowFlags(
-            self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
+        self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
 
         # Open settings file with no registry fallback
         self.settings = settings
@@ -134,7 +133,8 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
         self.settings_save_button.clicked.connect(self.save_settings)
         self.settings_cancel_button.clicked.connect(self.cancel_settings)
         self.settings_task_fullscreen_checkbox.clicked.connect(
-            self.task_fullscreen_checkbox)
+            self.task_fullscreen_checkbox
+        )
 
     def set_windowed_options_state(self, state):
         self.settings_task_borderless_checkbox.setEnabled(state)
@@ -155,30 +155,37 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
     def save_settings(self):
         # Check if Ravens images are in range (cant exceed 36 total)
-        if int(self.settings_ravens_start_value.text()) > (36 - int(self.settings_ravens_trials_value.text()) + 1):
-            QtWidgets.QMessageBox.warning(self, "Ravens Progressive Matrices Error",
-                                                "Too many images for Ravens task. "
-                                                "Start with an earlier image, or use fewer trials")
+        if int(self.settings_ravens_start_value.text()) > (
+            36 - int(self.settings_ravens_trials_value.text()) + 1
+        ):
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Ravens Progressive Matrices Error",
+                "Too many images for Ravens task. "
+                "Start with an earlier image, or use fewer trials",
+            )
         else:
             # General settings
             self.settings.beginGroup("GeneralSettings")
-            self.settings.setValue("fullscreen",
-                                   str(self.settings_task_fullscreen_checkbox.isChecked()).lower())
+            self.settings.setValue(
+                "fullscreen",
+                str(self.settings_task_fullscreen_checkbox.isChecked()).lower(),
+            )
 
             # Only save some options if fullscreen is not selected
             if not self.task_fullscreen:
                 self.settings.setValue(
                     "borderless",
-                    str(self.settings_task_borderless_checkbox.isChecked()).lower())
+                    str(self.settings_task_borderless_checkbox.isChecked()).lower(),
+                )
 
-                self.settings.setValue("width",
-                                       self.settings_task_width_value.text())
-                self.settings.setValue("height",
-                                       self.settings_task_height_value.text())
+                self.settings.setValue("width", self.settings_task_width_value.text())
+                self.settings.setValue("height", self.settings_task_height_value.text())
 
             # Task beep setting
-            self.settings.setValue("taskBeep",
-                                   str(self.settings_task_beep_checkbox.isChecked()).lower())
+            self.settings.setValue(
+                "taskBeep", str(self.settings_task_beep_checkbox.isChecked()).lower()
+            )
             self.settings.endGroup()
 
             # ANT settings
@@ -188,11 +195,21 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
             # Flanker settings
             self.settings.beginGroup("Flanker")
-            self.settings.setValue("darkMode", str(self.settings_flanker_dark.isChecked()).lower())
-            self.settings.setValue("setsPractice", self.settings_flanker_practice_sets_value.text())
-            self.settings.setValue("setsMain", self.settings_flanker_main_sets_value.text())
-            self.settings.setValue("blocksCompat", self.settings_flanker_compat_value.text())
-            self.settings.setValue("blocksIncompat", self.settings_flanker_incompat_value.text())
+            self.settings.setValue(
+                "darkMode", str(self.settings_flanker_dark.isChecked()).lower()
+            )
+            self.settings.setValue(
+                "setsPractice", self.settings_flanker_practice_sets_value.text()
+            )
+            self.settings.setValue(
+                "setsMain", self.settings_flanker_main_sets_value.text()
+            )
+            self.settings.setValue(
+                "blocksCompat", self.settings_flanker_compat_value.text()
+            )
+            self.settings.setValue(
+                "blocksIncompat", self.settings_flanker_incompat_value.text()
+            )
 
             if self.settings_flanker_order_compat.isChecked():
                 self.settings.setValue("blockOrder", "compatible")
@@ -205,13 +222,19 @@ class SettingsWindow(QtWidgets.QDialog, settings_window_qt.Ui_SettingsDialog):
 
             # Ravens settings
             self.settings.beginGroup("Ravens")
-            self.settings.setValue("startImage", self.settings_ravens_start_value.text())
-            self.settings.setValue("numTrials", self.settings_ravens_trials_value.text())
+            self.settings.setValue(
+                "startImage", self.settings_ravens_start_value.text()
+            )
+            self.settings.setValue(
+                "numTrials", self.settings_ravens_trials_value.text()
+            )
             self.settings.endGroup()
 
             # Sternberg settings
             self.settings.beginGroup("Sternberg")
-            self.settings.setValue("numBlocks", self.settings_sternberg_blocks_value.text())
+            self.settings.setValue(
+                "numBlocks", self.settings_sternberg_blocks_value.text()
+            )
             self.settings.endGroup()
 
             # Save settings window size information

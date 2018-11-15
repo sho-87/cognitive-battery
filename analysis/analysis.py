@@ -45,14 +45,26 @@ def aggregate_sart(data, sub_num):
     infrequent_rtcov = infrequent_rtsd / infrequent_rt
 
     sart_error_count = data[data["stimulus"] == 3]["key press"].sum()
-    sart_errors_num_items = collections.Counter(data['stimulus'])[3]
+    sart_errors_num_items = collections.Counter(data["stimulus"])[3]
     sart_errors_prop = sart_error_count / sart_errors_num_items
 
-    return [sub_num, follow_error_rt, follow_correct_rt,
-            total_rt, total_rtsd, total_rtcov,
-            frequent_rt, frequent_rtsd, frequent_rtcov,
-            infrequent_rt, infrequent_rtsd, infrequent_rtcov,
-            sart_error_count, sart_errors_prop, sart_errors_num_items]
+    return [
+        sub_num,
+        follow_error_rt,
+        follow_correct_rt,
+        total_rt,
+        total_rtsd,
+        total_rtcov,
+        frequent_rt,
+        frequent_rtsd,
+        frequent_rtcov,
+        infrequent_rt,
+        infrequent_rtsd,
+        infrequent_rtcov,
+        sart_error_count,
+        sart_errors_prop,
+        sart_errors_num_items,
+    ]
 
 
 def aggregate_ant(data, sub_num, response_type="full"):
@@ -112,7 +124,9 @@ def aggregate_ant(data, sub_num, response_type="full"):
     double_correct = grouped_cue.sum().get_value("double", "correct")
 
     # OLS regression
-    conflict_df = df[(df["congruency"] == "congruent") | (df["congruency"] == "incongruent")]
+    conflict_df = df[
+        (df["congruency"] == "congruent") | (df["congruency"] == "incongruent")
+    ]
     formula_conflict = "RT ~ C(congruency, Treatment(reference='congruent'))"
     ols_results = smf.ols(formula_conflict, conflict_df).fit()
     conflict_intercept, conflict_slope = ols_results.params
@@ -130,19 +144,48 @@ def aggregate_ant(data, sub_num, response_type="full"):
     orienting_intercept, orienting_slope = ols_results.params
     orienting_slope_norm = orienting_slope / spatial_rt
 
-    return [sub_num,
-            follow_error_rt, follow_correct_rt,
-            neutral_rt, congruent_rt, incongruent_rt,
-            neutral_rtsd, congruent_rtsd, incongruent_rtsd,
-            neutral_rtcov, congruent_rtcov, incongruent_rtcov,
-            neutral_correct, congruent_correct, incongruent_correct,
-            nocue_rt, center_rt, spatial_rt, double_rt,
-            nocue_rtsd, center_rtsd, spatial_rtsd, double_rtsd,
-            nocue_rtcov, center_rtcov, spatial_rtcov, double_rtcov,
-            nocue_correct, center_correct, spatial_correct, double_correct,
-            conflict_intercept, conflict_slope, conflict_slope_norm,
-            alerting_intercept, alerting_slope, alerting_slope_norm,
-            orienting_intercept, orienting_slope, orienting_slope_norm]
+    return [
+        sub_num,
+        follow_error_rt,
+        follow_correct_rt,
+        neutral_rt,
+        congruent_rt,
+        incongruent_rt,
+        neutral_rtsd,
+        congruent_rtsd,
+        incongruent_rtsd,
+        neutral_rtcov,
+        congruent_rtcov,
+        incongruent_rtcov,
+        neutral_correct,
+        congruent_correct,
+        incongruent_correct,
+        nocue_rt,
+        center_rt,
+        spatial_rt,
+        double_rt,
+        nocue_rtsd,
+        center_rtsd,
+        spatial_rtsd,
+        double_rtsd,
+        nocue_rtcov,
+        center_rtcov,
+        spatial_rtcov,
+        double_rtcov,
+        nocue_correct,
+        center_correct,
+        spatial_correct,
+        double_correct,
+        conflict_intercept,
+        conflict_slope,
+        conflict_slope_norm,
+        alerting_intercept,
+        alerting_slope,
+        alerting_slope_norm,
+        orienting_intercept,
+        orienting_slope,
+        orienting_slope_norm,
+    ]
 
 
 def aggregate_sternberg(data, sub_num, response_type="full"):
@@ -177,23 +220,32 @@ def aggregate_sternberg(data, sub_num, response_type="full"):
     intercept, slope = ols_results.params
     slope_norm = slope / set_2_rt
 
-    return [sub_num,
-            follow_error_rt, follow_correct_rt,
-            set_2_rt, set_6_rt,
-            set_2_rtsd, set_6_rtsd,
-            set_2_rtcov, set_6_rtcov,
-            set_2_correct, set_6_correct,
-            intercept, slope, slope_norm]
+    return [
+        sub_num,
+        follow_error_rt,
+        follow_correct_rt,
+        set_2_rt,
+        set_6_rt,
+        set_2_rtsd,
+        set_6_rtsd,
+        set_2_rtcov,
+        set_6_rtcov,
+        set_2_correct,
+        set_6_correct,
+        intercept,
+        slope,
+        slope_norm,
+    ]
 
 
 def aggregate_flanker(data, sub_num, response_type="full"):
 
     columns = [sub_num]
-    
+
     # split compatibility conditions
     for comp_type in sorted(list(data["compatibility"].unique()), reverse=False):
         df_cur = data[data["compatibility"] == comp_type]
-        
+
         # Calculate times following errors and correct responses
         follow_error_rt = df_cur.loc[df_cur.correct.shift() == 0, "RT"].mean()
         follow_correct_rt = df_cur.loc[df_cur.correct.shift() == 1, "RT"].mean()
@@ -204,33 +256,46 @@ def aggregate_flanker(data, sub_num, response_type="full"):
             df = df_cur[df_cur["correct"] == 0]
         elif response_type == "full":
             df = df_cur
-        
+
         grouped_congruency = df.groupby(["congruency"])
-        
+
         congruent_rt = grouped_congruency.mean().get_value("congruent", "RT")
         incongruent_rt = grouped_congruency.mean().get_value("incongruent", "RT")
-    
+
         congruent_rtsd = grouped_congruency.std().get_value("congruent", "RT")
         incongruent_rtsd = grouped_congruency.std().get_value("incongruent", "RT")
-    
+
         congruent_rtcov = congruent_rtsd / congruent_rt
         incongruent_rtcov = incongruent_rtsd / incongruent_rt
-    
+
         congruent_correct = grouped_congruency.sum().get_value("congruent", "correct")
-        incongruent_correct = grouped_congruency.sum().get_value("incongruent", "correct")
-    
+        incongruent_correct = grouped_congruency.sum().get_value(
+            "incongruent", "correct"
+        )
+
         # OLS regression
-        conflict_df = df[(df["congruency"] == "congruent") | (df["congruency"] == "incongruent")]
+        conflict_df = df[
+            (df["congruency"] == "congruent") | (df["congruency"] == "incongruent")
+        ]
         formula_conflict = "RT ~ C(congruency, Treatment(reference='congruent'))"
         ols_results = smf.ols(formula_conflict, conflict_df).fit()
         conflict_intercept, conflict_slope = ols_results.params
         conflict_slope_norm = conflict_slope / congruent_rt
 
-        columns += [follow_error_rt, follow_correct_rt,
-                    congruent_rt, incongruent_rt,
-                    congruent_rtsd, incongruent_rtsd,
-                    congruent_rtcov, incongruent_rtcov,
-                    congruent_correct, incongruent_correct,
-                    conflict_intercept, conflict_slope, conflict_slope_norm]
+        columns += [
+            follow_error_rt,
+            follow_correct_rt,
+            congruent_rt,
+            incongruent_rt,
+            congruent_rtsd,
+            incongruent_rtsd,
+            congruent_rtcov,
+            incongruent_rtcov,
+            congruent_correct,
+            incongruent_correct,
+            conflict_intercept,
+            conflict_slope,
+            conflict_slope_norm,
+        ]
 
     return columns

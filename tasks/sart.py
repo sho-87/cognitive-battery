@@ -44,13 +44,12 @@ class SART(object):
         self.image_path = os.path.join(self.base_dir, "images", "SART")
 
         # Use the 29mm mask image (as described by Robertson 1997)
-        self.img_mask = pygame.image.load(
-            os.path.join(self.image_path, 'mask_29.png'))
+        self.img_mask = pygame.image.load(os.path.join(self.image_path, "mask_29.png"))
 
         # Create trial sequence
         self.number_set = list(range(1, 10)) * 25  # Numbers 1-9
         random.shuffle(self.number_set)
-        self.trial_num = list(range(1, len(self.number_set)+1))
+        self.trial_num = list(range(1, len(self.number_set) + 1))
 
         # Create output dataframe
         self.all_data = pd.DataFrame()
@@ -59,16 +58,22 @@ class SART(object):
 
     def display_trial(self, i, data):
         # Randomly choose font size for this trial
-        size_index = random.randint(0, len(self.stim_fonts)-1)
+        size_index = random.randint(0, len(self.stim_fonts) - 1)
         trial_font = self.stim_fonts[size_index]
 
         key_press = 0
-        data.set_value(i, 'RT', 1150)
+        data.set_value(i, "RT", 1150)
 
         # Display number
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, trial_font, str(data["stimulus"][i]),
-                     "center", "center", (255, 255, 255))
+        display.text(
+            self.screen,
+            trial_font,
+            str(data["stimulus"][i]),
+            "center",
+            "center",
+            (255, 255, 255),
+        )
         pygame.display.flip()
 
         # Get start time in ms
@@ -81,8 +86,7 @@ class SART(object):
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_SPACE:
                     key_press = 1
-                    data.set_value(i, 'RT',
-                                   int(round(time.time() * 1000)) - start_time)
+                    data.set_value(i, "RT", int(round(time.time() * 1000)) - start_time)
                 elif event.type == KEYDOWN and event.key == K_F12:
                     sys.exit(0)
 
@@ -104,8 +108,8 @@ class SART(object):
                     if key_press == 0:
                         key_press = 1
                         data.set_value(
-                            i, 'RT',
-                            int(round(time.time() * 1000)) - start_time)
+                            i, "RT", int(round(time.time() * 1000)) - start_time
+                        )
                 elif event.type == KEYDOWN and event.key == K_F12:
                     sys.exit(0)
 
@@ -128,36 +132,61 @@ class SART(object):
                 accuracy = 1
 
         # Store key press data in dataframe
-        data.set_value(i, 'key press', key_press)
-        data.set_value(i, 'accuracy', accuracy)
-        data.set_value(i, 'stimSize', self.STIMSIZES_PT[size_index])
+        data.set_value(i, "key press", key_press)
+        data.set_value(i, "accuracy", accuracy)
+        data.set_value(i, "stimSize", self.STIMSIZES_PT[size_index])
 
     def run(self):
         # Instructions
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font, "SART",
-                     "center", self.screen_y/2 - 250, (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "SART",
+            "center",
+            self.screen_y / 2 - 250,
+            (255, 255, 255),
+        )
 
-        display.text(self.screen, self.font,
-                     "Numbers will appear in the center of the screen.",
-                     100, self.screen_y/2 - 150, (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "Numbers will appear in the center of the screen.",
+            100,
+            self.screen_y / 2 - 150,
+            (255, 255, 255),
+        )
 
-        display.text(self.screen, self.font,
-                     "Press the spacebar after you see a number.",
-                     100, self.screen_y/2 - 50, (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "Press the spacebar after you see a number.",
+            100,
+            self.screen_y / 2 - 50,
+            (255, 255, 255),
+        )
 
-        display.text(self.screen, self.font,
-                     "However, if the number is a 3, "
-                     "do NOT press the spacebar.",
-                     100, self.screen_y/2 + 50, (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "However, if the number is a 3, " "do NOT press the spacebar.",
+            100,
+            self.screen_y / 2 + 50,
+            (255, 255, 255),
+        )
 
-        display.text(self.screen, self.font,
-                     "Please respond as quickly, "
-                     "and as accurately, as possible",
-                     100, self.screen_y/2 + 150, (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "Please respond as quickly, " "and as accurately, as possible",
+            100,
+            self.screen_y / 2 + 150,
+            (255, 255, 255),
+        )
 
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 300, (255, 255, 255))
+        display.text_space(
+            self.screen, self.font, "center", self.screen_y / 2 + 300, (255, 255, 255)
+        )
 
         pygame.display.flip()
 
@@ -165,13 +194,18 @@ class SART(object):
 
         # Instructions Practice
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font,
-                     "We will begin with a few practice trials...",
-                     "center", "center", (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "We will begin with a few practice trials...",
+            "center",
+            "center",
+            (255, 255, 255),
+        )
 
-        display.text_space(self.screen, self.font,
-                           "center",
-                           self.screen_y/2 + 100, (255, 255, 255))
+        display.text_space(
+            self.screen, self.font, "center", self.screen_y / 2 + 100, (255, 255, 255)
+        )
 
         pygame.display.flip()
 
@@ -181,24 +215,36 @@ class SART(object):
         display.blank_screen(self.screen, self.background, self.BLANK_DURATION)
 
         # Show practice trials
-        practice_trials = pd.DataFrame([5, 7, 7, 3, 9, 2, 1, 3, 8, 6],
-                                       columns=['stimulus'])
+        practice_trials = pd.DataFrame(
+            [5, 7, 7, 3, 9, 2, 1, 3, 8, 6], columns=["stimulus"]
+        )
 
         for i in range(practice_trials.shape[0]):
             self.display_trial(i, practice_trials)
 
         # Practice end screen
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font,
-                     "End of practice trials",
-                     100, self.screen_y/2 - 100, (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "End of practice trials",
+            100,
+            self.screen_y / 2 - 100,
+            (255, 255, 255),
+        )
 
-        display.text(self.screen, self.font,
-                     "We will now begin the main trials...",
-                     100, "center", (255, 255, 255))
+        display.text(
+            self.screen,
+            self.font,
+            "We will now begin the main trials...",
+            100,
+            "center",
+            (255, 255, 255),
+        )
 
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100, (255, 255, 255))
+        display.text_space(
+            self.screen, self.font, "center", self.screen_y / 2 + 100, (255, 255, 255)
+        )
 
         pygame.display.flip()
 
@@ -212,17 +258,18 @@ class SART(object):
             self.display_trial(i, self.all_data)
 
         # Rearrange dataframe
-        columns = ['trial', 'stimulus', 'stimSize', 'RT', 'key press',
-                   'accuracy']
+        columns = ["trial", "stimulus", "stimSize", "RT", "key press", "accuracy"]
         self.all_data = self.all_data[columns]
 
         # End screen
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font,
-                     "End of task", "center", "center", (255, 255, 255))
+        display.text(
+            self.screen, self.font, "End of task", "center", "center", (255, 255, 255)
+        )
 
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100, (255, 255, 255))
+        display.text_space(
+            self.screen, self.font, "center", self.screen_y / 2 + 100, (255, 255, 255)
+        )
 
         pygame.display.flip()
 
