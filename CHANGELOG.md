@@ -1,5 +1,17 @@
 # Change Log
 
+## [3.2.1](https://github.com/sho-87/cognitive-battery/releases/tag/3.2.1) *(2018-11-15)*
+
+**General**
+- Code formatting.
+- Added Update UI that checks GitHub for new releases.
+
+**Tasks**
+- Added analysis for Eriksen Flanker task.
+
+**Bug Fixes**
+- Fixed a bug where leading zeros in subject numbers are missing in aggregated data.
+
 ## [3.2.0](https://github.com/sho-87/cognitive-battery/releases/tag/3.2.0) *(2017-09-14)*
 
 **General**

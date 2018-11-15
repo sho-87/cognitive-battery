@@ -1,4 +1,14 @@
+**[Requirements](#requirements)** |
+**[Usage](#usage)** |
+**[Included Tasks](#included-tasks)** |
+**[Contribution](#contribution)** |
+**[Getting Help](#getting-help)** |
+**[TODO](#todo)** |
+**[Changelog](#changelog)**
+
 # Cognitive Battery
+
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/cognitive-battery/Lobby)
 
 <img align="left" src="images/icon.png">
 
@@ -78,7 +88,7 @@ The task results are saved in the `/data` directory of your project directory (s
 
 If you want to reset the settings for a particular project, delete the `battery_settings.ini` file in the project's directory. A new (default) one will be created when you next load that project.
 
-## Tasks
+## Included Tasks
 
 Information about the tasks can be found [here](tasks/README.md).
 
@@ -148,6 +158,9 @@ method
 
 Consider making a pull request and please include a journal reference for any
 new tasks you add.
+
+## Getting Help
+You're encouraged to post questions as an [issue](https://github.com/sho-87/cognitive-battery/issues) in this repo, or get live help on [Gitter](https://gitter.im/cognitive-battery/Lobby).
 
 ## TODO
 

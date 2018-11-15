@@ -40,27 +40,31 @@ class DigitspanBackwards(object):
 
         # Generate all possible number sequence lengths for experiment
         self.digit_lengths = np.asarray(
-            [j for i in range(self.START_LENGTH, self.END_LENGTH + 1) for j in
-             [i] * self.NUM_REPEATS])
+            [
+                j
+                for i in range(self.START_LENGTH, self.END_LENGTH + 1)
+                for j in [i] * self.NUM_REPEATS
+            ]
+        )
 
         # Create main dataframe
         self.all_data = pd.DataFrame()
-        self.all_data["trial"] = list(range(1,
-                                       self.num_lengths * self.NUM_REPEATS + 1))
+        self.all_data["trial"] = list(range(1, self.num_lengths * self.NUM_REPEATS + 1))
         self.all_data["length"] = self.digit_lengths
 
         # Create digit sequences
         for i in range(len(self.all_data)):
-            generated_sequence = random.sample(self.NUMBERS_USED,
-                                               self.all_data['length'][i])
+            generated_sequence = random.sample(
+                self.NUMBERS_USED, self.all_data["length"][i]
+            )
             self.all_data.set_value(
-                i, 'sequence', ''.join(str(n) for n in generated_sequence))
+                i, "sequence", "".join(str(n) for n in generated_sequence)
+            )
 
     def display_numbers(self, i, data):
-        for number in data['sequence'][i]:
+        for number in data["sequence"][i]:
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.stimulus_font, number,
-                         "center", "center")
+            display.text(self.screen, self.stimulus_font, number, "center", "center")
             pygame.display.flip()
 
             display.wait(self.STIM_DURATION)
@@ -70,7 +74,7 @@ class DigitspanBackwards(object):
 
             display.wait(self.INTER_NUMBER_DURATION)
 
-        return data['sequence'][i]
+        return data["sequence"][i]
 
     def number_entry(self):
         user_sequence = ""
@@ -99,12 +103,17 @@ class DigitspanBackwards(object):
                         pass
 
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.font,
-                         "Type the sequence in backwards order:",
-                         50, self.screen_y/4)
+            display.text(
+                self.screen,
+                self.font,
+                "Type the sequence in backwards order:",
+                50,
+                self.screen_y / 4,
+            )
 
-            display.text(self.screen, self.stimulus_font, user_sequence,
-                         "center", "center")
+            display.text(
+                self.screen, self.stimulus_font, user_sequence, "center", "center"
+            )
 
             pygame.display.flip()
 
@@ -120,37 +129,64 @@ class DigitspanBackwards(object):
         # Instructions
         self.screen.blit(self.background, (0, 0))
 
-        display.text(self.screen, self.font, "Backwards Digit Span",
-                     "center", self.screen_y/2 - 300)
+        display.text(
+            self.screen,
+            self.font,
+            "Backwards Digit Span",
+            "center",
+            self.screen_y / 2 - 300,
+        )
 
-        display.text(self.screen, self.font,
-                     "You will be shown a number sequence, "
-                     "one number at a time",
-                     100, self.screen_y/2 - 200)
+        display.text(
+            self.screen,
+            self.font,
+            "You will be shown a number sequence, " "one number at a time",
+            100,
+            self.screen_y / 2 - 200,
+        )
 
-        display.text(self.screen, self.font,
-                     "Memorize the number sequence",
-                     100, self.screen_y/2 - 100)
+        display.text(
+            self.screen,
+            self.font,
+            "Memorize the number sequence",
+            100,
+            self.screen_y / 2 - 100,
+        )
 
-        display.text(self.screen, self.font,
-                     "You will then be asked to type the sequence "
-                     "in reverse/backwards order. For example...",
-                     100, "center")
+        display.text(
+            self.screen,
+            self.font,
+            "You will then be asked to type the sequence "
+            "in reverse/backwards order. For example...",
+            100,
+            "center",
+        )
 
-        display.text(self.screen, self.font,
-                     "Sequence: 1 2 3 4 5",
-                     "center", self.screen_y/2 + 100)
+        display.text(
+            self.screen,
+            self.font,
+            "Sequence: 1 2 3 4 5",
+            "center",
+            self.screen_y / 2 + 100,
+        )
 
-        display.text(self.screen, self.font,
-                     "Correct: 5 4 3 2 1",
-                     "center", self.screen_y/2 + 150)
+        display.text(
+            self.screen,
+            self.font,
+            "Correct: 5 4 3 2 1",
+            "center",
+            self.screen_y / 2 + 150,
+        )
 
-        display.text(self.screen, self.font,
-                     "The sequences will get longer throughout the experiment",
-                     100, self.screen_y/2 + 250)
+        display.text(
+            self.screen,
+            self.font,
+            "The sequences will get longer throughout the experiment",
+            100,
+            self.screen_y / 2 + 250,
+        )
 
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 350)
+        display.text_space(self.screen, self.font, "center", self.screen_y / 2 + 350)
 
         pygame.display.flip()
 
@@ -159,19 +195,22 @@ class DigitspanBackwards(object):
         # Instructions Practice
         self.screen.blit(self.background, (0, 0))
 
-        display.text(self.screen, self.font,
-                     "We will begin with a practice trial...",
-                     100, "center")
+        display.text(
+            self.screen,
+            self.font,
+            "We will begin with a practice trial...",
+            100,
+            "center",
+        )
 
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100)
+        display.text_space(self.screen, self.font, "center", self.screen_y / 2 + 100)
 
         pygame.display.flip()
 
         display.wait_for_space()
 
         # Practice trial
-        practice_data = pd.DataFrame(['13579'], columns=['sequence'])
+        practice_data = pd.DataFrame(["13579"], columns=["sequence"])
         correct_sequence_p = self.display_numbers(0, practice_data)
         user_sequence_p = self.number_entry()
 
@@ -180,11 +219,13 @@ class DigitspanBackwards(object):
 
         # Check if reverse of user input matches the correct sequence
         if self.check_answer(user_sequence_p, correct_sequence_p):
-            display.text(self.screen, self.font, "Correct",
-                         "center", "center", (0, 255, 0))
+            display.text(
+                self.screen, self.font, "Correct", "center", "center", (0, 255, 0)
+            )
         else:
-            display.text(self.screen, self.font, "Incorrect",
-                         "center", "center", (255, 0, 0))
+            display.text(
+                self.screen, self.font, "Incorrect", "center", "center", (255, 0, 0)
+            )
 
         pygame.display.flip()
 
@@ -192,10 +233,14 @@ class DigitspanBackwards(object):
 
         # Practice end screen
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font,
-                     "We will now begin the main trials...", 100, "center")
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100)
+        display.text(
+            self.screen,
+            self.font,
+            "We will now begin the main trials...",
+            100,
+            "center",
+        )
+        display.text_space(self.screen, self.font, "center", self.screen_y / 2 + 100)
 
         pygame.display.flip()
 
@@ -206,18 +251,17 @@ class DigitspanBackwards(object):
             correct_sequence = self.display_numbers(i, self.all_data)
             user_sequence = self.number_entry()
 
-            self.all_data.set_value(i, 'user_sequence', user_sequence)
+            self.all_data.set_value(i, "user_sequence", user_sequence)
 
             if self.check_answer(user_sequence, correct_sequence):
-                self.all_data.set_value(i, 'correct', 1)
+                self.all_data.set_value(i, "correct", 1)
             else:
-                self.all_data.set_value(i, 'correct', 0)
+                self.all_data.set_value(i, "correct", 0)
 
         # End screen
         self.screen.blit(self.background, (0, 0))
         display.text(self.screen, self.font, "End of task", "center", "center")
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100)
+        display.text_space(self.screen, self.font, "center", self.screen_y / 2 + 100)
 
         pygame.display.flip()
 

@@ -20,15 +20,15 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
         # Remove the help / whats this button from title bar
-        self.setWindowFlags(
-            self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
+        self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
 
         self.project_list = project_list
         self.base_dir = base_dir
 
         # Set input validators
         self.projectNameValue.setValidator(
-            QtGui.QRegExpValidator(QtCore.QRegExp("[A-Za-z0-9 ]+")))
+            QtGui.QRegExpValidator(QtCore.QRegExp("[A-Za-z0-9 ]+"))
+        )
 
         # Bind button events
         self.dirSelectButton.clicked.connect(self.select_file)
@@ -36,7 +36,9 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
         self.cancelButton.clicked.connect(self.close)
 
     def select_file(self):
-        self.file_dialog = QtWidgets.QFileDialog.getExistingDirectory(self, "Select directory for the project")
+        self.file_dialog = QtWidgets.QFileDialog.getExistingDirectory(
+            self, "Select directory for the project"
+        )
         self.dirValue.setText(self.file_dialog)
 
     def create_project(self):
@@ -69,6 +71,8 @@ class NewProjectWindow(QtWidgets.QDialog, project_new_window_qt.Ui_NewProjectWin
 
                 self.close()
             else:
-                QtWidgets.QMessageBox.warning(self, "Error", "Project name already exists")
+                QtWidgets.QMessageBox.warning(
+                    self, "Error", "Project name already exists"
+                )
         else:
             QtWidgets.QMessageBox.warning(self, "Error", "Please complete every field")

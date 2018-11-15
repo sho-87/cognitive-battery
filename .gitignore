@@ -2,6 +2,11 @@
 __pycache__
 *.pyc
 
+# Build
+run_battery.spec
+/build
+/dist
+
 # IDE
 .idea
 .vscode

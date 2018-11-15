@@ -16,8 +16,9 @@ class AboutDialog(QtWidgets.QDialog, about_dialog_qt.Ui_Dialog):
         self.versionValue.setText(values.get_version())
 
         # Add icon image
-        base_dir = os.path.dirname(os.path.dirname(
-            os.path.abspath(__file__)))  # Get parent directory
+        base_dir = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__))
+        )  # Get parent directory
         pixmap = QtGui.QPixmap(os.path.join(base_dir, "images", "icon.png"))
         self.icon.setPixmap(pixmap)
 
@@ -25,5 +26,4 @@ class AboutDialog(QtWidgets.QDialog, about_dialog_qt.Ui_Dialog):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
         # Remove the help / whats this button from title bar
-        self.setWindowFlags(
-            self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
+        self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)

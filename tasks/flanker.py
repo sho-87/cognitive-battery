@@ -10,9 +10,17 @@ from utils import display
 
 
 class Flanker(object):
-    def __init__(self, screen, background, dark_mode=False,
-                 sets_practice=3, sets_main=25,
-                 blocks_compat=1, blocks_incompat=0, block_order="compatible"):
+    def __init__(
+        self,
+        screen,
+        background,
+        dark_mode=False,
+        sets_practice=3,
+        sets_main=25,
+        blocks_compat=1,
+        blocks_incompat=0,
+        block_order="compatible",
+    ):
         # Get the pygame display window
         self.screen = screen
         self.background = background
@@ -51,10 +59,10 @@ class Flanker(object):
         self.ITI = 1500
 
         # Set stimuli
-        self.flanker_stim = {"left": {"congruent": "< < < < <",
-                                      "incongruent": "> > < > >"},
-                             "right": {"congruent": "> > > > >",
-                                       "incongruent": "< < > < <"}}
+        self.flanker_stim = {
+            "left": {"congruent": "< < < < <", "incongruent": "> > < > >"},
+            "right": {"congruent": "> > > > >", "incongruent": "< < > < <"},
+        }
 
         # Specify factor levels
         self.CONGRUENCY_LEVELS = ("congruent", "incongruent")
@@ -75,8 +83,9 @@ class Flanker(object):
 
         # Add shuffled combinations to dataframe
         np.random.shuffle(cur_combinations)
-        cur_block = pd.DataFrame(data=cur_combinations,
-                                 columns=("congruency", "direction"))
+        cur_block = pd.DataFrame(
+            data=cur_combinations, columns=("congruency", "direction")
+        )
 
         # Add timing info to dataframe
         cur_block["block"] = block_num + 1
@@ -86,7 +95,9 @@ class Flanker(object):
 
     def display_flanker(self, flanker_type, direction):
         stimulus = self.flanker_stim[direction][flanker_type]
-        display.text(self.screen, self.font_stim, stimulus, "center", "center", self.colour_font)
+        display.text(
+            self.screen, self.font_stim, stimulus, "center", "center", self.colour_font
+        )
 
     def display_trial(self, trial_num, data):
         # Check for a quit press after stimulus was shown
@@ -103,8 +114,9 @@ class Flanker(object):
 
         # Display flanker stimulus
         self.screen.blit(self.background, (0, 0))
-        self.display_flanker(data["congruency"][trial_num],
-                             data["direction"][trial_num])
+        self.display_flanker(
+            data["congruency"][trial_num], data["direction"][trial_num]
+        )
         pygame.display.flip()
 
         # Clear the event queue before checking for responses
@@ -153,15 +165,18 @@ class Flanker(object):
         # Display feedback
         self.screen.blit(self.background, (0, 0))
         if too_slow:
-            display.text(self.screen, self.font, "too slow",
-                         "center", "center", self.colour_font)
+            display.text(
+                self.screen, self.font, "too slow", "center", "center", self.colour_font
+            )
         else:
             if correct == 1:
-                display.text(self.screen, self.font, "correct",
-                             "center", "center", (0, 255, 0))
+                display.text(
+                    self.screen, self.font, "correct", "center", "center", (0, 255, 0)
+                )
             else:
-                display.text(self.screen, self.font, "incorrect",
-                             "center", "center", (255, 0, 0))
+                display.text(
+                    self.screen, self.font, "incorrect", "center", "center", (255, 0, 0)
+                )
         pygame.display.flip()
 
         display.wait(self.FEEDBACK_DURATION)
@@ -169,12 +184,18 @@ class Flanker(object):
         if trial_num != data.shape[0] - 1:
             # Display fixation
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.font, "+", "center", "center", self.colour_font)
+            display.text(
+                self.screen, self.font, "+", "center", "center", self.colour_font
+            )
             pygame.display.flip()
             display.wait(self.ITI)
 
-    def run_block(self, block_num, total_blocks, block_type, compatibility, second_half=False):
-        cur_block = self.create_block(block_num, self.combinations, block_type, compatibility)
+    def run_block(
+        self, block_num, total_blocks, block_type, compatibility, second_half=False
+    ):
+        cur_block = self.create_block(
+            block_num, self.combinations, block_type, compatibility
+        )
 
         for i in range(cur_block.shape[0]):
             self.display_trial(i, cur_block)
@@ -189,12 +210,21 @@ class Flanker(object):
         # End of block screen
         if block_num != total_blocks - 1:  # If not the final block
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.font,
-                         "End of current block. "
-                         "Start next block when you're ready...",
-                         100, "center", self.colour_font)
-            display.text_space(self.screen, self.font,
-                               "center", (self.screen_y/2) + 100, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "End of current block. " "Start next block when you're ready...",
+                100,
+                "center",
+                self.colour_font,
+            )
+            display.text_space(
+                self.screen,
+                self.font,
+                "center",
+                (self.screen_y / 2) + 100,
+                self.colour_font,
+            )
             pygame.display.flip()
 
             display.wait_for_space()
@@ -208,14 +238,30 @@ class Flanker(object):
                 self.BLOCK_ORDER = "compatible"
             else:
                 self.screen.blit(self.background, (0, 0))
-                display.text(self.screen, self.font, "Choose block order:",
-                             100, self.screen_y/2 - 300, self.colour_font)
-                display.text(self.screen, self.font,
-                             "1 - Compatible first",
-                             100, self.screen_y/2 - 200, self.colour_font)
-                display.text(self.screen, self.font,
-                             "2 - Incompatible first",
-                             100, self.screen_y/2 - 150, self.colour_font)
+                display.text(
+                    self.screen,
+                    self.font,
+                    "Choose block order:",
+                    100,
+                    self.screen_y / 2 - 300,
+                    self.colour_font,
+                )
+                display.text(
+                    self.screen,
+                    self.font,
+                    "1 - Compatible first",
+                    100,
+                    self.screen_y / 2 - 200,
+                    self.colour_font,
+                )
+                display.text(
+                    self.screen,
+                    self.font,
+                    "2 - Incompatible first",
+                    100,
+                    self.screen_y / 2 - 150,
+                    self.colour_font,
+                )
                 pygame.display.flip()
 
                 wait_response = True
@@ -232,58 +278,126 @@ class Flanker(object):
 
         # Set block order
         if self.BLOCK_ORDER == "compatible":
-            self.block_type_list = (["compatible"] * self.BLOCKS_COMPAT) + (["incompatible"] * self.BLOCKS_INCOMPAT)
+            self.block_type_list = (["compatible"] * self.BLOCKS_COMPAT) + (
+                ["incompatible"] * self.BLOCKS_INCOMPAT
+            )
         elif self.BLOCK_ORDER == "incompatible":
-            self.block_type_list = (["incompatible"] * self.BLOCKS_INCOMPAT) + (["compatible"] * self.BLOCKS_COMPAT)
+            self.block_type_list = (["incompatible"] * self.BLOCKS_INCOMPAT) + (
+                ["compatible"] * self.BLOCKS_COMPAT
+            )
 
         # Instructions
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font, "Eriksen Flanker Task",
-                     "center", self.screen_y/2 - 300, self.colour_font)
-        display.text(self.screen, self.font,
-                     "Keep your eyes on the fixation cross at the "
-                     "start of each trial:",
-                     100, self.screen_y/2 - 200, self.colour_font)
-        display.text(self.screen, self.font, "+", "center", self.screen_y/2 - 150, self.colour_font)
-        display.text(self.screen, self.font,
-                     "A set of arrows will appear:",
-                     100, self.screen_y/2 - 100, self.colour_font)
-        display.text(self.screen, self.font_stim, self.flanker_stim["left"]["incongruent"],
-                     "center", self.screen_y/2 - 60, self.colour_font)
+        display.text(
+            self.screen,
+            self.font,
+            "Eriksen Flanker Task",
+            "center",
+            self.screen_y / 2 - 300,
+            self.colour_font,
+        )
+        display.text(
+            self.screen,
+            self.font,
+            "Keep your eyes on the fixation cross at the " "start of each trial:",
+            100,
+            self.screen_y / 2 - 200,
+            self.colour_font,
+        )
+        display.text(
+            self.screen,
+            self.font,
+            "+",
+            "center",
+            self.screen_y / 2 - 150,
+            self.colour_font,
+        )
+        display.text(
+            self.screen,
+            self.font,
+            "A set of arrows will appear:",
+            100,
+            self.screen_y / 2 - 100,
+            self.colour_font,
+        )
+        display.text(
+            self.screen,
+            self.font_stim,
+            self.flanker_stim["left"]["incongruent"],
+            "center",
+            self.screen_y / 2 - 60,
+            self.colour_font,
+        )
 
         if self.block_type_list[0] == "compatible":
-            display.text(self.screen, self.font,
-                         "Use the Left / Right arrow keys to indicate "
-                         "the pointing direction of the CENTER arrow.",
-                         100, self.screen_y/2 + 70, self.colour_font)
-            display.text(self.screen, self.font,
-                         "In example above, you should press the LEFT key.",
-                         100, self.screen_y/2 + 120, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "Use the Left / Right arrow keys to indicate "
+                "the pointing direction of the CENTER arrow.",
+                100,
+                self.screen_y / 2 + 70,
+                self.colour_font,
+            )
+            display.text(
+                self.screen,
+                self.font,
+                "In example above, you should press the LEFT key.",
+                100,
+                self.screen_y / 2 + 120,
+                self.colour_font,
+            )
         elif self.block_type_list[0] == "incompatible":
-            display.text(self.screen, self.font,
-                         "Use the Left / Right arrow keys to indicate "
-                         "the OPPOSITE pointing direction of the CENTER arrow.",
-                         100, self.screen_y/2 + 70, self.colour_font)
-            display.text(self.screen, self.font,
-                         "In example above, you should press the RIGHT key.",
-                         100, self.screen_y/2 + 120, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "Use the Left / Right arrow keys to indicate "
+                "the OPPOSITE pointing direction of the CENTER arrow.",
+                100,
+                self.screen_y / 2 + 70,
+                self.colour_font,
+            )
+            display.text(
+                self.screen,
+                self.font,
+                "In example above, you should press the RIGHT key.",
+                100,
+                self.screen_y / 2 + 120,
+                self.colour_font,
+            )
 
-        display.text(self.screen, self.font,
-                     "Respond as quickly, and as accurately, as you can",
-                     100, self.screen_y/2 + 200, self.colour_font)
+        display.text(
+            self.screen,
+            self.font,
+            "Respond as quickly, and as accurately, as you can",
+            100,
+            self.screen_y / 2 + 200,
+            self.colour_font,
+        )
 
-        display.text_space(self.screen, self.font,
-                           "center", (self.screen_y/2) + 300, self.colour_font)
+        display.text_space(
+            self.screen,
+            self.font,
+            "center",
+            (self.screen_y / 2) + 300,
+            self.colour_font,
+        )
         pygame.display.flip()
         display.wait_for_space()
 
         # Instructions Practice
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font,
-                     "We'll begin with some practice trials...",
-                     "center", "center", self.colour_font)
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100, self.colour_font)
+        display.text(
+            self.screen,
+            self.font,
+            "We'll begin with some practice trials...",
+            "center",
+            "center",
+            self.colour_font,
+        )
+        display.text_space(
+            self.screen, self.font, "center", self.screen_y / 2 + 100, self.colour_font
+        )
         pygame.display.flip()
         display.wait_for_space()
 
@@ -292,11 +406,17 @@ class Flanker(object):
 
         # Instructions Practice End
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font,
-                     "We will now begin the main trials...",
-                     100, self.screen_y/2, self.colour_font)
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 200, self.colour_font)
+        display.text(
+            self.screen,
+            self.font,
+            "We will now begin the main trials...",
+            100,
+            self.screen_y / 2,
+            self.colour_font,
+        )
+        display.text_space(
+            self.screen, self.font, "center", self.screen_y / 2 + 200, self.colour_font
+        )
         pygame.display.flip()
         display.wait_for_space()
 
@@ -311,55 +431,116 @@ class Flanker(object):
         # Second half (if more than one compatibility type)
         if self.block_type_list[0] != self.block_type_list[-1]:
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.font,
-                         "End of first half. Please inform the experimenter.",
-                         100, self.screen_y/2, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "End of first half. Please inform the experimenter.",
+                100,
+                self.screen_y / 2,
+                self.colour_font,
+            )
 
-            display.text_space(self.screen, self.font,
-                               "center", self.screen_y/2 + 200, self.colour_font)
+            display.text_space(
+                self.screen,
+                self.font,
+                "center",
+                self.screen_y / 2 + 200,
+                self.colour_font,
+            )
             pygame.display.flip()
             display.wait_for_space()
 
             # Practice instructions
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.font,
-                         "For the second half, the task will be slightly different:",
-                         100, self.screen_y/2 - 300, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "For the second half, the task will be slightly different:",
+                100,
+                self.screen_y / 2 - 300,
+                self.colour_font,
+            )
 
-            display.text(self.screen, self.font_stim, self.flanker_stim["left"]["incongruent"],
-                         "center", self.screen_y/2 - 250, self.colour_font)
+            display.text(
+                self.screen,
+                self.font_stim,
+                self.flanker_stim["left"]["incongruent"],
+                "center",
+                self.screen_y / 2 - 250,
+                self.colour_font,
+            )
 
             if self.block_type_list[-1] == "compatible":
-                display.text(self.screen, self.font,
-                             "This time, indicate the pointing direction of the CENTER arrow",
-                             100, self.screen_y/2 - 100, self.colour_font)
-                display.text(self.screen, self.font,
-                             "So in the example above, you would press LEFT",
-                             100, self.screen_y/2, self.colour_font)
+                display.text(
+                    self.screen,
+                    self.font,
+                    "This time, indicate the pointing direction of the CENTER arrow",
+                    100,
+                    self.screen_y / 2 - 100,
+                    self.colour_font,
+                )
+                display.text(
+                    self.screen,
+                    self.font,
+                    "So in the example above, you would press LEFT",
+                    100,
+                    self.screen_y / 2,
+                    self.colour_font,
+                )
             elif self.block_type_list[-1] == "incompatible":
-                display.text(self.screen, self.font,
-                             "This time, indicate the OPPOSITE pointing direction of the CENTER arrow",
-                             100, self.screen_y/2 - 100, self.colour_font)
-                display.text(self.screen, self.font,
-                             "So in the example above, you would press RIGHT",
-                             100, self.screen_y/2, self.colour_font)
+                display.text(
+                    self.screen,
+                    self.font,
+                    "This time, indicate the OPPOSITE pointing direction of the CENTER arrow",
+                    100,
+                    self.screen_y / 2 - 100,
+                    self.colour_font,
+                )
+                display.text(
+                    self.screen,
+                    self.font,
+                    "So in the example above, you would press RIGHT",
+                    100,
+                    self.screen_y / 2,
+                    self.colour_font,
+                )
 
-            display.text(self.screen, self.font,
-                         "Respond as quickly, and as accurately, as you can",
-                         100, self.screen_y/2 + 100, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "Respond as quickly, and as accurately, as you can",
+                100,
+                self.screen_y / 2 + 100,
+                self.colour_font,
+            )
 
-            display.text_space(self.screen, self.font,
-                               "center", self.screen_y/2 + 250, self.colour_font)
+            display.text_space(
+                self.screen,
+                self.font,
+                "center",
+                self.screen_y / 2 + 250,
+                self.colour_font,
+            )
             pygame.display.flip()
             display.wait_for_space()
 
             # Instructions Practice
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.font,
-                         "We'll begin with some practice trials...",
-                         "center", "center", self.colour_font)
-            display.text_space(self.screen, self.font,
-                               "center", self.screen_y/2 + 100, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "We'll begin with some practice trials...",
+                "center",
+                "center",
+                self.colour_font,
+            )
+            display.text_space(
+                self.screen,
+                self.font,
+                "center",
+                self.screen_y / 2 + 100,
+                self.colour_font,
+            )
             pygame.display.flip()
             display.wait_for_space()
 
@@ -368,35 +549,68 @@ class Flanker(object):
 
             # Instructions Practice End
             self.screen.blit(self.background, (0, 0))
-            display.text(self.screen, self.font,
-                         "We will now begin the main trials...",
-                         100, self.screen_y/2, self.colour_font)
-            display.text_space(self.screen, self.font,
-                               "center", self.screen_y/2 + 200, self.colour_font)
+            display.text(
+                self.screen,
+                self.font,
+                "We will now begin the main trials...",
+                100,
+                self.screen_y / 2,
+                self.colour_font,
+            )
+            display.text_space(
+                self.screen,
+                self.font,
+                "center",
+                self.screen_y / 2 + 200,
+                self.colour_font,
+            )
             pygame.display.flip()
             display.wait_for_space()
 
             # Main task
             if self.block_type_list[-1] == "compatible":
                 for i in range(self.BLOCKS_COMPAT):
-                    self.run_block(self.BLOCKS_INCOMPAT + i, self.BLOCKS_COMPAT, "main", self.block_type_list[-1], True)
+                    self.run_block(
+                        self.BLOCKS_INCOMPAT + i,
+                        self.BLOCKS_COMPAT,
+                        "main",
+                        self.block_type_list[-1],
+                        True,
+                    )
             elif self.block_type_list[-1] == "incompatible":
                 for i in range(self.BLOCKS_INCOMPAT):
-                    self.run_block(self.BLOCKS_COMPAT + i, self.BLOCKS_INCOMPAT, "main", self.block_type_list[-1], True)
+                    self.run_block(
+                        self.BLOCKS_COMPAT + i,
+                        self.BLOCKS_INCOMPAT,
+                        "main",
+                        self.block_type_list[-1],
+                        True,
+                    )
 
         # Create trial number column
         self.all_data["trial"] = list(range(1, len(self.all_data) + 1))
 
         # Rearrange the dataframe
-        columns = ["trial", "block", "compatibility", "congruency", "direction",
-                   "response", "correct", "RT"]
+        columns = [
+            "trial",
+            "block",
+            "compatibility",
+            "congruency",
+            "direction",
+            "response",
+            "correct",
+            "RT",
+        ]
         self.all_data = self.all_data[columns]
 
         # End screen
         self.screen.blit(self.background, (0, 0))
-        display.text(self.screen, self.font, "End of task", "center", "center", self.colour_font)
-        display.text_space(self.screen, self.font,
-                           "center", self.screen_y/2 + 100, self.colour_font)
+        display.text(
+            self.screen, self.font, "End of task", "center", "center", self.colour_font
+        )
+        display.text_space(
+            self.screen, self.font, "center", self.screen_y / 2 + 100, self.colour_font
+        )
         pygame.display.flip()
 
         display.wait_for_space()

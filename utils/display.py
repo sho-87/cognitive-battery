@@ -32,12 +32,12 @@ def image(screen, img, x, y):
         Can be "center" or an integer value
     """
 
-    mid_x = screen.get_width()/2
-    mix_y = screen.get_height()/2
+    mid_x = screen.get_width() / 2
+    mix_y = screen.get_height() / 2
 
-    x_p = (mid_x - img.get_rect().width/2) if x == "center" else x
+    x_p = (mid_x - img.get_rect().width / 2) if x == "center" else x
 
-    y_p = (mix_y - img.get_rect().height/2) if y == "center" else y
+    y_p = (mix_y - img.get_rect().height / 2) if y == "center" else y
 
     screen.blit(img, (x_p, y_p))
 
@@ -63,12 +63,12 @@ def text(screen, font, text_string, x, y, colour=(0, 0, 0)):
     except TypeError:
         text_object = text_string  # Already a pygame surface
 
-    mid_x = screen.get_width()/2
-    mix_y = screen.get_height()/2
+    mid_x = screen.get_width() / 2
+    mix_y = screen.get_height() / 2
 
-    x_p = (mid_x - text_object.get_rect().width/2) if x == "center" else x
+    x_p = (mid_x - text_object.get_rect().width / 2) if x == "center" else x
 
-    y_p = (mix_y - text_object.get_rect().height/2) if y == "center" else y
+    y_p = (mix_y - text_object.get_rect().height / 2) if y == "center" else y
 
     screen.blit(text_object, (x_p, y_p))
 
