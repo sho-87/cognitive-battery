@@ -72,7 +72,7 @@ class MRT(object):
             self.practiceAnswers.append([0, 0])
 
         self.directory = os.path.dirname(os.path.realpath(__file__))
-        self.imagePath = self.directory + "\images\\MRT\\"
+        self.imagePath = os.path.join(self.directory, "images", "MRT")
 
     def pressSpace(self, x, y):
         self.space = self.xFont.render("(Press spacebar when ready)", 1, (0, 0, 0))
@@ -130,9 +130,8 @@ class MRT(object):
             for i in range(12):
                 # draws indicating arrow above timeline
                 if i + 1 + self.trialOffset == self.curTrial:
-                    self.imgIndicator = pygame.image.load(
-                        self.imagePath + "indicator.png"
-                    )
+                    self.imgIndicator = pygame.image.load(os.path.join(self.imagePath,
+                                                                       "indicator.png"))
                     self.indicatorX, self.indicatorY = self.imgIndicator.get_rect().size
                     self.screen.blit(
                         self.imgIndicator,
@@ -149,12 +148,12 @@ class MRT(object):
                     data.at[i + self.trialOffset, "user_answer1"] != 0
                     and data.at[i + self.trialOffset, "user_answer2"] != 0
                 ):
-                    self.imgCircle = pygame.image.load(
-                        self.imagePath + "circleBlue.png"
+                    self.imgCircle = pygame.image.load(os.path.join(
+                        self.imagePath, "circleBlue.png")
                     )
                 else:
-                    self.imgCircle = pygame.image.load(
-                        self.imagePath + "circleBlank.png"
+                    self.imgCircle = pygame.image.load(os.path.join(
+                        self.imagePath, "circleBlank.png")
                     )
                 self.circleX, self.circleY = self.imgCircle.get_rect().size
                 self.screen.blit(
@@ -166,7 +165,7 @@ class MRT(object):
                 )
 
             # draw previous button
-            self.imgPrev = pygame.image.load(self.imagePath + "previous.png")
+            self.imgPrev = pygame.image.load(os.path.join(self.imagePath, "previous.png"))
             self.prevX, self.prevY = self.imgPrev.get_rect().size
             self.prevButton = (
                 [
@@ -183,7 +182,7 @@ class MRT(object):
             )
 
             # draw next button
-            self.imgNext = pygame.image.load(self.imagePath + "next.png")
+            self.imgNext = pygame.image.load(os.path.join(self.imagePath, "next.png"))
             self.nextX, self.nextY = self.imgNext.get_rect().size
             self.nextButton = (
                 [
@@ -200,7 +199,7 @@ class MRT(object):
             )
 
             # draw finish button
-            self.imgFinish = pygame.image.load(self.imagePath + "finish.png")
+            self.imgFinish = pygame.image.load(os.path.join(self.imagePath, "finish.png"))
             self.finishX, self.finishY = self.imgFinish.get_rect().size
             self.finishButton = (
                 [
@@ -228,7 +227,7 @@ class MRT(object):
             self.letterOffset = 35  # text offset above boxes
 
             # target image
-            imgQ = pygame.image.load(self.imagePath + str(self.curTrial) + "q.png")
+            imgQ = pygame.image.load(os.path.join(self.imagePath, "{}q.png".format(self.curTrial)))
             qX, qY = imgQ.get_rect().size
             qButton = (
                 [self.questionX, (self.screen_y / 2) - (qY / 2)],
@@ -239,7 +238,7 @@ class MRT(object):
             self.screen.blit(lineQ, (qButton[0][0], qButton[0][1] - self.letterOffset))
 
             # answer a
-            imgA = pygame.image.load(self.imagePath + str(self.curTrial) + "a.png")
+            imgA = pygame.image.load(os.path.join(self.imagePath, "{}a.png".format(self.curTrial)))
             aX, aY = imgA.get_rect().size
             aButton = (
                 [self.answerX, (self.screen_y / 2) - (aY / 2)],
@@ -250,7 +249,7 @@ class MRT(object):
             self.screen.blit(lineA, (aButton[0][0], aButton[0][1] - self.letterOffset))
 
             # answer b
-            imgB = pygame.image.load(self.imagePath + str(self.curTrial) + "b.png")
+            imgB = pygame.image.load(os.path.join(self.imagePath, "{}b.png".format(self.curTrial)))
             bX, bY = imgB.get_rect().size
             bButton = (
                 [self.answerX + aX + self.spacer, (self.screen_y / 2) - (bY / 2)],
@@ -261,7 +260,7 @@ class MRT(object):
             self.screen.blit(lineB, (bButton[0][0], bButton[0][1] - self.letterOffset))
 
             # answer c
-            imgC = pygame.image.load(self.imagePath + str(self.curTrial) + "c.png")
+            imgC = pygame.image.load(os.path.join(self.imagePath, "{}c.png".format(self.curTrial)))
             cX, cY = imgC.get_rect().size
             cButton = (
                 [
@@ -278,7 +277,7 @@ class MRT(object):
             self.screen.blit(lineC, (cButton[0][0], cButton[0][1] - self.letterOffset))
 
             # answer d
-            imgD = pygame.image.load(self.imagePath + str(self.curTrial) + "d.png")
+            imgD = pygame.image.load(os.path.join(self.imagePath, "{}d.png".format(self.curTrial)))
             dX, dY = imgD.get_rect().size
             dButton = (
                 [
@@ -489,7 +488,7 @@ class MRT(object):
             )
             self.screen.blit(self.line1, (100, self.screen_y / 2 - 300))
 
-            img0a = pygame.image.load(self.imagePath + "0a.png")
+            img0a = pygame.image.load(os.path.join(self.imagePath, "0a.png"))
             x, y = img0a.get_rect().size
             self.screen.blit(
                 img0a, ((self.screen_x / 2) - (x / 2), self.screen_y / 2 - 260)
@@ -508,7 +507,7 @@ class MRT(object):
             )
             self.screen.blit(line2a, (100, self.screen_y / 2 - 10))
 
-            img0b = pygame.image.load(self.imagePath + "0b.png")
+            img0b = pygame.image.load(os.path.join(self.imagePath, "0b.png"))
             x, y = img0b.get_rect().size
             self.screen.blit(
                 img0b, ((self.screen_x / 2) - (x / 2), self.screen_y / 2 + 80)
@@ -557,7 +556,7 @@ class MRT(object):
             dButton = []
             # draws image boxes, 3 rows. appends location of boxes, for each row, into lists above
             for i in range(3):
-                imgQ = pygame.image.load(self.imagePath + "p" + str(i + 1) + "q.png")
+                imgQ = pygame.image.load(os.path.join(self.imagePath, "p{}q.png".format(i + 1)))
                 qX, qY = imgQ.get_rect().size
                 qButton.append(
                     (
@@ -574,7 +573,7 @@ class MRT(object):
                     lineQ, (qButton[i][0][0], qButton[i][0][1] - self.letterOffset)
                 )
 
-                imgA = pygame.image.load(self.imagePath + "p" + str(i + 1) + "a.png")
+                imgA = pygame.image.load(os.path.join(self.imagePath, "p{}a.png".format(i + 1)))
                 aX, aY = imgA.get_rect().size
                 aButton.append(
                     (
@@ -588,7 +587,7 @@ class MRT(object):
                     lineA, (aButton[i][0][0], aButton[i][0][1] - self.letterOffset)
                 )
 
-                imgB = pygame.image.load(self.imagePath + "p" + str(i + 1) + "b.png")
+                imgB = pygame.image.load(os.path.join(self.imagePath, "p{}b.png".format(i + 1)))
                 bX, bY = imgB.get_rect().size
                 bButton.append(
                     (
@@ -608,7 +607,7 @@ class MRT(object):
                     lineB, (bButton[i][0][0], bButton[i][0][1] - self.letterOffset)
                 )
 
-                imgC = pygame.image.load(self.imagePath + "p" + str(i + 1) + "c.png")
+                imgC = pygame.image.load(os.path.join(self.imagePath, "p{}c.png".format(i + 1)))
                 cX, cY = imgC.get_rect().size
                 cButton.append(
                     (
@@ -628,7 +627,7 @@ class MRT(object):
                     lineC, (cButton[i][0][0], cButton[i][0][1] - self.letterOffset)
                 )
 
-                imgD = pygame.image.load(self.imagePath + "p" + str(i + 1) + "d.png")
+                imgD = pygame.image.load(os.path.join(self.imagePath, "p{}d.png".format(i + 1)))
                 dX, dY = imgD.get_rect().size
                 dButton.append(
                     (
@@ -796,7 +795,7 @@ class MRT(object):
                 if event.type == KEYDOWN and event.key == K_SPACE:
                     answers = False
             # draws a tick next to the correct answers for practice questions
-            imgCorrect = pygame.image.load(self.imagePath + "correct.png")
+            imgCorrect = pygame.image.load(os.path.join(self.imagePath, "correct.png"))
             correctX, correctY = imgCorrect.get_rect().size
             correctAnswers = [
                 [bButton[0][0], bButton[0][1]],
