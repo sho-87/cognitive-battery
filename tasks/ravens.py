@@ -34,7 +34,7 @@ class Ravens(object):
 
         # get images
         self.directory = dirname(realpath(__file__))
-        self.imagePath = self.directory + "\images\\Ravens\\"
+        self.imagePath = join(self.directory, "images", "Ravens")
 
         # store all filenames in the images path to a list
         self.dirImages = [
@@ -48,7 +48,7 @@ class Ravens(object):
         # only load the desired number/set of images
         self.images = []
         for i in range(start - 1, start + numTrials - 1):
-            self.images.append(pygame.image.load(self.imagePath + self.dirImages[i]))
+            self.images.append(pygame.image.load(join(self.imagePath, self.dirImages[i])))
 
         # get image size
         self.stimH = self.images[0].get_rect().height
@@ -56,15 +56,15 @@ class Ravens(object):
 
         # load practice image
         self.practiceImage = pygame.image.load(
-            self.imagePath + "practice\\practice.png"
+            join(self.imagePath, "practice", "practice.png")
         )
 
         # load instructions page example images
-        self.img_example = pygame.image.load(self.imagePath + "practice\\example.png")
+        self.img_example = pygame.image.load(join(self.imagePath, "practice", "example.png"))
         self.exampleW = self.img_example.get_rect().width
 
         self.img_example_answers = pygame.image.load(
-            self.imagePath + "practice\\example_answers.png"
+            join(self.imagePath, "practice", "example_answers.png")
         )
         self.exampleAnswersW = self.img_example_answers.get_rect().width
 
